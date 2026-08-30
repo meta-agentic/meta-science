@@ -36,6 +36,11 @@ class Receipt:
     world_seeds: list[int]
     reason: str
     created_at: float
+    # Kept apart so a reader — human or model — can see whether accuracy survived the
+    # change or was merely outrun by the cost saving.
+    champion_parts: dict | None = None
+    challenger_parts: dict | None = None
+    audit: dict | None = None
 
     def digest(self) -> str:
         body = json.dumps(asdict(self), sort_keys=True).encode()
@@ -85,16 +90,24 @@ class PromotionGate:
     no score, no benchmark access, no say in the verdict."""
 
     def __init__(self, ledger: Ledger, evaluate: Callable[[object, list[int]], float],
-                 margin: float = 0.02):
+                 margin: float = 0.02, detailed=None, auditor=None):
         self._ledger = ledger
         self._evaluate = evaluate
+        self._detailed = detailed          # optional: score with its parts separated
+        self._auditor = auditor            # optional: advisory only, never a veto
         self.margin = margin
 
     def consider(self, champion, challenger, world_seeds: list[int]) -> Receipt:
         # Both arms run on the same held-out worlds under the same seeds. The proposer
         # never sees these seeds, so it cannot tune against them.
-        champ_score = self._evaluate(champion, world_seeds)
-        chal_score = self._evaluate(challenger, world_seeds)
+        if self._detailed:
+            champ_parts = self._detailed(champion, world_seeds)
+            chal_parts = self._detailed(challenger, world_seeds)
+            champ_score, chal_score = champ_parts["score"], chal_parts["score"]
+        else:
+            champ_parts = chal_parts = None
+            champ_score = self._evaluate(champion, world_seeds)
+            chal_score = self._evaluate(challenger, world_seeds)
         wins = chal_score >= champ_score + self.margin
 
         receipt = Receipt(
@@ -109,7 +122,14 @@ class PromotionGate:
             reason=("beat the champion on held-out worlds by the required margin" if wins
                     else f"gained {chal_score - champ_score:+.4f}, needed +{self.margin}"),
             created_at=time.time(),
+            champion_parts=champ_parts,
+            challenger_parts=chal_parts,
         )
+        # The audit runs after the verdict on purpose. A promotion that turned on a
+        # model's opinion would reintroduce exactly what the gate exists to prevent, so
+        # the auditor annotates the record and cannot change it.
+        if self._auditor and wins:
+            receipt.audit = self._auditor(receipt)
         self._ledger.put_receipt(receipt)
         if wins:
             self._ledger.set_canon("strategy", {"name": challenger.name,

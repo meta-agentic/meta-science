@@ -39,7 +39,8 @@ def _client() -> genai.Client:
 LAST_ERRORS: list[str] = []
 
 
-def _generate(prompt: str, schema: dict, temperature: float = 0.2) -> dict:
+def _generate(prompt: str, schema: dict, temperature: float = 0.2,
+              model: str | None = None) -> dict:
     client = _client()
     cfg = types.GenerateContentConfig(
         temperature=temperature,
@@ -47,7 +48,7 @@ def _generate(prompt: str, schema: dict, temperature: float = 0.2) -> dict:
         response_schema=schema,
     )
     LAST_ERRORS.clear()
-    for model in MODEL_CASCADE:
+    for model in ((model,) if model else MODEL_CASCADE):
         for attempt in range(2):
             try:
                 r = client.models.generate_content(model=model, contents=prompt, config=cfg)

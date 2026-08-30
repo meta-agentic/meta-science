@@ -30,8 +30,19 @@ BUDGET_UNIT = 12 * 2 * 400   # the champion's full spend = 1.0 units
 def evaluate_strategy(strategy: Strategy, world_seeds: list[int],
                       reasoner: Reasoner | None = None) -> float:
     """Mean score across held-out worlds. Deterministic given the seeds."""
+    return evaluate_detailed(strategy, world_seeds, reasoner)["score"]
+
+
+def evaluate_detailed(strategy: Strategy, world_seeds: list[int],
+                      reasoner: Reasoner | None = None) -> dict:
+    """The score with its parts kept separate.
+
+    The composite alone cannot distinguish "spent less and kept the answers" from
+    "spent less, lost accuracy, and the cost saving outran the loss". Those are exactly
+    the two cases an audit exists to tell apart, so the parts travel with the verdict.
+    """
     reasoner = reasoner or HeuristicReasoner()
-    totals = []
+    totals, accs, costs = [], [], []
     for seed in world_seeds:
         world = generate(seed)
         run = run_discovery(world, reasoner, strategy, seed=seed)
@@ -42,8 +53,14 @@ def evaluate_strategy(strategy: Strategy, world_seeds: list[int],
         scored = score_on_held_out(world, run, probes, seed=seed + 5000)
         samples_used = len(run.experiments) * 2 * strategy.samples_per_arm
         spend = samples_used / BUDGET_UNIT
-        totals.append(scored["direction_accuracy"] - MEASUREMENT_COST * spend)
-    return sum(totals) / len(totals)
+        accs.append(scored["direction_accuracy"])
+        costs.append(MEASUREMENT_COST * spend)
+        totals.append(accs[-1] - costs[-1])
+    n = len(totals)
+    return {"score": sum(totals) / n,
+            "accuracy": sum(accs) / n,
+            "cost": sum(costs) / n,
+            "worlds": n}
 
 
 class Proposer(Protocol):
