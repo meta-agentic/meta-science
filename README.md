@@ -342,4 +342,5 @@ Known limits, stated rather than buried:
 
 ## Licence
 
-MIT.
+**GPL-3.0-or-later** — copyleft, as science should be: free for everyone, human or AI.
+Use it, study it, improve it; keep it free for the next reader.

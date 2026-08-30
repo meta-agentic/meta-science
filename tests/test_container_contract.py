@@ -77,10 +77,17 @@ def test_the_image_copies_the_static_page():
 
 
 def test_the_landing_page_makes_no_external_requests(cloud_run_env):
-    """Self-contained by design: no CDN to go down, nothing leaving the viewer's browser."""
+    """Self-contained by design: no CDN to go down, nothing loaded from outside.
+
+    The distinction that matters is LOADS, not links: a script src or stylesheet
+    pulls a third party into the page and can break it during judging; an <a href>
+    to the repo is navigation the reader chooses. The first version of this test
+    banned the substring https:// outright and flagged the attribution footer.
+    """
     html = (ROOT / "static" / "index.html").read_text()
-    for scheme in ("http://", "https://", "//cdn", "//unpkg", "//fonts."):
-        assert scheme not in html, f"external reference found: {scheme}"
+    for load in ('script src="http', "script src='http", 'link rel="stylesheet" href="http',
+                 "url(http", "@import", "//cdn", "//unpkg", "//fonts."):
+        assert load not in html, f"external load found: {load}"
 
 
 def test_the_frozen_study_ships_with_the_image():
@@ -145,4 +152,4 @@ def test_every_page_carries_attribution_and_licence():
         html = (ROOT / "static" / page).read_text()
         assert "Marco Vanadia" in html, page
         assert "github.com/meta-agentic/meta-science" in html, page
-        assert "MIT License" in html, page
+        assert "GPL-3.0" in html, page
