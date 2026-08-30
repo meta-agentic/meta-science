@@ -135,3 +135,14 @@ def test_the_inspector_is_discoverable_from_the_landing_page():
     root URL, not in the README."""
     assert "/world/7/inspect" in (ROOT / "static" / "index.html").read_text()
     assert "/world/7/inspect" in (ROOT / "static" / "evidence.html").read_text()
+
+
+def test_every_page_carries_attribution_and_licence():
+    """Author, repo and licence in the footer of each shipped page — the submission
+    is judged from these pages, and they should say whose work it is and on what
+    terms, without a trip to the repo."""
+    for page in ("index.html", "evidence.html", "world.html"):
+        html = (ROOT / "static" / page).read_text()
+        assert "Marco Vanadia" in html, page
+        assert "github.com/meta-agentic/meta-science" in html, page
+        assert "MIT License" in html, page
