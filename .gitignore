@@ -10,3 +10,11 @@ runs/
 *.tfstate.*
 *.tfvars
 tfplan
+
+# Third-party agent tooling that happens to run in this working directory. Not part of
+# the product, and its policy state carries machine identity — neither belongs in a
+# public repo.
+.claude-flow/
+.swarm/
+.agentic-qe/
+.ruvnet-brain/
