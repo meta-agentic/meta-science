@@ -30,7 +30,14 @@ carried by hue alone — every colored mark also has a direct label or position.
 
 ## Figure 1 — Accuracy by arm: strip plot, not a bar of means
 
-- **Relationship**: distribution comparison across 5 ordinal arms.
+- **Relationship**: distribution comparison across strategy arms — nominal categories,
+  ordered on the page by sample budget within each noise regime for readability.
+- **Selection, stated**: the study has **8 arms; the figure shows 5** — the four that make
+  the measurement-efficiency × noise-regime contrast, plus the champion as the reference.
+  The threshold and screening arms (blunt, sensitive, no-screening) answer a different
+  question and live in the dataset tables; mixing them in would dilute the one comparison
+  this figure exists to make. All 8 are in the CSV, and blunt's collapse (to 0.17 at
+  worst) is reported in figure 2's companion tables, not hidden.
 - **Form**: horizontal strip plot (jittered dots, one row per arm), mean as a heavy tick,
   n=48 labeled per row.
 - **Why**: the finding is as much about **variance** as about the mean — lean-25 drops
@@ -39,10 +46,12 @@ carried by hue alone — every colored mark also has a direct label or position.
   the skill's own table lists "bar of means alone" as the anti-form for distributions.
   Position on a common aligned scale is the most accurately read encoding
   (Cleveland & McGill).
-- **Axis**: 0.4–1.0, *disclosed in the caption*. Dot position is a point encoding, not a
-  length encoding, so a non-zero baseline does not lie about ratios — but it is stated,
-  not hidden. Accuracy values cluster in 0.8–1.0; a forced zero would crush the
-  differences the figure exists to show.
+- **Axis**: full 0–1. **Corrected after validation** — the first draft ran 0.4–1.0 on the
+  argument that points are not lengths and the cluster sits high; the independent review
+  found the data contains values below 0.4 (two lean-25 worlds at 0.33), which the
+  truncated axis clipped off the plot entirely. Hiding the worst failure cases of the
+  most variable arm is the opposite of this figure's job. The disclosure-in-caption
+  defense fails when the axis excludes real observations rather than empty space.
 - **Rejected**: box plots (n=48 with heavy ties at 1.0 makes quartile boxes degenerate);
   violins (density smoothing invents shape at this n).
 - **Pitfall watched**: overplotting at accuracy=1.0 — mitigated with jitter and 55%

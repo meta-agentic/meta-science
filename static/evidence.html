@@ -72,10 +72,12 @@
       <span><i style="background:var(--discordant)"></i>paired arms (noise shared)</span>
     </div>
     <div id="c1"></div>
-    <p class="method">Axis runs 0.4–1.0 (disclosed; dots are point encodings, not lengths).
-    Strip plot rather than a bar of means because the finding is the variance: lean-25 drops
-    the mean and quadruples the spread — unless the arms share noise, in which case cutting
-    samples is invisibly free and the metric measures nothing.</p>
+    <p class="method">Full 0–1 axis: an earlier draft ran 0.4–1.0 and silently
+    clipped two lean-25 worlds at 0.33 — caught by the independent design review, and they
+    are exactly the failure cases the figure exists to show. Strip plot rather than a bar
+    of means because the finding is the variance: lean-25 drops the mean and quadruples
+    the spread — unless the arms share noise, in which case cutting samples is invisibly
+    free and the metric measures nothing.</p>
   </figure>
 
   <figure id="f2">
@@ -149,10 +151,10 @@ function fig1(d) {
   ];
   const W = 760, ROW = 54, L = 190, R = 70, T = 18;
   const H = T + arms.length * ROW + 34;
-  const x = v => L + (v - 0.4) / 0.6 * (W - L - R);
+  const x = v => L + v * (W - L - R);
   const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
     "aria-label": "Strip plot of held-out accuracy for five strategy arms"});
-  for (const t of [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]) {
+  for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1.0]) {
     svg.append(el("line", {x1: x(t), x2: x(t), y1: T, y2: H - 30, class: "tick"}));
     svg.append(el("text", {x: x(t), y: H - 14, "text-anchor": "middle", class: "axis"}, t.toFixed(1)));
   }
