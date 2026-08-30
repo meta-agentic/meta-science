@@ -216,6 +216,9 @@ document.querySelectorAll("#fmt button").forEach(b => b.onclick = () => {
     x.setAttribute("aria-pressed", x === b ? "true" : "false"));
   fmt = b.dataset.f; load();
 });
-$("seed").onchange = load; $("depth").onchange = load;
+// `change` alone misses typed digits until blur — a number field edited by keyboard
+// looks dead. `input` catches keystrokes and spinner clicks alike.
+$("seed").onchange = load;
+$("depth").oninput = load; $("depth").onchange = load;
 load();
 </script>
