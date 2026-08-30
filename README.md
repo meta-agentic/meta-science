@@ -347,9 +347,15 @@ gated turn of self-evolution). The honest gap: each hypothesis gets one experime
 one verdict, and the agent estimates *effects* — it never guesses the *law*. Science
 runs on repetition, and repetition is the roadmap:
 
-- **Replicated experiments** — every hypothesis re-run across fresh seeds, verdicts by
-  meta-analysis rather than a single-shot threshold. Synthetic worlds make replication
-  free and uncontaminated.
+- **Replicated experiments — mechanism shipped, measured honestly.** `replications` is
+  now a strategy knob the evolver can tune: each hypothesis re-runs across fresh seeds
+  and the verdict is meta-analytic (mean effect + majority sign agreement), with
+  replication charged in the cost, never free. R=1 reproduces the frozen history
+  bit-for-bit, by test. The benchmark's answer so far: at equal total budget,
+  replication is **cost-neutral in these worlds** (80×5 scores identically to 400×1) —
+  exactly what statistics predicts under iid gaussian noise. Replication earns its keep
+  against what these worlds do not yet contain: heavy-tailed noise, outlier seeds,
+  drift. Building worlds mean enough for replication to *win* is the real next step.
 - **Law recovery** — the model proposes structure, mechanism family and parameters,
   scored against held-out interventions. Today it recovers directions and magnitudes:
   causal discovery, not yet a law.

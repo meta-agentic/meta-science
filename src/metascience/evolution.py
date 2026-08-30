@@ -53,7 +53,8 @@ def evaluate_detailed(strategy: Strategy, world_seeds: list[int],
         if len(variables) > 1:
             probes.append((variables[1], 0.5))
         scored = score_on_held_out(world, run, probes, seed=seed + 5000)
-        samples_used = len(run.experiments) * 2 * strategy.samples_per_arm
+        samples_used = (len(run.experiments) * 2 * strategy.samples_per_arm
+                        * max(1, strategy.replications))
         spend = samples_used / BUDGET_UNIT
         accs.append(scored["direction_accuracy"])
         costs.append(MEASUREMENT_COST * spend)

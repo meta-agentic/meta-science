@@ -26,6 +26,12 @@ class Strategy:
     screen_observationally: bool = True   # use correlation to order candidates
     trust_observation: bool = False       # ...but never to conclude from it
     max_experiments: int = 12
+    # Independent replicates per experiment, verdict by meta-analysis across them.
+    # 1 = the historical single-shot behaviour, bit-for-bit (the frozen study and
+    # every receipt were produced at 1, and the pinned-figures test holds that).
+    # Tunable on purpose: whether replication is worth its measurement cost is a
+    # question the evolver can now be MADE to answer, not a belief we hard-code.
+    replications: int = 1
     # Independent by default. With paired arms the two contrast levels share noise, so
     # effect estimates stay precise however few samples are drawn — and cutting samples
     # becomes free score. Measured: at 25 samples per arm, accuracy holds at 0.981 paired

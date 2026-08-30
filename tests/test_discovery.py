@@ -102,3 +102,33 @@ def test_simulation_data_replays_the_exact_draws_of_the_run():
     # Truncation is reported, never silent.
     assert data["experiments_total"] == len(run.experiments)
     assert data["experiments_shown"] <= 4
+
+
+def test_replications_one_is_the_historical_behaviour_exactly():
+    """The frozen study and every receipt were produced single-shot. Replicate 0 uses
+    the historical seed, so R=1 must be indistinguishable from before the feature."""
+    from dataclasses import asdict
+    w = generate(7, "T3")
+    r1 = run_discovery(w, HeuristicReasoner(), Strategy(), seed=7)
+    rexp = run_discovery(generate(7, "T3"), HeuristicReasoner(),
+                         Strategy(replications=1), seed=7)
+    assert [asdict(e) for e in r1.experiments] == [asdict(e) for e in rexp.experiments]
+
+
+def test_replicated_verdicts_are_meta_analytic():
+    from metascience.strategy import Strategy as S
+    w = generate(7, "T6")
+    run = run_discovery(w, HeuristicReasoner(), S(replications=3), seed=7)
+    for e in run.experiments:
+        assert e.replicate_effects is not None and len(e.replicate_effects) == 3
+        mean = sum(e.replicate_effects) / 3
+        assert abs(mean - e.observed_effect) < 1e-3, "observed effect must be the meta-analytic mean"
+
+
+def test_replication_is_charged_not_free():
+    """Free robustness would be a lie in the metric — the evolver must pay for it."""
+    from metascience.evolution import evaluate_detailed, held_out_seeds
+    seeds = held_out_seeds(6)
+    one = evaluate_detailed(Strategy(samples_per_arm=100), seeds)
+    three = evaluate_detailed(Strategy(samples_per_arm=100, replications=3), seeds)
+    assert abs(three["cost"] - 3 * one["cost"]) < 1e-6

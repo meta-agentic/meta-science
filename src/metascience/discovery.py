@@ -34,8 +34,9 @@ class Experiment:
     lo: float
     hi: float
     n: int
-    observed_effect: float
+    observed_effect: float           # meta-analytic mean across replicates
     verdict: str
+    replicate_effects: list[float] | None = None   # per-replicate, when replications > 1
 
     @property
     def refuted(self) -> bool:
@@ -86,24 +87,37 @@ def run_discovery(world: World, reasoner: Reasoner, strategy: Strategy,
         sign = _observational_sign(observations, cause, effect)
         hyp = Hypothesis(cause, effect, sign, "observational association")
 
-        # 2. Run the experiment that can refute it.
+        # 2. Run the experiment that can refute it — replicated. Replicate 0 uses the
+        #    historical seed exactly, so replications=1 reproduces every past run
+        #    bit-for-bit; further replicates draw fresh seeds. Samples per arm guard
+        #    against sampling noise; replication guards against what samples cannot —
+        #    the lucky seed. Paired arms share noise within a replicate as before.
         lo, hi = strategy.contrast
-        # Paired arms share noise so the difference isolates the effect. Setting
-        # paired_arms=False gives each arm its own draws — the harder, more realistic
-        # regime, and the one an efficiency claim has to survive.
         arm_b = 0 if strategy.paired_arms else 1
-        a = _mean(world.intervene(cause, lo, strategy.samples_per_arm, seed=seed + 2), effect)
-        b = _mean(world.intervene(cause, hi, strategy.samples_per_arm, seed=seed + 2,
-                                  arm=arm_b), effect)
-        measured = (b - a) / (hi - lo)
+        effects = []
+        for r in range(max(1, strategy.replications)):
+            rep_seed = seed + 2 if r == 0 else seed + 2 + 7919 * r
+            a = _mean(world.intervene(cause, lo, strategy.samples_per_arm,
+                                      seed=rep_seed), effect)
+            b = _mean(world.intervene(cause, hi, strategy.samples_per_arm,
+                                      seed=rep_seed, arm=arm_b), effect)
+            effects.append((b - a) / (hi - lo))
+        measured = sum(effects) / len(effects)
 
-        # 3. Verdict by comparison, not by self-report.
+        # 3. Verdict by meta-analysis, not by self-report: the mean must clear the
+        #    threshold AND a majority of replicates must agree on its sign — one
+        #    lucky draw cannot carry a verdict once replications > 1.
         observed_sign = 1 if measured > strategy.effect_threshold else (
             -1 if measured < -strategy.effect_threshold else 0)
-        verdict = SUPPORTED if observed_sign == sign and observed_sign != 0 else REFUTED
+        agreeing = sum(1 for v in effects
+                       if observed_sign != 0 and (v > 0) == (observed_sign > 0))
+        consistent = observed_sign != 0 and agreeing * 2 > len(effects)
+        verdict = SUPPORTED if consistent and observed_sign == sign else REFUTED
 
-        run.experiments.append(Experiment(hyp, lo, hi, strategy.samples_per_arm,
-                                          round(measured, 4), verdict))
+        run.experiments.append(Experiment(
+            hyp, lo, hi, strategy.samples_per_arm, round(measured, 4), verdict,
+            replicate_effects=([round(v, 4) for v in effects]
+                               if len(effects) > 1 else None)))
         if observed_sign != 0:
             run.model[f"{cause}->{effect}"] = round(measured, 4)
 

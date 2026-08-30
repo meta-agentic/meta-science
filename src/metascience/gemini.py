@@ -27,6 +27,7 @@ TUNABLE = {
     "effect_threshold": float,
     "max_experiments": int,
     "screen_observationally": bool,
+    "replications": int,        # independent replicates per experiment (meta-analysis)
 }
 
 
@@ -141,7 +142,9 @@ class GeminiProposer:
             f"Observed weaknesses: {notes or 'none reported'}\n"
             f"{already}\n"
             "It is scored on getting causal directions right MINUS the total measurement "
-            "it spends (experiments x arms x samples). Buying accuracy with more samples "
+            "it spends (experiments x arms x samples x replications). Replications re-run "
+            "each experiment on fresh draws with a meta-analytic verdict — robustness that "
+            "costs measurement, like everything in science. Buying accuracy with more samples "
             "therefore loses. Propose ONE change that gets equal or better answers for "
             "less measurement, or better answers for the same.\n\n"
             "Return {\"changes\": {field: value}, \"rationale\": \"...\"} using only these "
@@ -156,6 +159,7 @@ class GeminiProposer:
                     "type": "object",
                     "properties": {
                         "samples_per_arm": {"type": "integer"},
+                        "replications": {"type": "integer"},
                         "effect_threshold": {"type": "number"},
                         "max_experiments": {"type": "integer"},
                         "screen_observationally": {"type": "boolean"},
