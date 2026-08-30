@@ -26,8 +26,12 @@ def _git_commit() -> str:
     try:
         out = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
                              text=True, timeout=5)
-        dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True,
-                               text=True, timeout=5).stdout.strip()
+        # -uno: untracked files do not make the code dirty. The frozen study artifact
+        # is itself untracked at generation time, so counting it would make every
+        # freshly generated artifact stamp itself "-dirty" — a chicken-and-egg flag
+        # that says nothing about the code that produced the numbers.
+        dirty = subprocess.run(["git", "status", "--porcelain", "-uno"],
+                               capture_output=True, text=True, timeout=5).stdout.strip()
         return out.stdout.strip()[:12] + ("-dirty" if dirty else "")
     except Exception:  # noqa: BLE001 — provenance is best-effort, never fatal
         return "unknown"
