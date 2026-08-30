@@ -1,0 +1,6 @@
+predicted X1->X4 sign +1  measured +1.178  SUPPORTED
+predicted X4->X1 sign +1  measured -0.000  REFUTED
+predicted X2->X4 sign -1  measured -2.072  SUPPORTED
+predicted X4->X2 sign -1  measured -0.011  REFUTED
+predicted X1->X2 sign -1  measured -0.011  REFUTED
+predicted X2->X1 sign -1  measured -1.755  SUPPORTED

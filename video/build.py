@@ -211,42 +211,74 @@ def corpus_trap() -> Scene:
     return s
 
 
+def _verdict_panel(d, y, title, lines, note=None):
+    d.text((120, y), title, font=F_MONO, fill=INK3)
+    y += 60
+    d.rectangle([80, y - 16, W - 80, y + 14 + 56 * len(lines)], fill=CARD,
+                outline=LINE, width=2)
+    for line in lines:
+        verdict = "REFUTED" if "REFUTED" in line else "SUPPORTED"
+        body = line.replace(verdict, "").rstrip()
+        d.text((120, y), body, font=F_MONO_S, fill=INK1)
+        d.text((W - 140, y), verdict, font=F_MONO_S,
+               fill=ORANGE if verdict == "REFUTED" else BLUE, anchor="ra")
+        y += 56
+    if note:
+        d.text((120, y + 18), note, font=F_FOOT, fill=INK3)
+        y += 50
+    return y + 40
+
+
 def corpus_refutation() -> Scene:
     s = Scene("corpus_refutation")
     demo = (ROOT / "assets" / "demo.txt").read_text().splitlines()
-    exp = [l for l in demo if "predicted" in l and "measured" in l]
+    trap = [l.strip() for l in demo if "predicted" in l and "measured" in l]
+    mixed = (ROOT / "assets" / "mixed.txt").read_text().splitlines()
 
-    def build(shown):
+    def build(stage):
         img, d = s.base()
-        d.text((60, 70), "3 · Refuted by its own experiment", font=F_H, fill=INK1)
-        y = 230
-        d.rectangle([80, y - 30, W - 80, y + 90 + 62 * len(exp)], fill=CARD,
-                    outline=LINE, width=2)
-        d.text((120, y), "$ python3 demo.py", font=F_MONO, fill=INK3)
-        y += 80
-        for line in exp:
-            verdict = "REFUTED" if "REFUTED" in line else "SUPPORTED"
-            body = line.strip().replace("REFUTED", "").replace("SUPPORTED", "").rstrip()
-            d.text((120, y), body, font=F_MONO, fill=INK1)
-            d.text((W - 140, y), verdict, font=F_MONO,
-                   fill=ORANGE if verdict == "REFUTED" else BLUE, anchor="ra")
-            y += 62
-        y += 40
-        for kind, line in shown:
-            y = text_block(d, 100, y, line, F_BODY, INK2 if kind == "d" else INK1) + 16
+        d.text((60, 70), "3 · Confirmed — and refuted — by experiment", font=F_H, fill=INK1)
+        y = 210
+        y = _verdict_panel(d, y, "an ordinary world — both verdicts, earned", mixed,
+                           note="X1→X4 supported, X4→X1 refuted: directionality, discovered.")
+        if stage >= 2:
+            y = _verdict_panel(d, y, "the confounded world — its best hypothesis dies", trap)
+        if stage >= 3:
+            text_block(d, 100, y,
+                       "The prediction is committed BEFORE the experiment runs; the "
+                       "verdict is a comparison, never a question put to the model.",
+                       F_BODY, INK1)
         return img
 
-    items = [
-        ("h", "The prediction is committed BEFORE the experiment runs."),
-        ("d", "The verdict is a comparison, never a question put to the model — "
-              "a hypothesis recorded after the result would just be a description."),
-    ]
-    reveal(s, build, items, 3.2, 5.0)
+    for stage, dur in ((1, 6.0), (2, 5.0), (3, 6.0)):
+        s.hold(build(stage), dur)
     return s
 
 
+def _ghost_panel(d, y, label, text, upto=None):
+    """Verbatim model reasoning, revealed as it 'thinks'. Nothing paraphrased —
+    the whole point is that this text came out of the model, not out of us."""
+    d.text((120, y), label, font=F_FOOT, fill=BLUE)
+    y += 42
+    shown = text if upto is None else text[:upto] + "▌"
+    box_h = 46 * (len(wrap(ImageDraw.Draw(Image.new('RGB', (1, 1))), text,
+                            F_MONO_S, 1560)) + 1)
+    d.rectangle([80, y - 14, W - 80, y + box_h], fill=(22, 30, 40),
+                outline=BLUE, width=2)
+    yy = y + 6
+    dd = d
+    for line in wrap(dd, shown, F_MONO_S, 1560):
+        dd.text((130, yy), line, font=F_MONO_S, fill=INK1)
+        yy += 46
+    return y + box_h + 30
+
+
 def corpus_evolution() -> Scene:
+    import json as _json
     s = Scene("corpus_evolution")
+    ghost = _json.loads((ROOT / "assets" / "ghost.json").read_text())
+    reasoning = '"' + ghost["proposer"]["rationale"].strip() + '"'
+    audit_reasoning = '"' + ghost["auditor"] + '"'
     gens = [
         ("gen 1", "PROMOTED", "gemini-1260  {'samples_per_arm': (200, 400)}",
          "beat the champion on 24 held-out worlds it never saw"),
@@ -258,23 +290,35 @@ def corpus_evolution() -> Scene:
          "gained +0.0056 — refusing marginal gains is what stops drift on noise"),
     ]
 
-    def build(shown):
+    def build(shown, ghost_chars=None, show_audit_ghost=False):
         img, d = s.base()
         d.text((60, 70), "4 · It improves its own method — through a gate", font=F_H, fill=INK1)
         d.text((60, 170), "Gemini proposes. It never sees the benchmark, never scores "
                           "itself, never writes to canon.", font=F_BODY, fill=INK2)
-        y = 290
+        y = 260
+        y = _ghost_panel(d, y, "GEMINI · reasoning, verbatim", reasoning, ghost_chars)
         for tag, verdict, line1, line2 in shown:
-            d.rectangle([80, y, W - 80, y + 150], fill=CARD, outline=LINE, width=2)
-            d.text((130, y + 28), tag, font=F_MONO, fill=INK3)
-            d.text((320, y + 28), verdict, font=F_MONO,
+            d.rectangle([80, y, W - 80, y + 128], fill=CARD, outline=LINE, width=2)
+            d.text((130, y + 22), tag, font=F_MONO, fill=INK3)
+            d.text((320, y + 22), verdict, font=F_MONO,
                    fill=BLUE if verdict == "PROMOTED" else ORANGE)
-            d.text((620, y + 28), line1, font=F_MONO_S, fill=INK1)
-            d.text((320, y + 88), line2, font=F_MONO_S, fill=INK2)
-            y += 175
+            d.text((640, y + 26), line1, font=F_MONO_S, fill=INK1)
+            d.text((320, y + 76), line2, font=F_MONO_S, fill=INK2)
+            y += 148
+            if tag == "audit" and show_audit_ghost:
+                y = _ghost_panel(d, y, "AUDITOR · a different model, verbatim",
+                                 audit_reasoning)
         return img
 
-    reveal(s, build, gens, 4.0, 5.0)
+    # The ghost thinks first — typewriter over the verbatim rationale.
+    step = max(6, len(reasoning) // 14)
+    for n in range(step, len(reasoning) + step, step):
+        s.hold(build([], min(n, len(reasoning))), 0.45)
+    s.hold(build([]), 1.2)
+    # Then the gate rules, card by card; the auditor gets its own ghost.
+    for i in range(1, len(gens) + 1):
+        s.hold(build(gens[:i], show_audit_ghost=(i >= 2)), 3.6)
+    s.hold(build(gens, show_audit_ghost=True), 5.0)
     return s
 
 
@@ -311,12 +355,59 @@ def corpus_evidence() -> Scene:
     return s
 
 
+def corpus_stats() -> Scene:
+    s = Scene("corpus_stats")
+    arms = (ROOT / "assets" / "stats_arms.txt").read_text().splitlines()
+    ref = (ROOT / "assets" / "stats_templates.txt").read_text().splitlines()
+
+    def build(stage):
+        img, d = s.base()
+        d.text((60, 70), "6 · The statistics, not the anecdote", font=F_H, fill=INK1)
+        y = 200
+        d.text((100, y), "held-out direction accuracy by strategy arm (48 worlds each)",
+               font=F_FOOT, fill=INK3)
+        y += 45
+        d.rectangle([80, y - 12, W - 80, y + 12 + 52 * len(arms)], fill=CARD,
+                    outline=LINE, width=2)
+        for line in arms:
+            hot = line.startswith("lean 25")
+            d.text((120, y), line, font=F_MONO,
+                   fill=ORANGE if hot else (BLUE if "paired" in line else INK1))
+            y += 52
+        y += 34
+        if stage >= 2:
+            d.text((100, y), "hypotheses refuted, by world topology", font=F_FOOT, fill=INK3)
+            y += 45
+            d.rectangle([80, y - 12, 1000, y + 12 + 48 * len(ref)], fill=CARD,
+                        outline=LINE, width=2)
+            for line in ref:
+                d.text((120, y), line, font=F_MONO_S,
+                       fill=ORANGE if line.startswith(("T5", "T6")) else INK1)
+                y += 48
+            d.text((1050, y - 48 * len(ref) + 10),
+                   "the confounded topologies refute", font=F_BODY, fill=INK2)
+            d.text((1050, y - 48 * len(ref) + 65),
+                   "nearly everything — by design.", font=F_BODY, fill=INK2)
+        if stage >= 3:
+            d.text((100, y + 26),
+                   "Same conclusions at a quarter of the measurement — but cut to 25 "
+                   "samples and the sd quadruples,", font=F_FOOT, fill=INK2)
+            d.text((100, y + 62),
+                   "unless the arms share noise (paired), in which case the metric "
+                   "measures nothing. We report both.", font=F_FOOT, fill=INK2)
+        return img
+
+    for stage, dur in ((1, 6.0), (2, 6.5), (3, 6.0)):
+        s.hold(build(stage), dur)
+    return s
+
+
 def corpus_replication() -> Scene:
     s = Scene("corpus_replication")
 
     def build(shown):
         img, d = s.base()
-        d.text((60, 70), "6 · We asked it whether science needs repetition", font=F_H, fill=INK1)
+        d.text((60, 70), "7 · We asked it whether science needs repetition", font=F_H, fill=INK1)
         y = 220
         for kind, line in shown:
             if kind == "mono":
@@ -368,7 +459,7 @@ def outro() -> Scene:
 
 
 CLIPS = [intro, corpus_world, corpus_trap, corpus_refutation,
-         corpus_evolution, corpus_evidence, corpus_replication, outro]
+         corpus_evolution, corpus_evidence, corpus_stats, corpus_replication, outro]
 
 
 def main() -> None:

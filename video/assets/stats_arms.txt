@@ -1,0 +1,4 @@
+champion 400×1     acc 0.9815  sd 0.0418  n 48
+frugal 100         acc 0.9815  sd 0.0418  n 48
+lean 25            acc 0.9271  sd 0.1584  n 48
+paired lean 25     acc 0.9815  sd 0.0418  n 48

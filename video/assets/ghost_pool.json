@@ -1,0 +1,62 @@
+[
+ {
+  "note": "accuracy is saturated on most worlds; 12 experiments x 400 samples each",
+  "diff": {
+   "samples_per_arm": [
+    150,
+    400
+   ]
+  },
+  "rationale": "Since accuracy is saturated across most worlds, reducing samples_per_arm from 400 to 150 drastically reduces total measurement expenditure while preserving enough statistical power to identify causal edges above the effect threshold."
+ },
+ {
+  "note": "the champion spends heavily; challenger refused last round for a marginal gain",
+  "diff": {
+   "samples_per_arm": [
+    250,
+    400
+   ]
+  },
+  "rationale": "Reducing samples_per_arm from 400 to 250 cuts total sample expenditure by 37.5% per experiment while retaining sufficient statistical power to reliably detect causal effects above the 0.15 threshold."
+ },
+ {
+  "note": "replication is available as a knob; verdicts are meta-analytic across replicates",
+  "diff": {
+   "samples_per_arm": [
+    250,
+    400
+   ]
+  },
+  "rationale": "Reducing samples_per_arm from 400 to 250 cuts total measurement cost per experiment by 37.5% while maintaining sufficient statistical power to detect causal effects above the 0.15 effect threshold, improving the net score."
+ },
+ {
+  "note": "several weak effects near the threshold were refused as inconsistent",
+  "diff": {
+   "effect_threshold": [
+    0.1,
+    0.15
+   ]
+  },
+  "rationale": "Lowering the effect_threshold from 0.15 to 0.10 prevents true weak causal effects from hovering near the boundary where random sampling variance causes inconsistent verdicts, thereby recovering real weak edges without increasing total measurement cost."
+ },
+ {
+  "note": "budget matters: score = accuracy minus total measurement",
+  "diff": {
+   "samples_per_arm": [
+    200,
+    400
+   ]
+  },
+  "rationale": "Reducing samples_per_arm from 400 to 200 cuts measurement cost in half per experiment while retaining sufficient statistical power to detect meaningful causal effects, directly improving the net score."
+ },
+ {
+  "note": "the confounded worlds refute most observational priors",
+  "diff": {
+   "screen_observationally": [
+    false,
+    true
+   ]
+  },
+  "rationale": "Observational screening relies on observational associations that are systematically misleading in the presence of unobserved confounding. Disabling observational screening prevents the system from making incorrect decisions or skipping critical interventions based on refuted observational priors."
+ }
+]

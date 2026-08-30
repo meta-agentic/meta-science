@@ -1,0 +1,23 @@
+{
+ "proposer": {
+  "note": "accuracy is saturated on most worlds; 12 experiments x 400 samples each",
+  "diff": {
+   "samples_per_arm": [
+    150,
+    400
+   ]
+  },
+  "rationale": "Since accuracy is saturated across most worlds, reducing samples_per_arm from 400 to 150 drastically reduces total measurement expenditure while preserving enough statistical power to identify causal edges above the effect threshold."
+ },
+ "proposer_alt": {
+  "note": "the confounded worlds refute most observational priors",
+  "diff": {
+   "screen_observationally": [
+    false,
+    true
+   ]
+  },
+  "rationale": "Observational screening relies on observational associations that are systematically misleading in the presence of unobserved confounding. Disabling observational screening prevents the system from making incorrect decisions or skipping critical interventions based on refuted observational priors."
+ },
+ "auditor": "Accuracy fell by 0.0278, which exceeds the noise threshold of 0.02 \u2014 the cost saving, not better science, carried the composite score."
+}
