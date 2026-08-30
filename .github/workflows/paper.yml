@@ -2,7 +2,7 @@ name: paper
 
 on:
   push:
-    branches: [article]
+    branches: [paper-instrument]
     paths: ["paper/**", ".github/workflows/paper.yml"]
   workflow_dispatch:
 
