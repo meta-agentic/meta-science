@@ -135,12 +135,32 @@ function diagram(truth) {
   marker.append(el("path", {d: "M0,0 L10,5 L0,10 z",
     fill: getComputedStyle(document.querySelector(".viz-root")).getPropertyValue("--ink-3")}));
   svg.querySelector("defs").append(marker);
+  const R = 22;                       // node radius
   for (const [child, parents] of Object.entries(edges)) {
     for (const p of parents) {
       const [x1, y1] = pos[p], [x2, y2] = pos[child];
-      svg.append(el("line", {x1: x1 + 26, y1, x2: x2 - 30, y2,
-        stroke: "var(--ink-3)", "stroke-width": 1.5, "marker-end": "url(#arr)",
-        "stroke-dasharray": hidden.has(p) ? "4 4" : "none", opacity: 0.85}));
+      // Trim both ends RADIALLY along the edge's own direction, so an arrow meets
+      // the circle's rim wherever the edge actually arrives. The old fixed
+      // horizontal offsets were only right for horizontal edges — diagonals
+      // pierced the circles, and every edge into a node landed on the same point.
+      const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy);
+      const ux = dx / len, uy = dy / len;
+      const sx = x1 + ux * (R + 3), sy = y1 + uy * (R + 3);
+      const ex = x2 - ux * (R + 9), ey = y2 - uy * (R + 9);   // +arrowhead room
+      const attrs = {stroke: "var(--ink-3)", "stroke-width": 1.5, fill: "none",
+        "marker-end": "url(#arr)", opacity: 0.85,
+        "stroke-dasharray": hidden.has(p) ? "4 4" : "none"};
+      if (Math.abs(depth[child] - depth[p]) > 1) {
+        // A layer-skipping edge would run straight through the intermediate
+        // column's nodes: bow it. The bow side alternates with the child's row
+        // parity so two skips in the same lane do not stack on one arc.
+        const bow = (28 + 6 * Math.abs(depth[child] - depth[p]))
+                    * (pos[child][1] <= H / 2 ? -1 : 1);
+        const mx = (sx + ex) / 2 - uy * bow, my = (sy + ey) / 2 + ux * bow;
+        svg.append(el("path", {...attrs, d: `M${sx},${sy} Q${mx},${my} ${ex},${ey}`}));
+      } else {
+        svg.append(el("line", {...attrs, x1: sx, y1: sy, x2: ex, y2: ey}));
+      }
     }
   }
   for (const [n, [x, y]] of Object.entries(pos)) {
@@ -153,7 +173,7 @@ function diagram(truth) {
       fill: isH ? "var(--discordant)" : "#fff",
       style: "font-weight:650"}, n));
     const m = mechs[n];
-    svg.append(el("text", {x, y: y + 40, "text-anchor": "middle", class: "mech"},
+    svg.append(el("text", {x, y: y + 38, "text-anchor": "middle", class: "mech"},
       m ? m.form : (isH ? "hidden noise" : "noise")));
   }
   return svg;

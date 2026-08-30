@@ -128,8 +128,13 @@ pair — more variables, longer paths, colliders across the seam — while every
 property (anonymisation, determinism, hidden-stays-hidden, the discovery loop running
 unchanged) is asserted by `tests/test_compose.py` rather than assumed.
 
+Compounds chain: `generate_compound(seed, depth)` folds composition left, so depth *n*
+is *n+1* templates (depth 0 is the atomic world through the same code path, and the API
+caps depth at 7 server-side — a cap that exists only in the UI is not a cap). A depth-7
+chain — 28 observables, hidden confounders intact — passes the same invariant suite as
+an atom and the discovery loop runs on it unchanged.
+
 Current limits, stated: bridges are a→b only (no merging of a shared variable, no
 bidirectional coupling — both would need a cycle check smarter than "one direction");
-compounds are pairs, not n-ary chains (trivial to extend, untested today); and the
-held-out benchmark still runs on atomic worlds — promoting a strategy on compound
-evidence is future work, not a claim.
+and the held-out benchmark still runs on atomic worlds — promoting a strategy on
+compound evidence is future work, not a claim.

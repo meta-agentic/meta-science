@@ -31,6 +31,7 @@ from metascience.reasoner import HeuristicReasoner  # noqa: E402
 from metascience.strategy import Strategy  # noqa: E402
 from metascience.compose import generate_compound  # noqa: E402
 from metascience.narrate import agent_brief, observer_narrative  # noqa: E402
+from metascience.templates import generate  # noqa: E402
 
 load_env()
 app = FastAPI(title="meta-science", description="An agent that does science, and can be refuted.")
