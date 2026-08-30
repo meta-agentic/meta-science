@@ -104,3 +104,27 @@ def test_the_evidence_page_is_self_contained(cloud_run_env):
     c = TestClient(cloud_run_env.app)
     assert c.get("/evidence").status_code == 200
     assert c.get("/static/study.json").status_code == 200
+
+
+def test_the_world_inspector_ships_and_is_self_contained(cloud_run_env):
+    html = (ROOT / "static" / "world.html").read_text()
+    for scheme in ("http://cdn", "https://cdn", "//unpkg", "//fonts.", "https://ajax"):
+        assert scheme not in html
+    from fastapi.testclient import TestClient
+    c = TestClient(cloud_run_env.app)
+    assert c.get("/world/7/inspect").status_code == 200
+    truth = c.get("/world/7/truth").json()
+    assert "narrative" in truth and "ground_truth" in truth
+
+
+def test_the_agent_surface_route_stays_clean_with_compounds(cloud_run_env):
+    """The compound flag widens the world, never the surface: still labels, affordances
+    and the brief — no edges, no mechanisms, no hidden nodes."""
+    from fastapi.testclient import TestClient
+    c = TestClient(cloud_run_env.app)
+    surface = c.get("/world/7?compound=true").json()
+    assert set(surface) == {"world_id", "variables", "affordances", "brief"}
+    import json as _json
+    blob = _json.dumps(surface).lower()
+    for word in ("edge", "mechanism", "exponential", "multiplicative", "hidden"):
+        assert word not in blob

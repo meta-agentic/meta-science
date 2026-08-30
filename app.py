@@ -29,6 +29,8 @@ from metascience.gemini import TUNABLE, GeminiProposer, GeminiReasoner  # noqa: 
 from metascience.ledger import FileLedger, PromotionGate  # noqa: E402
 from metascience.reasoner import HeuristicReasoner  # noqa: E402
 from metascience.strategy import Strategy  # noqa: E402
+from metascience.compose import generate_compound  # noqa: E402
+from metascience.narrate import agent_brief, observer_narrative  # noqa: E402
 from metascience.templates import generate  # noqa: E402
 
 load_env()
@@ -68,10 +70,44 @@ def health() -> dict:
     return {"ok": True, "model": model_name()}
 
 
+def _world(seed: int, compound: bool):
+    return generate_compound(seed) if compound else generate(seed)
+
+
 @app.get("/world/{seed}")
-def world(seed: int) -> dict:
+def world(seed: int, compound: bool = False) -> dict:
     """The agent's entire view. No structure, no domain terms, no ground truth."""
-    return generate(seed).describe()
+    w = _world(seed, compound)
+    return w.describe() | {"brief": agent_brief(w)}
+
+
+@app.get("/world/{seed}/truth")
+def world_truth(seed: int, compound: bool = False) -> dict:
+    """OBSERVER VIEW — ground truth for humans studying the benchmark.
+
+    Public on purpose: the repo is public and any reader can compute this from the
+    seed, so secrecy is not what protects the benchmark. The boundary is process-level
+    — nothing on the agent's path calls this — and anonymisation guards against
+    retrieval from training, not against a person reading the answer.
+    """
+    w = _world(seed, compound)
+    return {
+        "world_id": w.world_id,
+        "seed": w.seed,
+        "observable": list(w.observable),
+        "hidden": list(w.hidden),
+        "ground_truth": w.ground_truth(),
+        "narrative": observer_narrative(w),
+        "exogenous": {n: {"mean": node.exo_mean, "sd": node.exo_sd}
+                      for n, node in w.nodes.items() if node.mechanism is None},
+        "noise": {n: node.mechanism.noise
+                  for n, node in w.nodes.items() if node.mechanism},
+    }
+
+
+@app.get("/world/{seed}/inspect", response_class=HTMLResponse)
+def world_inspect(seed: int) -> str:
+    return (Path(__file__).parent / "static" / "world.html").read_text(encoding="utf-8")
 
 
 @app.get("/discover/{seed}")
