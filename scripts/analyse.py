@@ -49,6 +49,8 @@ def table(title: str, headers: list[str], rows: list[list]) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="runs/study")
+    ap.add_argument("--json", metavar="PATH",
+                    help="also freeze the figures' data to PATH (e.g. static/study.json)")
     args = ap.parse_args()
     records = FileLedger(args.data).experiments(limit=100_000)
     if not records:
@@ -131,6 +133,48 @@ def main() -> None:
           ["true pos", "false pos", "false neg", "precision", "recall"],
           [[tp, fp, fn, f"{prec:.3f}", f"{rec_:.3f}"]])
     print("\n  Ground truth is read here and nowhere on the agent's path.\n")
+
+    if args.json:
+        freeze(records, by_arm, inverted, agreed, ref, tp, fp, fn, args.json)
+
+
+def freeze(records, by_arm, inverted, agreed, ref, tp, fp, fn, path) -> None:
+    """Write the figures' data as a frozen artifact.
+
+    The page renders from this file, not from the live ledger, so the published figures
+    cannot drift after the claims are written. Stamped with commit and time so a reader
+    can tie the pixels back to the code that produced them.
+    """
+    import json
+
+    from metascience.experiment import provenance
+
+    out = {
+        "provenance": provenance({"reasoner": "heuristic"}) | {"records": len(records)},
+        "accuracy_by_arm": {
+            arm: {"values": [round(v, 4) for v in vals],
+                  "mean": round(st.mean(vals), 4),
+                  "sd": round(st.stdev(vals), 4) if len(vals) > 1 else None,
+                  "n": len(vals)}
+            for arm, vals in by_arm.items() if vals
+        },
+        "refutation_by_template": {
+            tid: {"refuted": v[0], "tested": v[1], "rate": round(v[0] / v[1], 4)}
+            for tid, v in sorted(ref.items())
+        },
+        "confounded_priors": {"inverted": inverted, "confirmed": agreed,
+                              "template": "T6"},
+        "edge_recovery": {
+            "true_pos": tp, "false_pos": fp, "false_neg": fn,
+            "precision": round(tp / (tp + fp), 4) if tp + fp else None,
+            "recall": round(tp / (tp + fn), 4) if tp + fn else None,
+            "arm": "champion",
+        },
+    }
+    pathlib_path = Path(path)
+    pathlib_path.parent.mkdir(parents=True, exist_ok=True)
+    pathlib_path.write_text(json.dumps(out, indent=2) + "\n")
+    print(f"  frozen -> {path} (commit {out['provenance']['git_commit']})")
 
 
 if __name__ == "__main__":
