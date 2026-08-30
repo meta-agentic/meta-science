@@ -1,0 +1,35 @@
+1
+00:00:00,300 --> 00:00:16,800
+What would it take to trust a machine that says it made itself better? Not a bigger claim — a smaller one, that can be checked.
+
+2
+00:00:17,300 --> 00:00:35,433
+Start by taking everything away. No names, no context, no textbook to remember. What is left is the only thing that cannot be faked: the ability to find out.
+
+3
+00:00:35,933 --> 00:01:01,466
+Data can be perfectly clear, and perfectly wrong. The only way past a hidden cause is to reach into the world and move something. Reading alone fails every time. Acting succeeds every time.
+
+4
+00:01:01,966 --> 00:01:24,466
+Real science cuts both ways. Some guesses survive their experiment, some die by it — and the machine finds out which, the hard way. It wrote its predictions down first, so there is no taking them back.
+
+5
+00:01:24,966 --> 00:01:56,833
+And here is the ghost in the shell — the model thinking about its own method, in its own words. Its idea was good, so it passed. Its next two ideas were also good. Not good enough. That is the whole point.
+
+6
+00:01:57,333 --> 00:02:27,833
+None of this rests on a lucky run. Hundreds of worlds, thousands of tests — and any of them can be re-run by anyone, from a single seed.
+
+7
+00:02:28,333 --> 00:02:53,366
+Spend a quarter of the budget: same answers. Spend even less, and the spread gives you away — unless the benchmark is rigged to hide it. Ours was, once. We found it, fixed it, and published both.
+
+8
+00:02:53,866 --> 00:03:17,999
+In the end we asked the system the oldest question in science: do you need repetition? It gave the statistician's answer — not here, not yet — and told us exactly what kind of world would change its mind.
+
+9
+00:03:18,499 --> 00:03:39,033
+One gated turn today. A thousand tomorrow — and every one of them would still have to show a receipt. Meta-science. Free for everyone, human or A.I.
