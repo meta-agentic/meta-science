@@ -208,7 +208,9 @@ From that study — 2,560 hypotheses across 8 arms — three results:
 
 `GET /export.csv` gives one row per hypothesis joined to ground truth, long format,
 straight into pandas or R. Full schema and findings in
-[docs/dataset.md](docs/dataset.md).
+[docs/dataset.md](docs/dataset.md). How worlds are generated, worded (two views, one
+enforced boundary) and composed into compound problems: [docs/worlds.md](docs/worlds.md)
+and the live inspector at `/world/{seed}/inspect`.
 
 ---
 
