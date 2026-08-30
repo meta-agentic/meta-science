@@ -4,6 +4,7 @@ If the retrieval surface leaks, the agent recognises the source system, emits th
 memorised law, and every number downstream measures recall instead of discovery.
 """
 import json
+import pathlib
 import statistics as st
 import sys
 
@@ -112,3 +113,25 @@ def test_an_empty_benchmark_is_refused():
     from metascience.strategy import Strategy
     with pytest.raises(ValueError, match="empty benchmark"):
         evaluate_detailed(Strategy(), [])
+
+
+def test_the_same_seed_builds_the_same_world_in_a_FRESH_PROCESS():
+    """Determinism has to survive leaving the interpreter, or receipts do not replay.
+
+    The in-process check above passed for weeks while `hash()` — randomised per process
+    by PYTHONHASHSEED — was seeding world generation, so the same seed produced a
+    different world in every run. Only a subprocess sees that.
+    """
+    import subprocess
+    import sys as _sys
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    script = (
+        "import sys, json; sys.path.insert(0, %r);"
+        "from metascience.templates import generate;"
+        "print(json.dumps(generate(7, 'T6').ground_truth(), sort_keys=True))"
+        % str(root / "src")
+    )
+    outs = {subprocess.run([_sys.executable, "-c", script], capture_output=True,
+                           text=True, check=True).stdout for _ in range(3)}
+    assert len(outs) == 1, "the same seed must build the same world in every process"

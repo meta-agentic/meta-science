@@ -7,6 +7,7 @@ the position of a variable is a fingerprint.
 """
 from __future__ import annotations
 
+import hashlib
 import random
 
 from .worlds import Mechanism, Node, World
@@ -25,8 +26,18 @@ def _c(rng: random.Random, lo: float, hi: float) -> float:
     return round(rng.uniform(lo, hi), 4)
 
 
+def _stable_hash(s: str) -> int:
+    """A hash that survives leaving the process.
+
+    Python randomises str.__hash__ per interpreter (PYTHONHASHSEED), so seeding world
+    generation with the builtin made the *same seed* produce a *different world* in every
+    run — which quietly broke the one property the receipts promise, replayability.
+    """
+    return int.from_bytes(hashlib.sha256(s.encode()).digest()[:4], "big")
+
+
 def build(template_id: str, seed: int) -> World:
-    rng = random.Random(seed * 31 + hash(template_id) % 9973)
+    rng = random.Random(seed * 31 + _stable_hash(template_id) % 9973)
     fn = _BUILDERS[template_id]
     return fn(rng, seed)
 

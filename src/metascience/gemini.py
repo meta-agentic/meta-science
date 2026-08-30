@@ -8,6 +8,7 @@ enforced rather than merely stated.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import statistics as st
 import time
@@ -155,7 +156,10 @@ class GeminiProposer:
                     changes[k] = TUNABLE[k](v)
                 except (TypeError, ValueError):
                     continue        # unusable value => simply not proposed
-        name = f"gemini-{abs(hash(json.dumps(changes, sort_keys=True))) % 10000:04d}"
+        # Same reason as the world generator: a builtin hash would give the identical
+        # proposal a different name in each process, breaking receipt lineage.
+        digest = hashlib.sha256(json.dumps(changes, sort_keys=True).encode()).hexdigest()
+        name = f"gemini-{int(digest[:8], 16) % 10000:04d}"
         child = champion.child(name, **changes)
         object.__setattr__(child, "_rationale", result.get("rationale", ""))
         return child

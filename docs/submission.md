@@ -74,6 +74,13 @@ better prompt but a better receipt: the score now travels split into accuracy an
 plus an explicit noise floor below which a movement is sampling variation. It now separates
 the two cases it exists to separate.
 
+**Receipts that did not replay.** A test pinning the README's figures to the code failed
+the first time it ran, and the cause was worse than a stale number: world generation was
+seeded with Python's builtin `hash()`, which is randomised per process. The same seed built
+a different world in every run, so the replayability the receipts promise did not hold and
+a judge would have got different numbers than we published. Fixed with a stable hash, and
+determinism is now asserted in a subprocess — an in-process check cannot see it.
+
 **Proving anonymisation rather than asserting it.** Checking that banned words are absent
 is easy. The real question is whether a model can answer without experimenting. So we
 tested it adversarially — and it cannot.
@@ -97,7 +104,7 @@ the paired difference isolate the causal effect. Elegant, and a trap: with the n
 cancelled, estimates stay precise however few samples are drawn, so cutting measurement
 was free score. That is very likely why the proposer kept winning by asking for fewer
 samples. We measured both regimes: at 25 samples per arm, accuracy holds at 0.9815 paired
-and falls to 0.8287 independent. Independent noise is now the default, the extreme
+and falls to 0.8426 independent. Independent noise is now the default, the extreme
 strategy correctly loses, and the promotion the demo shows survives the harder regime.
 Both facts are asserted by tests.
 

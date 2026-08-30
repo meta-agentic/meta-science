@@ -125,8 +125,13 @@ no role is pinned to a label.
 
 ```
 $ python3 -m pytest -q
-26 passed, 4 deselected
+37 passed, 4 deselected
 ```
+
+Determinism is checked in a **subprocess**. An in-process check passed throughout
+development while `hash()` — randomised per interpreter by `PYTHONHASHSEED` — was seeding
+world generation, so the same seed silently built a different world in every run and no
+receipt actually replayed. Only a fresh process catches that.
 
 The four deselected tests make live model calls; run them with `python3 -m pytest -m slow`
 and a key. They are excluded by default because each is several round trips to a
@@ -148,16 +153,16 @@ So we measured it, on 24 held-out worlds:
 | strategy | paired: accuracy · score | independent: accuracy · score |
 |---|---|---|
 | champion, 400 samples | 0.9815 · **+0.8704** | 0.9815 · **+0.8704** |
-| frugal, 100 samples | 0.9815 · **+0.9537** | 0.9398 · **+0.9120** |
-| very lean, 25 samples | 0.9815 · **+0.9745** | 0.8287 · **+0.8218** |
+| frugal, 100 samples | 0.9815 · **+0.9537** | 0.9537 · **+0.9259** |
+| very lean, 25 samples | 0.9815 · **+0.9745** | 0.8426 · **+0.8357** |
 
 Read the accuracy columns. **Paired, accuracy does not move at all** — 0.9815 whether you
 draw 400 samples or 25 — so the leanest strategy always wins and the metric has no
 trade-off in it. Independent, accuracy degrades as measurement is cut, and the extreme
-strategy correctly **loses** to the champion (+0.8218 against +0.8704).
+strategy correctly **loses** to the champion (+0.8357 against +0.8704).
 
 **Independent noise is now the default**, and the promotion the demo shows survives it:
-+0.9120 against +0.8704, a gain of +0.0417 against a required margin of +0.02. Both facts
++0.9259 against +0.8704, a gain of +0.0555 against a required margin of +0.02. Both facts
 are asserted by tests. The point is not that we got
 it right first time — we did not. It is that the benchmark was checked against the
 possibility that it was flattering us.
@@ -178,7 +183,7 @@ kept the answers* from *spent less, lost accuracy, and the saving outran it*.
 
 ```
 PROMOTED  gemini-8986   {'samples_per_arm': (200, 400)}
-          champ +0.8704  challenger +0.9120
+          champ +0.8704  challenger +0.9259
           audit legitimate (gemini-3.5-flash-lite)
 ```
 
