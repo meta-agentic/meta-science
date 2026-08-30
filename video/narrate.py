@@ -7,57 +7,130 @@ muxed final_narrated.mp4. Speech rate is fitted per clip so the narration lands
 inside the clip's own duration.
 """
 import subprocess
+import sys
+import wave
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 OUT = Path(__file__).resolve().parent / "out"
 CAP = OUT / "captions"
-VOICE = "Samantha"
+
+# Gemini's own TTS narrates the system's own demo — and when the API is not
+# reachable, macOS `say` keeps the build reproducible offline.
+TTS_MODEL = "gemini-2.5-flash-preview-tts"
+TTS_VOICE = "Charon"
+STYLE = ("Read as a calm, confident documentary narrator. Measured pace, "
+         "no hype, slight warmth: ")
+
+
+def synthesize(text: str, out_wav: Path, clip_dur: float) -> None:
+    # Cache per clip: a .voice marker records which engine produced the wav, so a
+    # rerun only re-synthesizes clips that are missing or fell back — the free-tier
+    # TTS quota is small, and burning it on already-good audio is how a mixed-voice
+    # video happens.
+    marker = out_wav.with_suffix(".voice")
+    if out_wav.exists() and marker.exists() and marker.read_text() == "gemini":
+        return
+    import time
+    last = None
+    for attempt in range(4):
+        try:
+            _gemini_tts(text, out_wav)
+            marker.write_text("gemini")
+            break
+        except Exception as exc:  # noqa: BLE001
+            last = exc
+            if "429" in str(exc) and attempt < 3:
+                print(f"    quota — waiting 35s (attempt {attempt + 1}/4)")
+                time.sleep(35)
+            else:
+                break
+    else:
+        pass
+    if not marker.exists() or marker.read_text() != "gemini":
+        print(f"    gemini tts unavailable ({str(last)[:60]}) — falling back to say")
+        subprocess.run(["say", "-v", "Samantha", "-o", str(out_wav.with_suffix(".aiff")),
+                        text], check=True)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error",
+                        "-i", str(out_wav.with_suffix(".aiff")), str(out_wav)], check=True)
+        marker.write_text("say")
+    _fit(out_wav, clip_dur)
+
+
+def _gemini_tts(text: str, out_wav: Path) -> None:
+    if True:
+        from metascience.config import api_key, load_env
+        load_env(Path(__file__).resolve().parents[1] / ".env")
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key())
+        r = client.models.generate_content(
+            model=TTS_MODEL,
+            contents=STYLE + text,
+            config=types.GenerateContentConfig(
+                response_modalities=["AUDIO"],
+                speech_config=types.SpeechConfig(
+                    voice_config=types.VoiceConfig(
+                        prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                            voice_name=TTS_VOICE)))))
+        pcm = r.candidates[0].content.parts[0].inline_data.data
+        with wave.open(str(out_wav), "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(24000)
+            w.writeframes(pcm)
+
+
+def _fit(out_wav: Path, clip_dur: float) -> None:
+    # If the read runs longer than the clip, speed it gently rather than truncate.
+    adur = float(subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "csv=p=0", str(out_wav)], capture_output=True, text=True).stdout)
+    if adur > clip_dur - 0.3:
+        factor = min(1.3, adur / (clip_dur - 0.3))
+        fitted = out_wav.with_name(out_wav.stem + "_fit.wav")
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(out_wav),
+                        "-af", f"atempo={factor:.3f}", str(fitted)], check=True)
+        fitted.replace(out_wav)
 
 NARRATION = {
+    # Written to COMPLEMENT the slides, not read them: the screen carries the
+    # specifics; the voice carries the frame and the stakes.
     "intro":
-        "Meta-science. Every self-improvement demo shows you successes — but a system "
-        "that reports it improved is indistinguishable from one that just logs the word. "
-        "So we built the one that can refuse itself.",
+        "What would it take to trust a machine that says it made itself better? "
+        "Not a bigger claim — a smaller one, that can be checked.",
     "corpus_world":
-        "The agent is given almost nothing. Opaque labels, and two moves: observe, or "
-        "intervene. The worlds come from real science, then every recognisable surface "
-        "is stripped — so the model cannot recite a law from memory. It must discover, "
-        "because it cannot retrieve.",
+        "Start by taking everything away. No names, no context, no textbook to "
+        "remember. What is left is the only thing that cannot be faked: the "
+        "ability to find out.",
     "corpus_trap":
-        "Here is the trap. The correlation is strong, clean — and wrong. A hidden common "
-        "cause dominates the data. Reading only observations, Gemini gets zero of four "
-        "confounded worlds right. Allowed to intervene, the same loop gets four of four. "
-        "The only difference is the ability to act.",
+        "Data can be perfectly clear, and perfectly wrong. The only way past a "
+        "hidden cause is to reach into the world and move something. Reading "
+        "alone fails every time. Acting succeeds every time.",
     "corpus_refutation":
-        "Science confirms and refutes. In an ordinary world, the agent's predictions are "
-        "supported one way and refuted the other — directionality, discovered. In the "
-        "confounded world, its best hypothesis dies. Every prediction is committed before "
-        "the experiment runs; the verdict is a comparison, never an opinion.",
+        "Real science cuts both ways. Some guesses survive their experiment, "
+        "some die by it — and the machine finds out which, the hard way. It "
+        "wrote its predictions down first, so there is no taking them back.",
     "corpus_evolution":
-        "Now one level up — and here is the ghost in the shell: Gemini's own reasoning, "
-        "verbatim, as it proposes a change to its own method. The gate promoted it. An "
-        "independent auditor flagged the trade-off, on the record. The next two proposals "
-        "were refused — real improvements, under the margin. Refusing marginal gains is "
-        "what stops a system ratcheting on noise.",
+        "And here is the ghost in the shell — the model thinking about its own "
+        "method, in its own words. Its idea was good, so it passed. Its next "
+        "two ideas were also good. Not good enough. That is the whole point.",
     "corpus_evidence":
-        "None of this is an anecdote. Three hundred eighty-four recorded runs, two and a "
-        "half thousand hypotheses, and every record carries its seeds, strategy and code "
-        "commit — enough to recompute the result, not merely to read it.",
+        "None of this rests on a lucky run. Hundreds of worlds, thousands of "
+        "tests — and any of them can be re-run by anyone, from a single seed.",
     "corpus_stats":
-        "The statistics hold up. Cutting measurement fourfold keeps the same accuracy — "
-        "but cut to twenty-five samples and the variance quadruples, unless the arms "
-        "share noise, in which case the metric measures nothing. And the confounded "
-        "topologies refute nearly everything, by design. We report both.",
+        "Spend a quarter of the budget: same answers. Spend even less, and the "
+        "spread gives you away — unless the benchmark is rigged to hide it. "
+        "Ours was, once. We found it, fixed it, and published both.",
     "corpus_replication":
-        "Finally we asked the system itself whether science needs repetition. Replication "
-        "is now a knob its own evolver can tune — charged, never free. Its answer: at "
-        "equal budget, cost neutral under clean noise — and it told us exactly which "
-        "kind of world would change that answer.",
+        "In the end we asked the system the oldest question in science: do you "
+        "need repetition? It gave the statistician's answer — not here, not yet "
+        "— and told us exactly what kind of world would change its mind.",
     "outro":
-        "Built on Gemini, the Gen AI SDK, Firestore and Cloud Run. Not the first AI "
-        "scientist — the claim is narrower, and checkable: falsifiable self-improvement, "
-        "with a receipt either way. Today it does one gated turn. The architecture "
-        "exists so that a thousand turns would still be falsifiable.",
+        "One gated turn today. A thousand tomorrow — and every one of them "
+        "would still have to show a receipt. Meta-science. Free for everyone, "
+        "human or A.I.",
 }
 
 
@@ -81,11 +154,8 @@ def main() -> None:
         d = dur(clip)
         (CAP / f"{name}.txt").write_text(text + "\n")
 
-        words = len(text.split())
-        rate = max(150, min(215, int(words / max(d - 1.0, 1) * 60)))
-        aiff = CAP / f"{name}.aiff"
-        subprocess.run(["say", "-v", VOICE, "-r", str(rate), "-o", str(aiff), text],
-                       check=True)
+        aiff = CAP / f"{name}.wav"
+        synthesize(text, aiff, d)
         merged = CAP / f"{name}_narrated.mp4"
         subprocess.run(
             ["ffmpeg", "-y", "-loglevel", "error", "-i", str(clip), "-i", str(aiff),
@@ -96,7 +166,7 @@ def main() -> None:
         srt.append(f"{idx}\n{ts(t0 + 0.3)} --> {ts(t0 + d - 0.2)}\n{text}\n")
         idx += 1
         t0 += d
-        print(f"  {name:22s} clip {d:5.1f}s  rate {rate} wpm")
+        print(f"  {name:22s} clip {d:5.1f}s")
 
     (OUT / "final.srt").write_text("\n".join(srt))
     listfile = OUT / "narrated_list.txt"
