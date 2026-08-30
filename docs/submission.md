@@ -23,16 +23,16 @@ intervention, runs it, and finds out it was wrong.
 
 Then it does the same thing one level up. It proposes a change to its own
 experiment-design strategy, and that proposal is evaluated on 24 held-out worlds it has
-never seen and cannot enumerate. It is promoted
-only if it beats the incumbent strategy by a margin — and refused otherwise, with a receipt saying why.
+never seen and cannot enumerate. It is promoted only if it beats the champion by a margin — and refused otherwise,
+with a receipt saying why.
 
-In a representative run, Gemini found a genuine improvement (the same conclusions on a
-fraction of the measurement) and it was promoted. It then proposed two further
+In a representative run, Gemini found a genuine improvement — half the measurement
+for a small, audited accuracy cost — and it was promoted. It then proposed two further
 refinements that *did* score higher, and both were refused for gaining less than the
-margin. Refusing marginal gains is
-the point: it is what stops a system ratcheting forward on noise.
+margin. Refusing marginal gains is the point: it is what stops a system ratcheting
+forward on noise.
 
-One number up front: reading observations alone, Gemini recovers the causal structure of
+One number up front: reading observations alone, Gemini recovers the causal direction in
 0 of 4 confounded worlds; the same loop, allowed to intervene, recovers 4 of 4.
 
 ## How we built it
@@ -64,24 +64,23 @@ to `roles/datastore.user`.
 **We built a metric we could have gamed.** Cost initially charged the number of
 experiments, which left sample size free — so a challenger could buy accuracy by drawing
 more data and appear to have learned something. One did exactly that. Cost now charges
-total measurement, and that candidate loses. Gemini independently reached the same
-conclusion our parameter sweep did: *"accuracy is saturated, reduce measurement cost."*
+total measurement, and that candidate loses.
 
 **A silent failure that looked like an empty answer.** The model cascade caught every
 exception and moved on, so a `503 UNAVAILABLE` from `gemini-3.7-flash` surfaced as a
-model with nothing to say. Failures are now recorded, and only a transient overload is
-retried.
+model with nothing to say. Failures are now recorded, only a transient overload is retried — and the cascade
+starts at 3.6.
 
 **An auditor that flagged everything.** We added a second Gemini model to check whether
 each promotion was earned rather than gamed. It initially flagged every single
 promotion — which carries exactly as much information as flagging none. The fix was not a
-better prompt but a better receipt: the score is now reported as separate accuracy and cost components, so
-"spent less and kept the answers" is distinguishable from "spent less and lost accuracy" —
-with an explicit noise floor marking movements small enough to be sampling variation. It now separates
-the two cases it exists to separate.
+better prompt but a better receipt: the score split into its accuracy and cost parts,
+plus a noise floor below which movement is just sampling variation. "Spent less and
+kept the answers" is now distinguishable from "spent less and lost accuracy" — the two
+cases it exists to separate.
 
 **Receipts that did not replay.** A test pinning the README's figures to the code failed
-the first time it ran, and the cause was worse than a stale number: world generation was
+on its first run, for a cause worse than a stale number: world generation was
 seeded with Python's builtin `hash()`, which is randomised per process. The same seed built
 a different world in every run, so the replayability the receipts promise did not hold and
 a judge would have got different numbers than we published. Fixed with a stable hash, and
@@ -94,7 +93,7 @@ tested it adversarially — and it cannot.
 ## Accomplishments
 
 The measurement that settles the whole design — four worlds with a hidden confounder,
-scored on whether the agent recovers the true causal structure:
+scored on whether the agent recovers the true causal direction:
 
 | | confounded worlds recovered |
 |---|---|
@@ -111,7 +110,7 @@ arms of an intervention — the treated and untreated runs — share random draw
 the paired difference isolate the causal effect. Elegant, and a trap: with the noise
 cancelled, estimates stay precise however few samples are drawn, so cutting measurement
 was free score. That is very likely why the proposer kept winning by asking for fewer
-samples. We measured both regimes: at 25 samples per arm, accuracy holds at 98.2% under
+samples. We measured both regimes: at 25 samples per arm, accuracy holds at 98.1% under
 shared noise but falls to 84.3% under honest, independent noise. Independent noise is now the default, the extreme
 strategy correctly loses, and the promotion the demo shows survives the harder regime.
 Both facts are asserted by tests.
@@ -135,7 +134,7 @@ held-out set so smaller margins become measurable.
 
 ## Built with
 
-`python` · `gemini-3.6-flash` · `gemini-3.5-flash-lite` · `google-genai` (GenAI SDK) · `google-cloud-firestore` ·
+`python` · `gemini-3.6-flash` · `gemini-3.5-flash` · `gemini-3.5-flash-lite` · `google-genai` (GenAI SDK) · `google-cloud-firestore` ·
 `cloud-run` · `secret-manager` · `terraform` · `fastapi` · `docker` · `pytest`
 
 ## What we are not claiming

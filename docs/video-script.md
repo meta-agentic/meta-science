@@ -1,127 +1,54 @@
-# Demo video — script and storyboard
+# Demo video — the shipped cut
 
-**Target: 4:00.** The rubric asks for the problem, the value proposition, and live
-functionality. Two beats carry the entry: the experiment that kills the agent's own
-hypothesis, and the benchmark that refuses the agent's own improvement. Everything else
-is setup for those.
+The video is assembled from reusable clips — an intro, a corpus, an outro — each
+rendered by [`video/build.py`](../video/build.py) and narrated by Gemini TTS (voice:
+Kore) via [`video/narrate.py`](../video/narrate.py). The narration is written to
+complement the slides, not read them aloud. Final renders live in `video/final/`
+(tracked with Git LFS), subtitles in `final.srt`.
 
-Record `python3 demo.py` full-screen. It is offline and deterministic, so takes are
-repeatable. Use `--live` only if you want the Gemini call visible on camera.
+The narrator's script, clip by clip:
 
----
+## Intro — the problem
 
-## 0:00 – 0:25 · The problem
+> What would it take to trust a machine that says it made itself better? Not a bigger claim — a smaller one, that can be checked.
 
-> "Every self-improving agent demo shows you a system getting better. None of them show
-> you the system being told it didn't. And that's the only part that would prove
-> anything — because a system that *reports* it improved is indistinguishable from one
-> that logs 'improved' and changes nothing."
+## The axioms
 
-**On screen:** title card, then the terminal.
+> Every science begins with what it refuses to assume. No agent judges its own claims — derivation is not truth. Seeing is not doing — the two coincide only when confounding is absent, which is exactly what may never be assumed. And improvement only counts when it is proven, on worlds the prover cannot see. The rest is engineering.
 
----
+## A world the agent has never seen
 
-## 0:25 – 1:00 · What the agent is allowed to know
+> Start by taking everything away. No names, no context, no textbook to remember. What is left is the only thing that cannot be faked: the ability to find out.
 
-Run the demo. Stop on beat [1].
+## The trap — seeing is not doing
 
-> "This is everything the agent gets. Variables called X1 and X2. No names, no units, no
-> documentation. Two things it can do: look at the system, or reach in and change it.
->
-> The names are stripped deliberately. If I called these 'pressure' and 'volume', Gemini
-> would recognise the system and recite the law from memory — and then design experiments
-> that confirm what it had already decided. That's not discovery, it's recall."
+> Data can be perfectly clear, and perfectly wrong. The only way past a hidden cause is to reach into the world and move something. Reading alone fails every time. Acting succeeds every time.
 
----
+## Refutations, both directions
 
-## 1:00 – 1:35 · The trap
+> Real science cuts both ways. Some guesses survive their experiment, some die by it — and the machine finds out which, the hard way. It wrote its predictions down first, so there is no taking them back.
 
-Beat [2] — the correlation.
+## The ghost in the shell — gated self-evolution
 
-> "So the agent looks. And the data is unambiguous — a correlation near minus one.
-> Strong, clean, and completely wrong. There's a hidden common cause driving both
-> variables, and it's swamping the real relationship.
->
-> Any system that reasons from data alone stops here — with the sign backwards."
+> And here is the ghost in the shell — the model thinking about its own method, in its own words. Its idea was good, so it passed. Its next two ideas were also good. Not good enough. That is the whole point.
 
-**On screen:** hold on the red correlation.
+## The evidence base
 
----
+> None of this rests on a lucky run. Hundreds of worlds, thousands of tests — and any of them can be re-run by anyone, from a single seed.
 
-## 1:35 – 2:15 · The refutation
+## The statistics — and the rigged benchmark
 
-Beat [3].
+> Spend a quarter of the budget: same answers. Spend even less, and the spread gives you away — unless the benchmark is rigged to hide it. Ours was, once. We found it, fixed it, and published both.
 
-> "Now it acts. It commits a prediction first — negative, following the correlation —
-> and *then* runs the experiment.
->
-> Measured effect: strongly positive. The opposite sign. Its own experiment just killed
-> its own hypothesis.
->
-> That order matters. The prediction is written down before the experiment runs, and the
-> verdict comes from comparing the two. The model is never asked whether it was right."
+## Replication — the system answers the oldest question
 
-**On screen:** the red `REFUTED`.
+> In the end we asked the system the oldest question in science: do you need repetition? It gave the statistician's answer — not here, not yet — and told us exactly what kind of world would change its mind.
+
+## Outro — one more thing
+
+> One gated turn today. A thousand tomorrow — and every one of them would still have to show a receipt. ... One more thing. The voice you have been listening to... is Gemini. The system just narrated its own demo. Meta-science. Free for everyone — human, or A.I.
 
 ---
 
-## 2:15 – 3:00 · The measurement that settles it
-
-**On screen:** the comparison table.
-
-> "We ran that as a controlled test. Give Gemini the observations and forbid experiments:
-> it recovers the causal direction in zero out of four confounded worlds. Give the same
-> loop the ability to intervene: four out of four.
->
-> Identical worlds. The only difference is the ability to act."
-
----
-
-## 3:00 – 3:40 · The system improves itself — and is refused
-
-Beats [4] and [5].
-
-> "Now one level up. The agent proposes a change to its own experiment-design strategy.
-> Gemini proposes; it never sees the twenty-four held-out worlds, never runs the scorer,
-> and gets no say in the verdict.
->
-> First proposal: same conclusions on a quarter of the measurement. Genuinely better.
-> Promoted.
->
-> Second: refused. And notice *why* — not because it was stupid, but because it didn't
-> clear the margin. Canon didn't move. Both decisions wrote a receipt you can replay."
-
-**On screen:** hold on `REFUSED`, then `canon holds: frugal-v2`.
-
----
-
-## 3:40 – 4:00 · Close
-
-> "Built on Gemini 3.6 through the GenAI SDK, Firestore for the ledger, Cloud Run,
-> declared in Terraform.
->
-> It isn't the first AI scientist and doesn't claim to be. What it is, is a
-> self-improving system that can be checked — because it can refuse itself."
-
----
-
-## A note on the numbers
-
-**Read them off the screen, don't recite them from here.** Exact values move whenever the
-world generator changes — they already did once, when a hashing fix altered the
-constants. The *shapes* are stable and are what the narration should commit to: the
-correlation is strongly negative, the measured effect is strongly positive and of
-comparable magnitude, and the observation-only baseline is 0/4 against 4/4.
-
-At the time of writing, seed 7 gives `corr(X2, X1) = −0.961` and a measured effect of
-`+1.183`. Re-run `python3 demo.py` before recording and use whatever it prints.
-
-## Notes
-
-- **Do not oversell.** The prior-art disclaimer at the end costs eight seconds and buys
-  credibility with any judge who knows the literature.
-- **Let the refusals sit.** Two full seconds on each red verdict. They are the entry.
-- **Show the terminal, not slides.** The rubric asks for live functionality, and the
-  output is legible enough to read on screen.
-- If the mask-reveal is wanted, add after 2:15: *"That world was a confounded treatment
-  effect in disguise. The agent never saw a single domain word."*
+The reveal at the end is literal: the narration audio is synthesized by Gemini, so
+the system's own model voices the demo of the gate that refused it.

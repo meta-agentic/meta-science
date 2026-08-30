@@ -34,7 +34,7 @@ exactly when confounding is absent and that absence is what may never be assumed
 what makes discovery *cost* something. Our worlds contain
 traps where the data, read passively, is clean, strong, and points the wrong way. Only
 an agent that reaches in and moves something can recover the truth; in our measurements,
-observation alone recovers the causal structure of zero confounded worlds out of four,
+observation alone recovers the causal direction in zero confounded worlds out of four,
 and the same loop with hands recovers four of four. Knowledge that can be had by
 looking is retrieval. Knowledge that must be paid for in experiments is science.
 
