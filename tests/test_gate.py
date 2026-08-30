@@ -115,3 +115,33 @@ def test_a_moderate_efficiency_gain_still_wins():
     seeds = held_out_seeds(12)
     assert (evaluate_detailed(Strategy(samples_per_arm=100), seeds)["score"]
             > evaluate_detailed(Strategy(), seeds)["score"] + 0.02)
+
+
+def test_a_refused_candidate_is_fed_back_to_the_proposer(tmp_path):
+    """Observed live: the same refused diff proposed twice in a row.
+
+    Each proposal call is independent, so a prose note saying "it was refused" is easy
+    to ignore. The verdict has to come back as structured history.
+    """
+    from metascience.evolution import run_generation
+
+    class Recording:
+        def __init__(self):
+            self.seen, self._n = [], 0
+
+        def propose(self, champion, notes=""):
+            self._n += 1
+            return champion.child(f"c{self._n}", samples_per_arm=100 * self._n)
+
+        def remember_verdict(self, diff, gain, promoted):
+            self.seen.append((diff, promoted))
+
+    champ = Strategy()
+    ledger, gate = _gate(tmp_path, {champ.name: 0.90, "c1": 0.10, "c2": 0.99})
+    proposer = Recording()
+    champ, _ = run_generation(ledger, gate, champ, proposer, [1, 2, 3])
+    run_generation(ledger, gate, champ, proposer, [1, 2, 3])
+
+    assert len(proposer.seen) == 2, "every verdict must reach the proposer"
+    assert proposer.seen[0][1] is False and proposer.seen[1][1] is True
+    assert proposer.seen[0][0], "the refused diff must be included, not just the outcome"

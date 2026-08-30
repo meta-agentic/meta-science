@@ -117,12 +117,29 @@ class GeminiProposer:
     tune against the test it will be judged on.
     """
 
+    def __init__(self) -> None:
+        # Proposals already ruled on. Without this the model re-proposes a refused
+        # candidate verbatim — observed live, twice in a row — because each call is
+        # independent and a prose summary of "it was refused" is easy to ignore.
+        self._rejected: list[tuple[dict, float]] = []
+
+    def remember_verdict(self, diff: dict, gain: float, promoted: bool) -> None:
+        if not promoted and diff:
+            self._rejected.append((diff, gain))
+
     def propose(self, champion: Strategy, notes: str = "") -> Strategy:
+        already = ""
+        if self._rejected:
+            lines = "\n".join(
+                f"  - {json.dumps(d)} gained only {g:+.4f}" for d, g in self._rejected[-5:])
+            already = ("\nAlready proposed and REFUSED — do not repeat these, and do not "
+                       f"propose a smaller step in the same direction:\n{lines}\n")
         prompt = (
             "You are improving the experiment-design strategy of an automated scientist "
             "that discovers causal structure by intervening on unknown systems.\n\n"
             f"Current strategy: {json.dumps({k: getattr(champion, k) for k in TUNABLE})}\n"
-            f"Observed weaknesses: {notes or 'none reported'}\n\n"
+            f"Observed weaknesses: {notes or 'none reported'}\n"
+            f"{already}\n"
             "It is scored on getting causal directions right MINUS the total measurement "
             "it spends (experiments x arms x samples). Buying accuracy with more samples "
             "therefore loses. Propose ONE change that gets equal or better answers for "

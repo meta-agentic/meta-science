@@ -111,4 +111,9 @@ def run_generation(ledger, gate, champion: Strategy, proposer: Proposer,
                     "diff": challenger.diff(champion), "status": "proposed, not canon"})
     receipt = gate.consider(champion, challenger, world_seeds)
     from .ledger import PROMOTED
-    return (challenger if receipt.verdict == PROMOTED else champion), receipt
+    promoted = receipt.verdict == PROMOTED
+    # Feed the verdict back, so a refused candidate is not simply proposed again.
+    if hasattr(proposer, "remember_verdict"):
+        proposer.remember_verdict(receipt.diff, receipt.challenger_score - receipt.champion_score,
+                                  promoted)
+    return (challenger if promoted else champion), receipt
