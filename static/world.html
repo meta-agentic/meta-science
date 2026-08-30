@@ -130,8 +130,63 @@ function layers(truth) {
   return {cols, depth, edges};
 }
 
-// The observer's DAG: layered layout, radial edge trimming, bowed layer-skips,
-// distribution families with parameters under each node.
+// Auto-layout: Sugiyama-style, deliberately medium-complexity. Three passes —
+// longest-path layering (in layers()), barycenter ordering sweeps to reduce edge
+// crossings, then y-coordinate relaxation pulling each node toward the mean of its
+// neighbours with per-layer separation. Chosen over a physics simulation on purpose:
+// it is deterministic (same world, same picture — the project's replayability ethos
+// applies to diagrams too) and it completes synchronously in milliseconds, so the
+// drawing is settled at first paint, well inside any settle budget.
+function autoLayout(cols, edges, RH, PAD, H) {
+  const parentsOf = edges;
+  const childrenOf = {};
+  for (const [c, ps] of Object.entries(edges))
+    for (const p of ps) (childrenOf[p] ??= []).push(c);
+
+  // 1 · Crossing reduction: four alternating barycenter sweeps. A node moves to the
+  // average order-index of its neighbours in the adjacent layer; ties stay stable.
+  const order = cols.map(c => [...c]);
+  const idx = {};
+  const reindex = () => order.forEach(col => col.forEach((n, i) => idx[n] = i));
+  reindex();
+  const bary = (n, neigh) => {
+    const ns = (neigh[n] || []).filter(m => idx[m] !== undefined);
+    return ns.length ? ns.reduce((s, m) => s + idx[m], 0) / ns.length : idx[n];
+  };
+  for (let sweep = 0; sweep < 4; sweep++) {
+    const [start, end, step, neigh] = sweep % 2 === 0
+      ? [1, order.length, 1, parentsOf] : [order.length - 2, -1, -1, childrenOf];
+    for (let li = start; li !== end; li += step) {
+      order[li].sort((a, b) => bary(a, neigh) - bary(b, neigh) || a.localeCompare(b));
+      reindex();
+    }
+  }
+
+  // 2 · Coordinates: start from the crossing-reduced order, then 30 relaxation
+  // rounds pulling each y toward the mean of ALL neighbours, re-separating each
+  // layer after every round so nodes never overlap.
+  const y = {};
+  order.forEach(col => {
+    const free = H - PAD * 2 - col.length * RH;
+    col.forEach((n, ri) => y[n] = PAD + ri * RH + free / 2 + RH / 2);
+  });
+  for (let round = 0; round < 30; round++) {
+    for (const col of order) {
+      for (const n of col) {
+        const ns = [...(parentsOf[n] || []), ...(childrenOf[n] || [])];
+        if (ns.length)
+          y[n] += 0.4 * (ns.reduce((s, m) => s + y[m], 0) / ns.length - y[n]);
+      }
+      col.sort((a, b) => y[a] - y[b]);
+      for (let i = 1; i < col.length; i++)
+        y[col[i]] = Math.max(y[col[i]], y[col[i - 1]] + RH);
+      const over = y[col[col.length - 1]] - (H - PAD - RH / 2);
+      if (over > 0) for (const n of col) y[n] -= over * 0.5;
+    }
+  }
+  return {order, y};
+}
+
 function dagDiagram(truth) {
   const {cols, depth, edges} = layers(truth);
   const hidden = new Set(truth.hidden);
@@ -141,10 +196,10 @@ function dagDiagram(truth) {
   const CW = 170, RH = 92, PAD = 40, R = 22;
   const W = Math.max(520, cols.length * CW + PAD * 2);
   const H = Math.max(...cols.map(c => c.length)) * RH + PAD * 2 + 10;
+  const {order, y} = autoLayout(cols, edges, RH, PAD, H);
   const pos = {};
-  cols.forEach((col, ci) => col.forEach((n, ri) => {
-    const free = H - PAD * 2 - col.length * RH;
-    pos[n] = [PAD + ci * CW + 60, PAD + ri * RH + free / 2 + RH / 2];
+  order.forEach((col, ci) => col.forEach(n => {
+    pos[n] = [PAD + ci * CW + 60, y[n]];
   }));
   const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
     "aria-label": "Causal graph of the world, hidden nodes dashed"});
