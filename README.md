@@ -185,6 +185,33 @@ possibility that it was flattering us.
 
 ---
 
+## Every run is recorded as evidence
+
+The deployed service has an interactive page, but the more useful output is the data
+behind it. Each run is stored with its seeds, full strategy and code commit — enough to
+**recompute** the result, not merely read it.
+
+```bash
+python3 scripts/collect.py --worlds 48   # 384 runs, ~45s, offline, no API key
+python3 scripts/analyse.py               # the tables
+```
+
+From that study — 2,560 hypotheses across 8 arms — three results:
+
+- **Cutting measurement costs accuracy only under independent noise.** From 400 samples to
+  25 costs 5.4 accuracy points and quadruples the variance; with paired arms it costs
+  *nothing*, which is the artefact that once made this look like a free efficiency gain.
+- **83.9%** of observational priors on the confounded template are inverted by the
+  experiment that tests them.
+- Edge recovery: **recall 1.000, precision 0.786** — the agent never misses a real causal
+  edge and over-claims about one in five.
+
+`GET /export.csv` gives one row per hypothesis joined to ground truth, long format,
+straight into pandas or R. Full schema and findings in
+[docs/dataset.md](docs/dataset.md).
+
+---
+
 ## A second model audits every promotion
 
 Scoring higher is necessary and not sufficient. A challenger can score higher by
@@ -259,6 +286,8 @@ uvicorn app:app --reload --port 8080
 | `GET /discover/7` | a run, including which hypotheses its experiments killed |
 | `POST /evolve` | one generation: Gemini proposes, the gate decides |
 | `GET /receipts` | every verdict, promotions and refusals alike |
+| `GET /stats` | population figures over everything recorded |
+| `GET /export.csv` | one row per hypothesis, joined to ground truth |
 
 ---
 
