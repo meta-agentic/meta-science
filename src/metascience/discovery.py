@@ -140,3 +140,41 @@ def score_on_held_out(world: World, run: DiscoveryRun,
 
 def _mean(rows: list[dict[str, float]], key: str) -> float:
     return sum(r[key] for r in rows) / len(rows)
+
+
+def simulation_data(world: World, run: DiscoveryRun, strategy: Strategy,
+                    seed: int = 0, per_band: int = 40, max_experiments: int = 4) -> dict:
+    """The raw draws behind a run, re-derived from the same seeds.
+
+    The loop does not retain its samples; it does not need to, because every draw is
+    seeded. This replays exactly the calls run_discovery made — same seeds, same
+    order — so the data shown IS the data the run saw, guaranteed by determinism
+    rather than by having remembered it.
+
+    Bands: the observation phase, then lo/hi arms per experiment. Down-sampled to
+    `per_band` rows and capped at `max_experiments` experiments for display; the
+    caps are reported so truncation is never silent.
+    """
+    bands = []
+    obs = world.observe(strategy.samples_per_arm, seed=seed + 1)
+    bands.append({"label": "observe", "kind": "observe", "rows": obs[:per_band]})
+
+    shown = run.experiments[:max_experiments]
+    for e in shown:
+        cause = e.hypothesis.cause
+        lo_rows = world.intervene(cause, e.lo, strategy.samples_per_arm, seed=seed + 2)
+        arm_b = 0 if strategy.paired_arms else 1
+        hi_rows = world.intervene(cause, e.hi, strategy.samples_per_arm, seed=seed + 2,
+                                  arm=arm_b)
+        bands.append({"label": f"do({cause}={e.lo:g})", "kind": "lo",
+                      "cause": cause, "value": e.lo, "rows": lo_rows[:per_band]})
+        bands.append({"label": f"do({cause}={e.hi:g})", "kind": "hi",
+                      "cause": cause, "value": e.hi, "rows": hi_rows[:per_band]})
+
+    return {
+        "variables": list(world.observable),
+        "per_band": per_band,
+        "experiments_shown": len(shown),
+        "experiments_total": len(run.experiments),
+        "bands": bands,
+    }

@@ -20,7 +20,8 @@ from fastapi.responses import HTMLResponse, PlainTextResponse
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from metascience.config import load_env, model_name  # noqa: E402
-from metascience.discovery import run_discovery, score_on_held_out  # noqa: E402
+from metascience.discovery import (run_discovery, score_on_held_out,  # noqa: E402
+                                   simulation_data)
 from metascience.auditor import audit_promotion  # noqa: E402
 from metascience.evolution import (evaluate_detailed, evaluate_strategy,  # noqa: E402
                                    held_out_seeds, run_generation)
@@ -119,7 +120,8 @@ def world_inspect(seed: int) -> str:
 
 @app.get("/discover/{seed}")
 def discover(seed: int, live: bool = False, depth: int = Query(0, ge=0, le=7),
-             use_complex: bool = Query(False, alias="complex")) -> dict:
+             use_complex: bool = Query(False, alias="complex"),
+             include_data: bool = False) -> dict:
     w = _world(seed, depth, False, use_complex)
     reasoner = GeminiReasoner() if live else HeuristicReasoner()
     run = run_discovery(w, reasoner, Strategy(), seed=seed)
@@ -130,12 +132,17 @@ def discover(seed: int, live: bool = False, depth: int = Query(0, ge=0, le=7),
                            models={"reasoner": model_name() if live else "heuristic"},
                            notes=(f"depth={depth} complex={use_complex}"
                                   if (depth or use_complex) else ""))
-    return {
+    out = {
         **run.to_dict(),
         "held_out_score": held_out,
         "reasoner": "gemini" if live else "heuristic",
         "run_id": rec.run_id,
     }
+    if include_data:
+        # Re-derived from the same seeds the run used — identical by determinism,
+        # not by having been remembered. See simulation_data.
+        out["simulation"] = simulation_data(w, run, Strategy(), seed=seed)
+    return out
 
 
 @app.post("/evolve")

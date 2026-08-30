@@ -185,3 +185,74 @@ function surfaceDiagram(surface) {
   });
   return svg;
 }
+
+// laneChart — the raw draws behind a run, one lane per variable.
+//
+// Encoding: x is concatenated draw index, banded by phase (observe, then each
+// do() arm); y is the value on a per-lane scale shared across ALL bands of that
+// lane, so a shift between bands is a real shift, not a rescale. In a do() band
+// the intervened variable's dots turn orange and sit on a flat guide at the
+// pinned value — the meaning of intervention, visible in the data itself.
+// Per-lane min/max are printed on the right, because lanes deliberately do NOT
+// share a scale with each other (an exponential child would flatten every
+// other lane to a hairline).
+function laneChart(sim) {
+  const vars = sim.variables;
+  const bands = sim.bands;
+  const LANE_H = 46, GAP = 10, LAB_W = 64, VAL_W = 86, TOP = 26, DOT = 1.8;
+  const bandW = Math.max(60, Math.min(120, 640 / bands.length));
+  const W = LAB_W + bands.length * bandW + VAL_W;
+  const H = TOP + vars.length * (LANE_H + GAP) + 8;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Raw simulation draws, one lane per variable, banded by phase"});
+
+  // Per-lane range across every band, so cross-band shifts are honest.
+  const range = {};
+  for (const v of vars) {
+    let lo = Infinity, hi = -Infinity;
+    for (const b of bands) for (const r of b.rows) {
+      lo = Math.min(lo, r[v]); hi = Math.max(hi, r[v]);
+    }
+    if (hi - lo < 1e-9) { hi += 1; lo -= 1; }
+    range[v] = [lo, hi];
+  }
+
+  bands.forEach((b, bi) => {
+    const x0 = LAB_W + bi * bandW;
+    if (bi) svg.append(el("line", {x1: x0, x2: x0, y1: TOP - 8, y2: H - 6,
+      stroke: "var(--line)", "stroke-width": 1}));
+    svg.append(el("text", {x: x0 + bandW / 2, y: 14, "text-anchor": "middle",
+      class: "mech"}, b.label));
+  });
+
+  vars.forEach((v, vi) => {
+    const yTop = TOP + vi * (LANE_H + GAP);
+    const [lo, hi] = range[v];
+    const py = val => yTop + LANE_H - ((val - lo) / (hi - lo)) * LANE_H;
+    svg.append(el("text", {x: LAB_W - 10, y: yTop + LANE_H / 2 + 4,
+      "text-anchor": "end", style: "font-weight:650"}, v));
+    svg.append(el("line", {x1: LAB_W, x2: W - VAL_W, y1: yTop + LANE_H,
+      y2: yTop + LANE_H, class: "tick", stroke: "var(--line)"}));
+    svg.append(el("text", {x: W - VAL_W + 8, y: yTop + 9, class: "mech"},
+      hi.toPrecision(3)));
+    svg.append(el("text", {x: W - VAL_W + 8, y: yTop + LANE_H, class: "mech"},
+      lo.toPrecision(3)));
+
+    bands.forEach((b, bi) => {
+      const x0 = LAB_W + bi * bandW;
+      const pinned = b.cause === v;
+      if (pinned)
+        svg.append(el("line", {x1: x0 + 2, x2: x0 + bandW - 2,
+          y1: py(b.value), y2: py(b.value),
+          stroke: "var(--discordant)", "stroke-width": 1, opacity: 0.5,
+          "stroke-dasharray": "3 3"}));
+      b.rows.forEach((r, i) => {
+        const x = x0 + 3 + (i / Math.max(1, b.rows.length - 1)) * (bandW - 6);
+        svg.append(el("circle", {cx: x, cy: py(r[v]), r: DOT,
+          fill: pinned ? "var(--discordant)" : "var(--concordant)",
+          "fill-opacity": pinned ? 0.9 : 0.5}));
+      });
+    });
+  });
+  return svg;
+}

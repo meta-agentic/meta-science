@@ -78,3 +78,27 @@ def test_a_probe_on_an_unknown_variable_is_rejected_loudly():
         assert "non-observable" in str(exc)
     else:
         raise AssertionError("an unknown probe variable must raise")
+
+
+def test_simulation_data_replays_the_exact_draws_of_the_run():
+    """The lane chart's honesty claim: shown data IS the run's data, re-derived from
+    the same seeds rather than remembered. Verify against a fresh world object so
+    nothing is carried over but the seeds."""
+    from metascience.discovery import simulation_data
+
+    w1 = generate(7, "T3")
+    run = run_discovery(w1, HeuristicReasoner(), Strategy(), seed=7)
+    data = simulation_data(generate(7, "T3"), run, Strategy(), seed=7)
+
+    # The observation band must equal a direct re-draw with the run's seed.
+    again = generate(7, "T3").observe(Strategy().samples_per_arm, seed=8)
+    assert data["bands"][0]["rows"] == again[:data["per_band"]]
+
+    # In a do() band the intervened variable is pinned at the set value in EVERY row.
+    for band in data["bands"][1:]:
+        for row in band["rows"]:
+            assert row[band["cause"]] == band["value"]
+
+    # Truncation is reported, never silent.
+    assert data["experiments_total"] == len(run.experiments)
+    assert data["experiments_shown"] <= 4

@@ -98,8 +98,12 @@
     is a comparison, never a question put to the model.</p>
     <div id="trial"></div>
     <div id="revealbox" style="display:none;margin-top:1rem">
-      <button class="reveal" id="reveal">Reveal this world's hidden truth</button>
-      <span class="note">— the observer view, for the same world the agent just worked blind.</span>
+      <div class="row">
+        <button class="ghost" id="showdata">Show the simulation data</button>
+        <button class="reveal" id="reveal">Reveal this world's hidden truth</button>
+        <span class="note">— both for the same world the agent just worked blind.</span>
+      </div>
+      <div id="dataview" style="margin-top:1rem"></div>
       <div id="truthview" style="margin-top:1rem"></div>
     </div>
   </section>
@@ -186,6 +190,28 @@ $("run").onclick = async e => {
     $("revealbox").style.display = "block";
     load();
   } finally { busy(e.target, false, "Run experiments on this world"); }
+};
+
+$("showdata").onclick = async e => {
+  busy(e.target, true);
+  try {
+    const d = await get(withParams(`/discover/${seed()}`, {include_data: "true"}));
+    const sim = d.simulation;
+    const box = $("dataview");
+    box.replaceChildren();
+    box.append(laneChart(sim));
+    const note = document.createElement("p");
+    note.className = "note";
+    const more = sim.experiments_total > sim.experiments_shown
+      ? ` Showing the first ${sim.experiments_shown} of ${sim.experiments_total} experiments, ${sim.per_band} draws per band.`
+      : ` ${sim.per_band} draws per band.`;
+    note.textContent =
+      "One lane per variable, banded by phase; each lane keeps one scale across all its "
+      + "bands, so a shift between bands is a real shift. Orange dots are the intervened "
+      + "variable pinned at its do() value. Re-derived from the run's own seeds — identical "
+      + "to what the agent drew, by determinism rather than by memory." + more;
+    box.append(note);
+  } finally { busy(e.target, false, "Show the simulation data"); }
 };
 
 $("reveal").onclick = async e => {
