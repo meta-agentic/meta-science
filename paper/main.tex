@@ -1,0 +1,331 @@
+% LNCS submission — Springer Computer Science Proceedings.
+% Style rules followed from the author guidelines (Hofmann et al.):
+% abstract 70-150 words; keywords separated by middots; only two levels of
+% numbered headings, capitalized; table captions above, figure captions below;
+% displayed equations numbered (1),(2),... without section counters; citations
+% as [n]; references in Springer numbered style; American English; no page
+% numbers or running heads.
+\documentclass{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{url}
+
+\begin{document}
+
+\title{Recall or Discovery? A Falsifiable Instrument for\\
+Law Induction with Language Models}
+
+\author{Marco Vanadia}
+\institute{Independent Researcher, Warsaw, Poland\\
+\email{marco.vanadia@gmail.com}}
+
+\maketitle
+
+\begin{abstract}
+When a language model shown planetary data answers ``Kepler's first law,'' it is
+impossible to tell discovery from recall: the data is in its training set. We
+present an instrument that separates the two. Laws are induced from three kinds
+of worlds---a historical dataset (Tycho Brahe's Mars observations), synthetic
+planets propagated by a flight-dynamics service, and perturbed worlds where the
+textbook law is false---under paired blind and labeled protocols. The model
+proposes free-form mathematical expressions; a deterministic harness fits their
+constants and judges them on held-out data, split in time rather than
+interleaved, because a law is a claim about extrapolation. On sparse historical
+data, naming Mars improves prediction 3.2-fold (memorization quantified); on
+clean synthetic data the gap vanishes. Shown its own residuals, the model
+reproduces Kepler's 1602--1605 path from a near-miss harmonic to the exact
+conic. Every result carries a replayable receipt.
+\keywords{Falsifiability \and Scientific discovery \and Large language models
+\and Symbolic regression \and Memorization \and Causal inference}
+\end{abstract}
+
+
+\section{Introduction}
+
+``Self-improving agent'' and ``AI scientist'' are, as usually demonstrated,
+unfalsifiable claims: demonstrations exhibit successes, benchmarks are chosen
+after the fact, and---for famous scientific results---the conclusion is in the
+training corpus, so a correct answer carries no information about the process
+that produced it. Popper's demarcation applies to the demonstrations
+themselves~\cite{popper}: an experiment that cannot fail is empty, and an
+answer that may be recalled cannot count as discovered.
+
+This paper contributes an \emph{instrument} rather than a system: a protocol
+that measures, in the same units, how much of a language model's ``discovery''
+is inference and how much is memory. Two refusals anchor it:
+\begin{equation}
+A \vdash c \;\;\not\Rightarrow\;\; \vDash c
+\end{equation}
+no agent is the judge of its own claims---that an agent \emph{derives} a
+conclusion never entails that the conclusion \emph{holds}; and
+\begin{equation}
+P(Y \mid \mathrm{do}(X)) \;\not\equiv\; P(Y \mid X)
+\end{equation}
+seeing is not doing~\cite{pearl}---the two coincide exactly when confounding is
+absent, which is what may never be assumed. The first axiom dictates the
+architecture: the model proposes, and a deterministic harness fits, scores, and
+refuses. The second dictates the data: worlds where looking and acting
+disagree, and worlds where the remembered answer is wrong.
+
+Concretely, we make four contributions. (i)~A \textbf{law grammar}: the model
+writes an arbitrary expression over a small operator algebra with free
+constants; a parser (never \texttt{eval}) and a deterministic fitter turn the
+proposal into a falsifiable object (Sect.~\ref{sec:instrument}). (ii)~A
+\textbf{recall/inference measurement}: paired blind and labeled protocols over
+historical, synthetic, and law-breaking worlds, with a scale-invariant
+observable that anonymization cannot destroy (Sect.~\ref{sec:worlds}).
+(iii)~A \textbf{time-split judge}: laws are scored by fitting on the earliest
+observations and predicting the latest, after an interleaved holdout was shown
+to certify shapes whose futures are wrong by an order of magnitude
+(Sect.~\ref{sec:judge}). (iv)~\textbf{Measurements} (Sect.~\ref{sec:results}),
+among them: a 3.2-fold recall advantage on Tycho Brahe's Mars data that
+vanishes on clean synthetic planets; the reproduction of Kepler's
+harmonic-to-ellipse refinement in two turns of residual feedback; a one-shot
+recovery of the $T \propto a^{3/2}$ law from eight anonymized synthetic
+planets; and the first observed \emph{refusal to refine}, on residuals that
+really were noise.
+
+Everything is replayable: propagated arcs are committed with their generating
+requests, fits are deterministic, and only the proposals themselves were live.
+
+\section{Related Work}
+
+Symbolic regression discovers analytic laws from data by search: from
+evolutionary approaches~\cite{schmidt} through physics-informed methods such
+as AI~Feynman~\cite{aifeynman}, sparse regression over derivative libraries
+(SINDy)~\cite{sindy}, and modern engines such as PySR~\cite{pysr}. Our harness
+solves a smaller fitting problem than these systems; the contribution is
+orthogonal---the measurement of \emph{where a proposal comes from}. A symbolic
+regressor cannot recall Kepler; a language model can, and recent
+LLM-as-scientist systems~\cite{aiscientist} inherit exactly this ambiguity.
+Benchmark-contamination studies quantify memorization on text tasks; we
+quantify it on law induction, where a scale-invariant observable (an exponent)
+lets the same question be asked with and without the disguise.
+
+\section{The Instrument}\label{sec:instrument}
+
+\subsection{Laws as Expressions}
+
+A proposed law is a string over the grammar
+$\{\,+,-,\times,/,\ \cos,\sin,\exp,\log,\sqrt{\ },|\cdot|,\mathrm{pow},\
+\pi,\ x_1,\ c_1..c_4\,\}$, parsed by a recursive-descent parser---never
+evaluated as code---with the free constants $c_i$ fitted by the harness using
+deterministic multi-start Nelder--Mead: the same expression on the same data
+yields the same constants in every process. The model chooses the \emph{shape}
+of the law; the arithmetic belongs to the machinery. Node count is reported as
+a complexity measure alongside every score. Offering the model a menu of named
+families is itself an information leak (Sect.~\ref{sec:results}); the grammar
+replaces the menu.
+
+\subsection{Worlds}\label{sec:worlds}
+
+\textbf{Historical.} Five positions of Mars triangulated from Tycho Brahe's
+observations by the method of \emph{Astronomia Nova}~\cite{kepler}, transcribed
+to the arc-minute and verified against physics by test: the triangulation must
+land on an orbit with Mars's shape, or the transcription is refused.
+$\mathtt{intervene()}$ raises---nobody intervenes on a planet.
+
+\textbf{Synthetic.} Planets that have never existed, with seed-derived
+Keplerian elements, propagated by an Orekit-based flight-dynamics service and
+committed as fixtures with their full generating requests. Real physics, no
+textbook entry: recall is impossible by construction.
+
+\textbf{Law-breaking.} The same machinery under force models where the
+textbook answer is false: an oblate primary precesses the ellipse (no closed
+$r(\theta)$ exists), and atmospheric drag---a dissipative, non-central
+force---decays the areal rate that Kepler's second law says is constant.
+Notably, oblateness alone cannot break the second law: $J_2$ is axially
+symmetric, so equatorial angular momentum is conserved. On these worlds,
+memory is a measurable liability.
+
+\textbf{Anonymization.} Blind arms rescale both variables by arbitrary
+constants and strip all provenance. Under a power law the rescale changes only
+the prefactor: \emph{the exponent is scale-invariant}, so the disguise cannot
+leak the one number that is the discovery.
+
+\subsection{The Judge}\label{sec:judge}
+
+Every law is scored twice: on an interleaved holdout (interpolation) and by
+fitting on the earliest 60\,\% of observations and predicting the final 20\,\%
+(extrapolation). The second split exists because the first was shown to
+certify impostors: on a decaying orbit, a hyperbolic-tangent ``law'' scored
+0.06\,\% relative error interleaved and collapsed 22-fold on the time split
+(Table~\ref{tab:judge}). A law \emph{extrapolates} if its future error stays
+within $3\times$ its interleaved error \emph{or} within $10^{-3}$ of the
+data's own scale, whichever is more generous. Both bounds are necessary, and
+the second was found by the first's failure: the criterion began as a pure
+self-ratio, and the \emph{true} shape failed it---a law that interpolates
+near-perfectly can carry a future error eight times its interleaved error that
+is still 0.08\,\% of the data. A self-ratio punishes excellence. The judge's
+own first version was falsified by its calibration data, and that record is
+kept.
+
+\section{Results}\label{sec:results}
+
+All numbers replay offline from committed fixtures and receipts; only the
+proposals were live (Gemini~3.6/3.5 via typed JSON schemas, every exchange
+recorded whole: prompt, answer, answering model, timing).
+
+\subsection{Recall, Quantified}
+
+On Tycho's five points, blind and labeled arms saw identical rows and
+committed a prediction for the same held-out point before scoring
+(Table~\ref{tab:recall}). Naming Mars improved the prediction 3.2-fold. On a
+synthetic planet (138 clean points), the blind prediction error fell to
+$1.4\times10^{-4}$ of the data scale and the model could name nothing---there
+is nothing to name. Memorization is a crutch for sparse data, not a substitute
+for physics.
+
+\begin{table}
+\caption{The recall gap on Tycho Brahe's Mars data, and its disappearance on a
+synthetic planet. Identical rows per arm; predictions committed before
+scoring.}\label{tab:recall}
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+Arm & Family chosen & Claimed source & Prediction error (AU)\\
+\midrule
+Tycho, blind & focus conic & ``Keplerian orbit of a celestial body'' & 0.0575\\
+Tycho, labeled & focus conic & ``the orbit of Mars around the Sun'' & 0.0177\\
+Synthetic, blind & focus conic & (nothing to name) & 0.0002\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The Menu Is a Fingerprint}
+
+When the blind protocol offered four named families including
+$r = p/(1+e\cos\theta)$, the model said ``Keplerian'' even blind. With the
+grammar replacing the menu, the recognition vanished: the same synthetic
+planet became ``a rotating sensor measuring distance to an off-center
+target''---an orbit, described by someone who has never heard of one. The leak
+was in the offered formulas, not the data. Conversely, in the third-law
+experiment the model named ``Child--Langmuir or Kepler's third law'' from
+eight anonymized $(a, T)$ pairs---recognition \emph{earned} from a measured
+exponent, which is in the data. The instrument distinguishes leaked
+recognition from earned recognition.
+
+\subsection{Astronomia Nova in Two Turns}
+
+Free-form and blind, the model proposed
+$c_1 + c_2\cos(2\pi x_1 + c_3)$---the first-order conic, the nearly-right
+shape at which Kepler stood in 1602---leaving a $400\times$ systematic
+residual it could not see and the harness could. Shown those residuals, it
+observed their doubled frequency, matched it to ``the second-order Taylor
+expansion of the polar equation for an ellipse,'' composed
+$c_1/(1 + c_2\cos(2\pi x_1 + c_3))$, collapsed the held-out error 448-fold,
+recovered the injected eccentricity ($c_2 = 0.060$, truth $0.06$)---and only
+then said ``Keplerian orbit.'' Recognition arrived when the evidence forced
+it.
+
+\subsection{The Third Law, One Shot}
+
+Eight synthetic planets ($a \in [0.47, 2.20]$\,AU), each propagated
+$\sim$1.3 orbits; period measured by wrap time, axis by geometry---never
+injected. The log-log slope across the fleet is 1.507 before any agent looks.
+Blind, the model ran its own log-log analysis, composed
+$c_1\,\mathrm{pow}(x_1, c_2)$, and the fit returned $c_2 = 1.515$ with
+0.4\,\% relative held-out error.
+
+\subsection{The Second Law, and a Refusal}\label{sec:secondlaw}
+
+The swept-area instrument measures Kepler's conserved quantity directly:
+areal-rate drift of $-0.003\,\%$ on a two-body planet and $-0.008\,\%$ on a
+two-body low orbit (the law, measured), against $-1.107\,\%$ under
+atmospheric drag (the law, broken)---140$\times$ the control's drift with one
+force-model field changed. Under the time-split judge (Table~\ref{tab:judge}),
+the model's saturating proposals from an early run are refused, a rational
+shape whose second-order expansion contains the true behavior is certified,
+and---shown residuals that really were noise---the model \emph{declined to
+refine}: ``oscillatory behavior without a clear systematic trend.'' A system
+that can only ever refine cannot be trusted when it does; the refusal is what
+makes the refinements informative.
+
+\begin{table}
+\caption{The time-split judge on the drag world. Interleaved holdout certifies
+shapes whose futures are wrong; the two-bound verdict does not.}\label{tab:judge}
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Candidate & Interleaved & Future & Penalty & Extrapolates\\
+\midrule
+True shape ($c_1 x_1 - c_2 x_1^2$) & 0.00048 & 0.0039 & 8.1 & yes\\
+Naive linear & 0.00527 & 0.0218 & 4.1 & no\\
+Saturating (tanh) & 0.00563 & 0.0881 & 15.6 & no\\
+Saturating (capacitor) & 0.03124 & 0.1962 & 6.3 & no\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Limitations}
+
+Every live arm is $n{=}1$: the variance of one-shot proposals is unmeasured,
+and all proposals come from one model family. The judge certifies
+extrapolation over the recorded horizon only---the rational shape of
+Sect.~\ref{sec:secondlaw} has a wrong asymptote twenty windows past the data,
+where no finite evidence reaches; a law survives its tests and is never proven
+by them. The propagation service's heliocentric clock runs a consistent
+$13.06\times$ fast (an effective $\mu \approx 170\times$ solar); exponents
+survive, constants do not, and the defect is pinned by test rather than
+hidden. Anonymizing \emph{time} remains open for real datasets: our synthetic
+elapsed times carry no identity, but Tycho's dates would. Finally, comparisons
+against symbolic-regression baselines are future work; the instrument, not the
+fitter, is the contribution.
+
+\section{Conclusion}
+
+The question ``can a language model do science?'' is unanswerable while
+discovery and recall are indistinguishable. We built the scale that weighs
+them apart, calibrated it on the one dataset where memorization is guaranteed,
+and watched the needle move: 3.2-fold on sparse famous data, nothing on clean
+anonymous data, negative where the textbook is wrong. Along the way the
+instrument disciplined its own builders---the judge's first criterion was
+falsified by its own calibration and the corrected version kept the record of
+its failure. \emph{Ex probatione propria non sequitur veritas}: from one's own
+proving, truth does not follow. Including ours.
+
+\subsubsection*{Acknowledgements.} The system described here was built
+meta-agentically: an AI pair-engineer proposing at speed, a human judging,
+refusing, and redirecting---neither trusted as the judge of its own claims.
+
+\begin{thebibliography}{9}
+% NOTE: verify every entry against the actual editions before submission.
+\bibitem{popper}
+Popper, K.: Logik der Forschung. Julius Springer, Vienna (1934). English
+edition: The Logic of Scientific Discovery. Hutchinson, London (1959)
+
+\bibitem{pearl}
+Pearl, J.: Causality: Models, Reasoning, and Inference. 2nd edn. Cambridge
+University Press, Cambridge (2009)
+
+\bibitem{kepler}
+Kepler, J.: Astronomia Nova. Heidelberg (1609)
+
+\bibitem{schmidt}
+Schmidt, M., Lipson, H.: Distilling free-form natural laws from experimental
+data. Science 324(5923), 81--85 (2009)
+
+\bibitem{aifeynman}
+Udrescu, S.-M., Tegmark, M.: AI Feynman: a physics-inspired method for
+symbolic regression. Science Advances 6(16), eaay2631 (2020)
+
+\bibitem{sindy}
+Brunton, S.L., Proctor, J.L., Kutz, J.N.: Discovering governing equations from
+data by sparse identification of nonlinear dynamical systems. PNAS 113(15),
+3932--3937 (2016)
+
+\bibitem{pysr}
+Cranmer, M.: Interpretable machine learning for science with PySR and
+SymbolicRegression.jl. arXiv:2305.01582 (2023)
+
+\bibitem{aiscientist}
+Lu, C., Lu, C., Lange, R.T., Foerster, J., Clune, J., Ha, D.: The AI
+Scientist: towards fully automated open-ended scientific discovery.
+arXiv:2408.06292 (2024)
+\end{thebibliography}
+
+\end{document}

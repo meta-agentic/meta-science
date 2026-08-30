@@ -1,0 +1,32 @@
+name: paper
+
+on:
+  push:
+    branches: [article]
+    paths: ["paper/**", ".github/workflows/paper.yml"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # llncs.cls is Springer's class file, freely provided to authors but not
+      # ours to redistribute inside a GPL repository — fetched at build time.
+      - name: Fetch the LNCS class
+        working-directory: paper
+        run: |
+          curl -fsSL -o llncs.zip https://mirrors.ctan.org/macros/latex/contrib/llncs.zip
+          unzip -j llncs.zip "llncs/llncs.cls" -d .
+
+      - name: Compile
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper/main.tex
+          work_in_root_file_dir: true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper-pdf
+          path: paper/main.pdf
