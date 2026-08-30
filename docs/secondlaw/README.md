@@ -83,6 +83,37 @@ data's own scale ([verdicts](judge-verdicts.json), pinned by test):
 | Gemini r2 (tanh) | 0.00563 | 0.08811 | 15.6 | no |
 | Gemini r1 (capacitor) | 0.03124 | 0.19622 | 6.3 | no |
 
+## The re-run under the judge (trace: [`1788129198-secondlaw.json`](1788129198-secondlaw.json))
+
+Same protocol, scored through `laws.judge()` — and all four cells moved:
+
+**Arm A, round 1** — the identical sine-in-disguise as the first run (deterministic
+fit, same constants), but now the verdict exposes on sight what the old scorer could
+not: interleaved 0.011 looks healthy, future error 0.109, penalty 9.6 —
+**extrapolates: False**. Round 2's repair (adding the linear term) passes through the
+absolute floor exactly as designed: a 39× self-ratio on a 4×10⁻⁵ interpolation is
+excellence, not overfitting.
+
+**Arm B, round 1** — a different and better proposal this time: the rational shape
+`x1/(c1 + c2·x1 + c3·x1²)` ("enzyme kinetics, Haldane/Andrews"). Expanded to second
+order this *contains* the true linear-minus-quadratic behaviour, and the judge
+certifies it: interleaved 0.0001, future 0.0014, **extrapolates: True** — a 60×
+better future error than the previous run's tanh, which the judge would have refused.
+
+**Arm B, round 2 — the first observed "keep."** Shown its residuals, the model
+declined to refine: *"oscillatory behaviour without a clear systematic trend,
+indicating they are measurement noise."* Correct — and the refusal option is what
+makes every refinement elsewhere informative. In the first run the model changed its
+law in all four opportunities; under this run's protocol it held when holding was
+right.
+
+One honest boundary: the judge certifies extrapolation over the recorded horizon,
+not to infinity — the rational shape's far asymptote (a decaying sweep) is wrong
+beyond x1 ≈ 44, twenty times past the data window, where no finite evidence reaches.
+A law survives its tests; it is never proven by them. The claimed sources, as ever,
+wandered (pendulum → rolling wheel; Haldane → Langmuir): the mathematics converges
+long before the physics naming does.
+
 ## Standing caveats
 
 n=1 per arm, one model family, and the anonymisation-of-time problem remains open for
