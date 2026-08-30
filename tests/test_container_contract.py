@@ -128,3 +128,10 @@ def test_the_agent_surface_route_stays_clean_with_compounds(cloud_run_env):
     blob = _json.dumps(surface).lower()
     for word in ("edge", "mechanism", "exponential", "multiplicative", "hidden"):
         assert word not in blob
+
+
+def test_the_inspector_is_discoverable_from_the_landing_page():
+    """Shipping a page nobody can find is not delivering it: a judge starts at the
+    root URL, not in the README."""
+    assert "/world/7/inspect" in (ROOT / "static" / "index.html").read_text()
+    assert "/world/7/inspect" in (ROOT / "static" / "evidence.html").read_text()
