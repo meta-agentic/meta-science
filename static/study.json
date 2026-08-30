@@ -1,13 +1,13 @@
 {
   "provenance": {
     "schema_version": 1,
-    "git_commit": "0cf09c9c108a",
+    "git_commit": "451ea401e718",
     "image": "local",
     "python": "3.13.7",
     "models": {
       "reasoner": "heuristic"
     },
-    "recorded_at": 1788075263.5318542,
+    "recorded_at": 1788078247.113616,
     "records": 384
   },
   "accuracy_by_arm": {
