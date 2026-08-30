@@ -81,3 +81,26 @@ def test_the_landing_page_makes_no_external_requests(cloud_run_env):
     html = (ROOT / "static" / "index.html").read_text()
     for scheme in ("http://", "https://", "//cdn", "//unpkg", "//fonts."):
         assert scheme not in html, f"external reference found: {scheme}"
+
+
+def test_the_frozen_study_ships_with_the_image():
+    """/evidence renders from static/study.json; a missing artifact 500s in production
+    while every code path works. It must exist, parse, and carry its provenance."""
+    import json
+    study = json.loads((ROOT / "static" / "study.json").read_text())
+    assert study["provenance"]["git_commit"] != "unknown"
+    assert not study["provenance"]["git_commit"].endswith("-dirty"), \
+        "the shipped study must be generated from committed code"
+    for key in ("accuracy_by_arm", "refutation_by_template",
+                "confounded_priors", "edge_recovery"):
+        assert key in study
+
+
+def test_the_evidence_page_is_self_contained(cloud_run_env):
+    html = (ROOT / "static" / "evidence.html").read_text()
+    for scheme in ("http://cdn", "https://cdn", "//unpkg", "//fonts.", "https://ajax"):
+        assert scheme not in html
+    from fastapi.testclient import TestClient
+    c = TestClient(cloud_run_env.app)
+    assert c.get("/evidence").status_code == 200
+    assert c.get("/static/study.json").status_code == 200

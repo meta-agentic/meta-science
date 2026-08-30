@@ -1,0 +1,307 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>meta-science · evidence</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  .viz-root{
+    color-scheme:light;
+    --surface-1:#fcfcfb; --line:#e4e4e7;
+    --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#8a8983;
+    --concordant:#2a78d6;   /* agrees with ground truth */
+    --discordant:#eb6834;   /* refuted · inverted · over-claimed */
+  }
+  @media (prefers-color-scheme:dark){
+    :root:where(:not([data-theme="light"])) .viz-root{
+      color-scheme:dark;
+      --surface-1:#1a1a19; --line:#33322f;
+      --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8a8983;
+      --concordant:#3987e5; --discordant:#d95926;
+    }
+  }
+  :root[data-theme="dark"] .viz-root{
+    color-scheme:dark;
+    --surface-1:#1a1a19; --line:#33322f;
+    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8a8983;
+    --concordant:#3987e5; --discordant:#d95926;
+  }
+  body{margin:0}
+  .viz-root{background:var(--surface-1);color:var(--ink-1);
+    font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif;min-height:100vh}
+  main{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+  h1{font-size:1.7rem;margin:0 0 .3rem;letter-spacing:-.02em}
+  .lede{color:var(--ink-2);margin:0 0 .5rem;max-width:46rem}
+  .prov{color:var(--ink-3);font-size:.8rem;margin:0 0 2.2rem}
+  .prov code{font:12px ui-monospace,Menlo,monospace}
+  figure{margin:0 0 2.8rem;padding:0}
+  figcaption h2{font-size:1.05rem;margin:0 0 .2rem;font-weight:650}
+  figcaption .sub{color:var(--ink-2);font-size:.9rem;margin:0 0 .9rem}
+  figcaption .method{color:var(--ink-3);font-size:.8rem;margin:.7rem 0 0;max-width:46rem}
+  svg{display:block;max-width:100%;height:auto}
+  svg text{font:12px ui-sans-serif,system-ui,sans-serif;fill:var(--ink-2)}
+  svg .val{fill:var(--ink-1);font-weight:600}
+  svg .tick{stroke:var(--line);stroke-width:1}
+  svg .axis{fill:var(--ink-3);font-size:11px}
+  .legend{display:flex;gap:1.2rem;font-size:.83rem;color:var(--ink-2);margin:.15rem 0 .5rem}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:.4rem}
+  .live{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.5rem}
+  .live h2{font-size:.95rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+  .stat{display:inline-block;margin:0 2rem .5rem 0}
+  .stat b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
+  .stat span{color:var(--ink-2);font-size:.8rem}
+  .note{color:var(--ink-3);font-size:.82rem}
+  a{color:var(--concordant)}
+  #tip{position:fixed;pointer-events:none;background:var(--ink-1);color:var(--surface-1);
+    padding:.3rem .55rem;border-radius:6px;font-size:.78rem;opacity:0;transition:opacity .12s}
+</style>
+<div class="viz-root"><main>
+  <h1>The evidence</h1>
+  <p class="lede">Four figures from the frozen study — 384 recorded runs, 2,560 hypotheses,
+  eight arms over 48 worlds, heuristic ranker throughout so anyone can regenerate it
+  without credentials. Design reasoning in
+  <a href="https://github.com/meta-agentic/meta-science/blob/main/docs/viz-rationale.md">docs/viz-rationale.md</a>.</p>
+  <p class="prov" id="prov">loading study…</p>
+
+  <figure id="f1">
+    <figcaption>
+      <h2>1 · Cutting measurement costs accuracy — only under independent noise</h2>
+      <p class="sub">Held-out direction accuracy per world. Each dot is one world (n=48 per arm);
+      the heavy tick is the arm mean.</p>
+    </figcaption>
+    <div class="legend">
+      <span><i style="background:var(--concordant)"></i>independent noise</span>
+      <span><i style="background:var(--discordant)"></i>paired arms (noise shared)</span>
+    </div>
+    <div id="c1"></div>
+    <p class="method">Axis runs 0.4–1.0 (disclosed; dots are point encodings, not lengths).
+    Strip plot rather than a bar of means because the finding is the variance: lean-25 drops
+    the mean and quadruples the spread — unless the arms share noise, in which case cutting
+    samples is invisibly free and the metric measures nothing.</p>
+  </figure>
+
+  <figure id="f2">
+    <figcaption>
+      <h2>2 · The confounded worlds refute nearly everything</h2>
+      <p class="sub">Hypotheses refuted by the experiment that tested them, by world topology.</p>
+    </figcaption>
+    <div id="c2"></div>
+    <p class="method">Sorted by rate; length on a common scale from a zero baseline.
+    The two confounded topologies were built to punish observational priors, and do.</p>
+  </figure>
+
+  <figure id="f3">
+    <figcaption>
+      <h2>3 · On the sign-inverting worlds, observation points the wrong way</h2>
+      <p class="sub" id="f3sub"></p>
+    </figcaption>
+    <div id="c3"></div>
+    <p class="method">Population: sign-carrying hypotheses on template T6 across the study.
+    Two parts, so the whole comparison is one boundary — a single 100% bar.</p>
+  </figure>
+
+  <figure id="f4">
+    <figcaption>
+      <h2>4 · The agent never misses a real edge — and over-claims one in five</h2>
+      <p class="sub" id="f4sub"></p>
+    </figcaption>
+    <div id="c4"></div>
+    <p class="method">Raw counts, zero baseline; precision and recall are annotations,
+    not bars — the ratios are derived, the counts are the evidence. The empty
+    false-negative segment <em>is</em> the recall result.</p>
+  </figure>
+
+  <section class="live">
+    <h2>Live ledger — separate from the study</h2>
+    <div id="livestats"><span class="note">loading…</span></div>
+    <p class="note">Totals only, no rates: a live denominator changes under the reader.
+    The figures above never include these runs. Raw data:
+    <a href="/export.csv">CSV</a> · <a href="/experiments">JSON</a> · <a href="/stats">stats</a></p>
+  </section>
+<div id="tip"></div></main></div>
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const css = v => getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(v).trim();
+const el = (name, attrs, text) => {
+  const n = document.createElementNS(NS, name);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (text != null) n.textContent = text;
+  return n;
+};
+const tip = document.getElementById("tip");
+const hover = (node, text) => {
+  node.addEventListener("mousemove", e => {
+    tip.textContent = text; tip.style.opacity = 1;
+    tip.style.left = (e.clientX + 12) + "px"; tip.style.top = (e.clientY - 30) + "px";
+  });
+  node.addEventListener("mouseleave", () => tip.style.opacity = 0);
+};
+
+// Deterministic jitter so the page renders identically on every load — same
+// discipline as the worlds themselves.
+const jitter = i => ((i * 2654435761 % 97) / 97 - 0.5);
+
+function fig1(d) {
+  const arms = [
+    ["champion",        "champion · 400 samples",  false],
+    ["frugal-100",      "frugal · 100",            false],
+    ["lean-25",         "lean · 25",               false],
+    ["paired-champion", "paired champion · 400",   true],
+    ["paired-lean-25",  "paired lean · 25",        true],
+  ];
+  const W = 760, ROW = 54, L = 190, R = 70, T = 18;
+  const H = T + arms.length * ROW + 34;
+  const x = v => L + (v - 0.4) / 0.6 * (W - L - R);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Strip plot of held-out accuracy for five strategy arms"});
+  for (const t of [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]) {
+    svg.append(el("line", {x1: x(t), x2: x(t), y1: T, y2: H - 30, class: "tick"}));
+    svg.append(el("text", {x: x(t), y: H - 14, "text-anchor": "middle", class: "axis"}, t.toFixed(1)));
+  }
+  arms.forEach(([key, label, paired], r) => {
+    const a = window.STUDY.accuracy_by_arm[key];
+    if (!a) return;
+    const cy = T + r * ROW + ROW / 2;
+    const color = paired ? css("--discordant") : css("--concordant");
+    svg.append(el("text", {x: L - 12, y: cy + 4, "text-anchor": "end"}, label));
+    a.values.forEach((v, i) => {
+      const dot = el("circle", {cx: x(v), cy: cy + jitter(i) * 26, r: 4.5,
+        fill: color, "fill-opacity": 0.55});
+      hover(dot, `${label}: ${v}`);
+      svg.append(dot);
+    });
+    const m = el("line", {x1: x(a.mean), x2: x(a.mean), y1: cy - 16, y2: cy + 16,
+      stroke: css("--ink-1"), "stroke-width": 2.5});
+    hover(m, `mean ${a.mean} · sd ${a.sd} · n ${a.n}`);
+    svg.append(m);
+    svg.append(el("text", {x: W - R + 8, y: cy + 4, class: "val"}, a.mean.toFixed(3)));
+  });
+  document.getElementById("c1").append(svg);
+}
+
+function fig2(d) {
+  const names = {T1: "T1 · multiplicative", T2: "T2 · exponential", T3: "T3 · transport chain",
+    T4: "T4 · saturating", T5: "T5 · hidden common cause", T6: "T6 · sign inversion"};
+  const conf = new Set(["T5", "T6"]);
+  const rows = Object.entries(d).sort((a, b) => b[1].rate - a[1].rate);
+  const W = 760, ROW = 44, L = 220, R = 150, T = 8;
+  const H = T + rows.length * ROW + 30;
+  const x = v => L + v * (W - L - R);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Refutation rate by world template, sorted"});
+  rows.forEach(([tid, v], r) => {
+    const cy = T + r * ROW + ROW / 2;
+    svg.append(el("text", {x: L - 12, y: cy + 4, "text-anchor": "end"}, names[tid] || tid));
+    const bar = el("rect", {x: x(0), y: cy - 11, width: x(v.rate) - x(0), height: 22,
+      rx: 4, fill: css("--discordant")});
+    hover(bar, `${v.refuted} of ${v.tested} refuted`);
+    svg.append(bar);
+    svg.append(el("text", {x: x(v.rate) + 8, y: cy + 4, class: "val"},
+      `${(v.rate * 100).toFixed(1)}%`));
+    svg.append(el("text", {x: x(v.rate) + 62, y: cy + 4, class: "axis"},
+      `${v.refuted}/${v.tested}`));
+    if (conf.has(tid))
+      svg.append(el("text", {x: x(0) + 8, y: cy + 4, fill: "#fff",
+        style: "font-size:10.5px;font-weight:600"}, "confounded"));
+  });
+  document.getElementById("c2").append(svg);
+}
+
+function fig3(d) {
+  const total = d.inverted + d.confirmed;
+  document.getElementById("f3sub").textContent =
+    `${d.inverted} of ${total} observational priors were inverted by the experiment ` +
+    `that tested them — ${(d.inverted / total * 100).toFixed(1)}%.`;
+  const W = 760, H = 86, L = 8, R = 8;
+  const x = v => L + v / total * (W - L - R);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Share of observational priors inverted versus confirmed"});
+  const inv = el("rect", {x: x(0), y: 18, width: x(d.inverted) - x(0) - 2, height: 34,
+    rx: 4, fill: css("--discordant")});
+  hover(inv, `${d.inverted} priors inverted`);
+  const conf = el("rect", {x: x(d.inverted) + 2, y: 18, width: x(total) - x(d.inverted) - 2,
+    height: 34, rx: 4, fill: css("--concordant")});
+  hover(conf, `${d.confirmed} priors confirmed`);
+  svg.append(inv, conf);
+  svg.append(el("text", {x: x(0) + 10, y: 40, fill: "#fff",
+    style: "font-weight:650"}, `inverted · ${d.inverted}`));
+  svg.append(el("text", {x: x(total) - 10, y: 40, fill: "#fff", "text-anchor": "end",
+    style: "font-weight:650"}, `confirmed · ${d.confirmed}`));
+  svg.append(el("text", {x: x(0), y: 72, class: "axis"}, "0%"));
+  svg.append(el("text", {x: x(total), y: 72, "text-anchor": "end", class: "axis"}, "100%"));
+  document.getElementById("c3").append(svg);
+}
+
+function fig4(d) {
+  const champN = window.STUDY.accuracy_by_arm.champion.n;
+  document.getElementById("f4sub").textContent =
+    `Champion arm only (${champN} runs): precision ${d.precision.toFixed(3)} · recall ${d.recall.toFixed(3)}.`;
+  const rows = [
+    ["edges the agent claimed", [["true", d.true_pos, "--concordant"],
+                                 ["false", d.false_pos, "--discordant"]],
+     `precision ${d.precision}`],
+    ["real edges in the worlds", [["found", d.true_pos, "--concordant"],
+                                  ["missed", d.false_neg, "--discordant"]],
+     `recall ${d.recall.toFixed(3)}`],
+  ];
+  const max = d.true_pos + d.false_pos;
+  const W = 760, ROW = 58, L = 210, R = 170, T = 8;
+  const H = T + rows.length * ROW + 26;
+  const x = v => L + v / max * (W - L - R);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Edge recovery counts against hidden ground truth"});
+  rows.forEach(([label, parts, metric], r) => {
+    const cy = T + r * ROW + ROW / 2;
+    svg.append(el("text", {x: L - 12, y: cy + 4, "text-anchor": "end"}, label));
+    let acc = 0;
+    parts.forEach(([name, count, color]) => {
+      if (count === 0) return;
+      const bar = el("rect", {x: x(acc) + (acc ? 2 : 0), y: cy - 12,
+        width: x(acc + count) - x(acc) - (acc ? 2 : 0), height: 24, rx: 4,
+        fill: css(color)});
+      hover(bar, `${count} ${name}`);
+      svg.append(bar);
+      const segW = x(acc + count) - x(acc);
+      if (segW >= 70) {
+        svg.append(el("text", {x: (x(acc) + x(acc + count)) / 2, y: cy + 4, fill: "#fff",
+          "text-anchor": "middle", style: "font-size:11px;font-weight:650"},
+          `${name} ${count}`));
+      } else {
+        // Too narrow for an interior label: annotate above the segment in ink, so
+        // nothing collides with the metric annotation on the right.
+        svg.append(el("text", {x: (x(acc) + x(acc + count)) / 2, y: cy - 18,
+          "text-anchor": "middle", style: "font-size:11px"}, `${name} ${count}`));
+      }
+      acc += count;
+    });
+    if (parts[1][1] === 0)
+      svg.append(el("text", {x: x(acc) + 8, y: cy + 4, class: "axis"}, "0 missed"));
+    svg.append(el("text", {x: W - 10, y: cy + 4, class: "val",
+      "text-anchor": "end"}, metric));
+  });
+  document.getElementById("c4").append(svg);
+}
+
+async function main() {
+  const s = await (await fetch("/static/study.json")).json();
+  window.STUDY = s;
+  const p = s.provenance;
+  document.getElementById("prov").innerHTML =
+    `Frozen study · ${p.records} runs · code <code>${p.git_commit}</code> · ` +
+    `regenerate with <code>scripts/collect.py && scripts/analyse.py --json</code>`;
+  fig1(s.accuracy_by_arm);
+  fig2(s.refutation_by_template);
+  fig3(s.confounded_priors);
+  fig4(s.edge_recovery);
+  try {
+    const live = await (await fetch("/stats")).json();
+    const cell = (v, l) => `<div class="stat"><b>${v ?? "—"}</b><span>${l}</span></div>`;
+    document.getElementById("livestats").innerHTML =
+      cell(live.records, "runs recorded") + cell(live.hypotheses_tested, "hypotheses") +
+      cell(live.hypotheses_refuted, "refuted") + cell(live.promotions, "promotions") +
+      cell(live.refusals, "refusals");
+  } catch {
+    document.getElementById("livestats").innerHTML =
+      '<span class="note">live ledger unavailable</span>';
+  }
+}
+main();
+</script>

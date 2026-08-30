@@ -50,6 +50,18 @@ def index() -> str:
     return page.read_text(encoding="utf-8")
 
 
+@app.get("/evidence", response_class=HTMLResponse)
+def evidence() -> str:
+    """The frozen study, presented. Renders from static/study.json, not the live ledger."""
+    return (Path(__file__).parent / "static" / "evidence.html").read_text(encoding="utf-8")
+
+
+@app.get("/static/study.json")
+def study_json() -> dict:
+    import json as _json
+    return _json.loads((Path(__file__).parent / "static" / "study.json").read_text())
+
+
 @app.get("/health")
 def health() -> dict:
     """Not /healthz: Google's frontend intercepts that path and returns its own 404."""
