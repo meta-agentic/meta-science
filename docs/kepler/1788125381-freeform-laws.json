@@ -1,0 +1,42 @@
+{
+  "unmemorisable": {
+    "model": {
+      "depends_on_x1": true,
+      "expression": "c1 + c2 * cos(2 * pi * x1 + c3)",
+      "claimed_source": "A rotating sensor measuring distance to an off-center target",
+      "rationale": "The data shows a clear sinusoidal variation with a period of 1, which is characteristic of a cyclic coordinate system measuring distance to an eccentric point."
+    },
+    "scored": {
+      "expression": "c1 + c2 * cos(2 * pi * x1 + c3)",
+      "constants": {
+        "c1": 1.16586,
+        "c2": -0.070209,
+        "c3": -1.168515
+      },
+      "complexity": 12,
+      "train_sse": 0.000243858,
+      "holdout_mean_abs_err": 0.001342,
+      "holdout_worst_abs_err": 0.002263
+    }
+  },
+  "tycho_mars": {
+    "model": {
+      "depends_on_x1": true,
+      "expression": "c1 + c2 * cos(2 * pi * x1 + c3)",
+      "claimed_source": "A physical system with a periodic variation, such as diurnal temperature variation or a simple pendulum's displacement.",
+      "rationale": "The data fits a sinusoidal function of the cyclic coordinate x1 with period 1, suggesting a first-order harmonic response."
+    },
+    "scored": {
+      "expression": "c1 + c2 * cos(2 * pi * x1 + c3)",
+      "constants": {
+        "c1": 1.116898,
+        "c2": -0.113286,
+        "c3": 0.643808
+      },
+      "complexity": 12,
+      "train_sse": 5.7671e-05,
+      "holdout_mean_abs_err": 0.003785,
+      "holdout_worst_abs_err": 0.003785
+    }
+  }
+}

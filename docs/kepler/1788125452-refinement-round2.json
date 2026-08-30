@@ -1,0 +1,32 @@
+{
+  "round1": {
+    "expression": "c1 + c2 * cos(2 * pi * x1 + c3)",
+    "constants": {
+      "c1": 1.16586,
+      "c2": -0.070209,
+      "c3": -1.168515
+    },
+    "complexity": 12,
+    "train_sse": 0.000243858,
+    "holdout_mean_abs_err": 0.001342,
+    "holdout_worst_abs_err": 0.002263
+  },
+  "round2_model": {
+    "depends_on_x1": true,
+    "expression": "c1 / (1 + c2 * cos(2 * pi * x1 + c3))",
+    "claimed_source": "Keplerian orbit",
+    "rationale": "The systematic residual has a frequency twice that of the fundamental, and its phase relative to the first harmonic matches the second-order Taylor expansion of the polar equation for an ellipse (distance as a function of true anomaly)."
+  },
+  "round2_scored": {
+    "expression": "c1 / (1 + c2 * cos(2 * pi * x1 + c3))",
+    "constants": {
+      "c1": 1.163795,
+      "c2": -0.060001,
+      "c3": -4.310965
+    },
+    "complexity": 14,
+    "train_sse": 1e-09,
+    "holdout_mean_abs_err": 3e-06,
+    "holdout_worst_abs_err": 6e-06
+  }
+}

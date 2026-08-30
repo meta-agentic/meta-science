@@ -107,6 +107,42 @@ inference is essentially perfect and recall adds nothing; on four noisy historic
 points, naming Mars was worth 3.2×. Memorisation is a crutch for sparse data, not a
 substitute for physics — which is a publishable sentence, and now a measured one.
 
+## The law language: composing mathematics, not choosing from a menu
+
+The family menu had two faults — the agent could not express a law we had not
+anticipated, and the menu itself was a fingerprint. `laws.py` removes it: a law is
+now a free-text expression over a small grammar (`+ - * /`, `cos sin exp log sqrt
+abs pow`, numbers, `pi`, `x1`, free constants `c1..c4`), parsed by a recursive-descent
+parser — never `eval` — with the constants fitted deterministically by the harness
+and the result judged on a held-out split. The agent chooses the *shape*; the
+machinery does the arithmetic. Complexity (node count) is reported alongside error,
+ready for a gate to charge it the way the strategy gate charges measurement.
+
+Three live results, in the order they happened
+([free-form record](kepler/1788125381-freeform-laws.json),
+[refinement record](kepler/1788125452-refinement-round2.json)):
+
+**1. Remove the menu and "Keplerian" vanishes.** Free-form on the unmemorisable
+planet, the model proposed the cosine and called the source *"a rotating sensor
+measuring distance to an off-center target"* — an orbit, described by someone who
+has never heard of one. On Tycho's Mars: *"diurnal temperature variation or a
+pendulum."* The earlier menu-leak hypothesis is confirmed experimentally: the
+recognition lived in the offered formulas, not in the data.
+
+**2. Free-form, the model stops where Kepler stood in 1602.** Both probes composed
+`c1 + c2·cos(2πx1 + c3)` — the first-order conic, the nearly-right shape — and the
+harness measured the gap the model could not see: holdout 0.001342 against the true
+conic's 3×10⁻⁶, a 400× systematic residual. The modern echo of the eight arc-minutes.
+
+**3. Shown its own residuals, it finds the ellipse.** Round two fed back the pattern
+of measured-minus-predicted. The model observed the residual's doubled frequency,
+matched it to *"the second-order Taylor expansion of the polar equation for an
+ellipse,"* composed `c1/(1 + c2·cos(2πx1 + c3))` itself, collapsed the holdout error
+448×, recovered the injected eccentricity in its fitted constants — and only then
+said "Keplerian orbit." Recognition arrived when the evidence forced it, which is
+the only arrival this project respects. *Astronomia Nova*, reproduced as a two-turn
+propose-refute-refine loop.
+
 ## What this is not
 
 Not part of the hackathon submission's frozen claims — it lives on a branch, one live
