@@ -88,6 +88,23 @@ correlation carries the opposite sign to its true causal effect.
 An agent that only looks at data concludes the opposite of the truth. Only intervention
 recovers it — which is the entire argument for autonomy, made unfakeable.
 
+### The measurement that settles it
+
+Give Gemini the anonymised observations and forbid experiments, then ask for the causal
+sign. Compare against the same agent allowed to intervene:
+
+| | confounded worlds recovered |
+|---|---|
+| Gemini, observation only | **0 / 4** |
+| The same loop, allowed to intervene | **4 / 4** |
+
+Both readings are of identical worlds. The only difference is the ability to act. This is
+also the adversarial test of anonymisation: if the surface leaked, the model would have
+recognised the system and answered from memory instead of following the correlation into
+the trap. It followed the correlation, every time.
+
+Reproduce with `python3 -m pytest tests/test_retrieval_baseline.py -q` (needs a key).
+
 ---
 
 ## Anonymisation is a test, not a promise
