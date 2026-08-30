@@ -24,6 +24,9 @@ _FORM_PROSE = {
     "multiplicative": "a product of powers of",
     "exponential": "an exponential response to",
     "saturating": "a saturating response to",
+    "modulus": "the modulus (Euclidean magnitude) of",
+    "real": "a scaled tap of the real component of",
+    "imag": "a scaled tap of the imaginary component of",
 }
 
 
@@ -50,13 +53,24 @@ def observer_narrative(world: World) -> str:
         f"World {world.world_id} was drawn from template {gt['template_id']} "
         f"(seed {world.seed}).",
     ]
+    for z, (re_, im_) in world.complex_vars.items():
+        im_node = world.nodes[im_]
+        const_note = (f" — a constant ({im_node.exo_mean:g})"
+                      if im_node.mechanism is None and im_node.exo_sd == 0 else "")
+        lines.append(
+            f"{z} is a complex quantity {re_} + j·{im_}: its real component is {re_} "
+            f"and its imaginary component is {im_}{const_note}. Both components are "
+            "independently tappable downstream.")
     for name in world._topo_order():
         node = world.nodes[name]
         tag = " (hidden — the agent cannot see or set it)" if name in hidden else ""
         if node.mechanism is None:
-            lines.append(
-                f"{name}{tag} is exogenous noise: gaussian with mean "
-                f"{node.exo_mean} and sd {node.exo_sd}.")
+            if node.exo_sd == 0:
+                lines.append(f"{name}{tag} is a constant: {node.exo_mean:g}.")
+            else:
+                lines.append(
+                    f"{name}{tag} is exogenous noise: gaussian with mean "
+                    f"{node.exo_mean} and sd {node.exo_sd}.")
         else:
             m = node.mechanism
             parents = ", ".join(
@@ -64,7 +78,11 @@ def observer_narrative(world: World) -> str:
             lines.append(
                 f"{name}{tag} is {_FORM_PROSE[m.form]} its parents — {parents} — "
                 f"with constant {m.const:g} and observation noise sd {m.noise:g}.")
-    if hidden:
+    # A hidden CONSTANT (sd 0) is not a confounder — it does not vary, so it cannot
+    # induce correlation. Only varying hidden nodes earn the warning below.
+    varying_hidden = {h for h in hidden if world.nodes[h].exo_sd > 0}
+    if varying_hidden:
+        hidden = varying_hidden
         children = sorted(
             n for n, node in world.nodes.items()
             if node.mechanism and any(p in hidden for p in node.parents))

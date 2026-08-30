@@ -12,7 +12,12 @@ import random
 
 from .worlds import Mechanism, Node, World
 
+# The seed-rotation set. FROZEN at T1-T6: adding to this tuple remaps every seed's
+# template (seed % len), which would silently rebuild the held-out benchmark, the
+# frozen study and every receipt. New templates join EXTRA_TEMPLATES instead and are
+# reachable only by asking for them by name.
 TEMPLATE_IDS = ("T1", "T2", "T3", "T4", "T5", "T6")
+EXTRA_TEMPLATES = ("T7",)
 
 
 def _labels(rng: random.Random, k: int) -> list[str]:
@@ -37,6 +42,8 @@ def _stable_hash(s: str) -> int:
 
 
 def build(template_id: str, seed: int) -> World:
+    if template_id not in _BUILDERS:
+        raise ValueError(f"unknown template: {template_id}")
     rng = random.Random(seed * 31 + _stable_hash(template_id) % 9973)
     fn = _BUILDERS[template_id]
     return fn(rng, seed)
@@ -131,7 +138,39 @@ def _t6(rng: random.Random, seed: int) -> World:
     return World(f"W-{seed}", "T6", nodes, (a, b), (h,), seed)
 
 
-_BUILDERS = {"T1": _t1, "T2": _t2, "T3": _t3, "T4": _t4, "T5": _t5, "T6": _t6}
+# -- T7: complex quantity z = a + j·b — EXTRA, never in the seed rotation ------
+def _t7(rng: random.Random, seed: int) -> World:
+    """A complex variable with both outputs used downstream.
+
+    Component a (real) is always a gaussian node. Component b (imaginary) is a
+    gaussian node on even worlds and a CONSTANT on odd ones — materialised as an
+    sd=0 hidden node, exercising the 'component can be a constant' case. One child
+    takes the modulus of the pair; another taps a single component, so the two
+    outputs of z are both load-bearing, not decorative.
+    """
+    a, b, m_, t_, z = _labels(rng, 5)
+    const_im = rng.random() < 0.5
+    nodes = {
+        a: Node(a, (), None, _c(rng, -1, 2), _c(rng, .3, .9)),
+        b: Node(b, (), None, _c(rng, -1, 2), 0.0 if const_im else _c(rng, .3, .9)),
+        m_: Node(m_, (a, b), Mechanism(
+            "modulus", {a: _c(rng, .6, 1.4), b: _c(rng, .6, 1.4)},
+            _c(rng, -.5, .5), _c(rng, .05, .15))),
+        t_: Node(t_, (b,) if rng.random() < 0.5 else (a,), None),
+    }
+    tap_parent = nodes[t_].parents[0]
+    tap_form = "imag" if tap_parent == b else "real"
+    nodes[t_] = Node(t_, (tap_parent,), Mechanism(
+        tap_form, {tap_parent: _c(rng, .5, 1.5)}, _c(rng, -.5, .5), _c(rng, .05, .2)))
+    hidden = (b,) if const_im else ()
+    observable = tuple(n for n in (a, b, m_, t_) if n not in hidden)
+    world = World(f"W-{seed}", "T7", nodes, observable, hidden, seed,
+                  complex_vars={z: (a, b)})
+    return world
+
+
+_BUILDERS = {"T1": _t1, "T2": _t2, "T3": _t3, "T4": _t4, "T5": _t5, "T6": _t6,
+             "T7": _t7}
 
 
 def generate(seed: int, template_id: str | None = None) -> World:

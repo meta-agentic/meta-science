@@ -55,6 +55,16 @@ class Mechanism:
         elif self.form == "saturating":
             s = sum(xs)
             v = self.const * s / (1.0 + abs(s))
+        elif self.form == "modulus":
+            # |a + j·b| over weighted components — the Euclidean norm, and the reason
+            # complex variables earn their place: a genuinely new nonlinear family the
+            # agent has to map by intervening, not another curve in a known one.
+            v = self.const + math.sqrt(sum(x * x for x in xs))
+        elif self.form in ("real", "imag"):
+            # Component taps of a complex quantity. Numerically a weighted selection of
+            # the single parent; the form name carries the complex semantics so the
+            # observer narration and the atlas can say what the tap means.
+            v = self.const + sum(xs)
         else:
             raise ValueError(f"unknown mechanism form: {self.form}")
         return v + rng.gauss(0.0, self.noise)
@@ -76,6 +86,13 @@ class World:
     `template_id` and `nodes` are ground truth: they are what the agent is trying to
     recover and must never be serialised into anything the agent reads. `describe()`
     is the only agent-facing view.
+
+    `complex_vars` groups pairs of scalar sources into complex quantities z = a + j·b.
+    A complex variable is a grouping, not a node: its two components are ordinary
+    scalar nodes (a constant component is a materialised sd=0 node), which is exactly
+    what makes its "two outputs" usable downstream — any mechanism may tap either
+    component as a parent. The grouping lives in ground truth only; the agent surface
+    stays scalar, because a label that says "complex pair" would leak structure.
     """
     world_id: str
     template_id: str
@@ -83,6 +100,7 @@ class World:
     observable: tuple[str, ...]
     hidden: tuple[str, ...]
     seed: int
+    complex_vars: dict[str, tuple[str, str]] = field(default_factory=dict)
     _draws: int = field(default=0, repr=False)
 
     # -- agent-facing surface -------------------------------------------------
@@ -128,6 +146,7 @@ class World:
             "template_id": self.template_id,
             "edges": {k: list(v.parents) for k, v in self.nodes.items()},
             "hidden": list(self.hidden),
+            "complex_vars": {k: list(v) for k, v in self.complex_vars.items()},
             "mechanisms": {
                 k: {"form": v.mechanism.form, "coeffs": v.mechanism.coeffs,
                     "const": v.mechanism.const}

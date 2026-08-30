@@ -109,3 +109,47 @@ def test_depth_out_of_range_is_refused():
     import pytest
     with pytest.raises(ValueError, match="depth"):
         generate_compound(7, depth=8)
+
+
+def test_t7_complex_template_holds_the_invariants():
+    """T7 is EXTRA — reachable by name, never by rotation — and must pass the same
+    gates as the rotation set: anonymous surface, determinism, a runnable loop."""
+    from metascience.templates import TEMPLATE_IDS
+
+    assert "T7" not in TEMPLATE_IDS, \
+        "adding T7 to the rotation remaps every held-out seed"
+    for seed in range(6):
+        w = generate(seed, "T7")
+        blob = json.dumps(w.describe()).lower() + json.dumps(w.observe(4, seed=1)).lower()
+        assert not [t for t in BANNED_LEXICON if t in blob]
+        for word in ("complex", "modulus", "real", "imag", "j·"):
+            assert word not in blob, f"complex semantics leaked to the surface: {word}"
+        gt = w.ground_truth()
+        assert gt["complex_vars"], "T7 must register its complex grouping"
+        z, (re_, im_) = next(iter(w.complex_vars.items()))
+        assert z not in w.observable and z not in w.nodes, \
+            "the complex variable is a grouping, not a node"
+        forms = {m["form"] for m in gt["mechanisms"].values()}
+        assert "modulus" in forms and forms & {"real", "imag"}
+
+
+def test_modulus_is_discoverable_by_intervention():
+    """The new family must be a real mechanism the loop can probe, not decoration."""
+    w = generate(3, "T7")
+    run = run_discovery(w, HeuristicReasoner(), Strategy(), seed=3)
+    assert run.experiments
+    mod_node = next(n for n, m in w.ground_truth()["mechanisms"].items()
+                    if m["form"] == "modulus")
+    touched = [e for e in run.experiments if e.hypothesis.effect == mod_node]
+    assert touched, "the modulus node must be reachable by the agent's experiments"
+
+
+def test_t7_is_deterministic_across_processes():
+    script = (
+        "import sys, json; sys.path.insert(0, %r);"
+        "from metascience.templates import generate;"
+        "print(json.dumps(generate(2, 'T7').ground_truth(), sort_keys=True))"
+        % str(ROOT / "src"))
+    outs = {subprocess.run([sys.executable, "-c", script], capture_output=True,
+                           text=True, check=True).stdout for _ in range(2)}
+    assert len(outs) == 1
