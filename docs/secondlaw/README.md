@@ -58,9 +58,30 @@ time, the only regime a law actually promises anything about:
 
 Both model shapes that flattered on interleaved holdout collapse 22–50× when asked
 about the future; the honest shape wins by an order of magnitude. **Interleaved
-holdout rewards interpolation; a law is a claim about extrapolation.** The law loop's
-scoring should split in time, not in stride — that change is the first item this
-experiment feeds back into the harness.
+holdout rewards interpolation; a law is a claim about extrapolation.**
+
+## The finding, applied — and the metric's own bug, found by its first test
+
+`laws.judge()` now scores every law twice — interleaved (interpolation) and
+fit-early/judge-late (extrapolation) — and issues an `extrapolates` verdict. The law
+loop (`freeform_probe`, both runners) judges through it, and the third-law runner's
+refinement round now triggers on a failed extrapolation verdict, not on a flattering
+interpolation number.
+
+Calibrating the verdict on this experiment's own data immediately broke the naive
+design. The first criterion was a pure self-ratio — future error over interleaved
+error — and the **true shape failed it** (penalty 8.1): a law that interpolates
+near-perfectly can have a future error many times its interleaved error that is
+still 0.08% of the data. A self-ratio punishes excellence. The shipped criterion
+takes the more generous of two bounds — 3× the interleaved error, or 0.1% of the
+data's own scale ([verdicts](judge-verdicts.json), pinned by test):
+
+| candidate | interleaved | future | penalty | extrapolates |
+|---|---|---|---|---|
+| true shape (linear − quadratic) | 0.00048 | 0.00393 | 8.1 | **yes** |
+| naive linear | 0.00527 | 0.02184 | 4.1 | no — misses the decay |
+| Gemini r2 (tanh) | 0.00563 | 0.08811 | 15.6 | no |
+| Gemini r1 (capacitor) | 0.03124 | 0.19622 | 6.3 | no |
 
 ## Standing caveats
 

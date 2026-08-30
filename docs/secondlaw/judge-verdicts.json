@@ -1,0 +1,100 @@
+{
+  "gemini r1 capacitor": {
+    "expression": "c1 * (1 - exp(-c2 * x1))",
+    "interpolation": {
+      "constants": {
+        "c1": 137.802554,
+        "c2": 0.036414
+      },
+      "complexity": 9,
+      "train_sse": 1.499628328,
+      "holdout_mean_abs_err": 0.031242,
+      "holdout_worst_abs_err": 0.087788
+    },
+    "extrapolation": {
+      "constants": {
+        "c1": 95.281976,
+        "c2": 0.052597
+      },
+      "train_rows": 864,
+      "judged_rows": 288,
+      "future_mean_abs_err": 0.196216,
+      "future_worst_abs_err": 0.260822
+    },
+    "extrapolation_penalty": 6.281,
+    "extrapolates": false
+  },
+  "gemini r2 tanh": {
+    "expression": "c1 * (1 - exp(-c2 * x1)) / (1 + exp(-c2 * x1))",
+    "interpolation": {
+      "constants": {
+        "c1": 62.770552,
+        "c2": 0.15642
+      },
+      "complexity": 17,
+      "train_sse": 0.057524898,
+      "holdout_mean_abs_err": 0.005631,
+      "holdout_worst_abs_err": 0.021323
+    },
+    "extrapolation": {
+      "constants": {
+        "c1": 40.755274,
+        "c2": 0.241153
+      },
+      "train_rows": 864,
+      "judged_rows": 288,
+      "future_mean_abs_err": 0.088108,
+      "future_worst_abs_err": 0.126313
+    },
+    "extrapolation_penalty": 15.647,
+    "extrapolates": false
+  },
+  "naive linear": {
+    "expression": "c1 * x1",
+    "interpolation": {
+      "constants": {
+        "c1": 4.88556
+      },
+      "complexity": 3,
+      "train_sse": 0.041973959,
+      "holdout_mean_abs_err": 0.005271,
+      "holdout_worst_abs_err": 0.015398
+    },
+    "extrapolation": {
+      "constants": {
+        "c1": 4.893206
+      },
+      "train_rows": 864,
+      "judged_rows": 288,
+      "future_mean_abs_err": 0.021839,
+      "future_worst_abs_err": 0.031072
+    },
+    "extrapolation_penalty": 4.143,
+    "extrapolates": false
+  },
+  "true shape": {
+    "expression": "c1 * x1 - c2 * x1 * x1",
+    "interpolation": {
+      "constants": {
+        "c1": 4.905226,
+        "c2": 0.012791
+      },
+      "complexity": 9,
+      "train_sse": 0.000366257,
+      "holdout_mean_abs_err": 0.000483,
+      "holdout_worst_abs_err": 0.001959
+    },
+    "extrapolation": {
+      "constants": {
+        "c1": 4.902814,
+        "c2": 0.010421
+      },
+      "train_rows": 864,
+      "judged_rows": 288,
+      "future_mean_abs_err": 0.003925,
+      "future_worst_abs_err": 0.006974
+    },
+    "extrapolation_penalty": 8.126,
+    "extrapolates": true
+  }
+}

@@ -282,6 +282,84 @@ def score(expression: str, points, stride: int = 5) -> dict:
     }
 
 
+def score_in_time(expression: str, points, train_frac: float = 0.6,
+                  judge_frac: float = 0.2) -> dict:
+    """Fit on the earliest rows, judge on the final ones — extrapolation.
+
+    `points` must be in causal order (time for a timed series; the orbit's own
+    sweep for angular data). The constants never see the judged rows, and unlike
+    the stride split, neither do their neighbours: the law is asked about a
+    region of the world it has only ever pointed toward.
+    """
+    tree = parse(expression)
+    unknown = {v for v in variables(tree) if not (v == "x1" or v.startswith("c"))}
+    if unknown:
+        raise LawSyntaxError(f"unknown variables {sorted(unknown)}")
+    n = len(points)
+    train = points[:max(2, int(n * train_frac))]
+    judged = points[n - max(1, int(n * judge_frac)):]
+    consts, _ = fit(tree, train)
+    errs = []
+    for x1, x2 in judged:
+        try:
+            errs.append(abs(evaluate(tree, {"x1": x1, **consts}) - x2))
+        except (ValueError, OverflowError, ZeroDivisionError):
+            errs.append(math.inf)
+    mean = sum(errs) / len(errs)
+    return {
+        "expression": expression,
+        "constants": consts,
+        "train_rows": len(train),
+        "judged_rows": len(judged),
+        "future_mean_abs_err": (round(mean, 6) if math.isfinite(mean) else None),
+        "future_worst_abs_err": (round(max(errs), 6) if math.isfinite(max(errs))
+                                 else None),
+    }
+
+
+# A law extrapolates if its future error stays within TOLERANCE times its
+# interleaved error, or within ABS_FLOOR of the data's own scale — whichever is
+# more generous. Both bounds are needed, and the second was learned from the
+# first's failure: a shape that interpolates near-perfectly can have a future
+# error 8x its interleaved error that is still 0.08% of the data — a pure
+# self-ratio punishes excellence. Calibrated on the second-law drag arc: the
+# true shape (linear - quadratic) passes, naive linear fails for missing the
+# decay, and the saturating impostors fail by an order of magnitude.
+EXTRAPOLATION_TOLERANCE = 3.0
+EXTRAPOLATION_ABS_FLOOR = 1e-3
+
+
+def judge(expression: str, points, stride: int = 5, train_frac: float = 0.6,
+          judge_frac: float = 0.2) -> dict:
+    """Both verdicts on one law: interpolation (stride) and extrapolation (time).
+
+    The second-law experiment is why both are required: a hyperbolic-tangent
+    'law' for a decaying orbit scored 0.06% relative on the interleaved split
+    and collapsed 22x when fitted early and judged late. Interpolation
+    flatters; a law is a claim about the rows that have not happened yet.
+    """
+    interp = score(expression, points, stride)
+    extrap = score_in_time(expression, points, train_frac, judge_frac)
+    i_err, f_err = interp["holdout_mean_abs_err"], extrap["future_mean_abs_err"]
+    if i_err is None or f_err is None:
+        penalty, extrapolates = None, False
+    else:
+        # floor at the reporting quantum: a machine-precision interpolation must
+        # not make a tiny future error look infinitely bad
+        penalty = round(f_err / max(i_err, 1e-6), 3)
+        scale = sum(abs(x2) for _, x2 in points) / len(points)
+        allowance = max(EXTRAPOLATION_TOLERANCE * i_err,
+                        EXTRAPOLATION_ABS_FLOOR * scale)
+        extrapolates = f_err <= allowance
+    return {
+        "expression": expression,
+        "interpolation": {k: v for k, v in interp.items() if k != "expression"},
+        "extrapolation": {k: v for k, v in extrap.items() if k != "expression"},
+        "extrapolation_penalty": penalty,
+        "extrapolates": extrapolates,
+    }
+
+
 # ------------------------------------------------------------------- free-form probe
 
 FREEFORM_SCHEMA = {
@@ -334,7 +412,7 @@ def freeform_probe(points, n_shown: int = 11, stride: int = 5) -> dict:
     answer = _generate(freeform_prompt(shown, held_x1), FREEFORM_SCHEMA)
     record = {"model": answer}
     try:
-        record["scored"] = score(answer["expression"], scaled, stride)
+        record["scored"] = judge(answer["expression"], scaled, stride)
     except LawSyntaxError as exc:
         record["scored"] = {"error": str(exc)}
     return record

@@ -66,3 +66,42 @@ def test_the_freeform_prompt_offers_no_menu():
     for word in ("conic", "circle", "ellipse", "kepler", "orbit", "family",
                  "periodic", "focus"):
         assert word not in lowered, f"the prompt names {word!r}"
+
+
+# ------------------------------------------------------- the time-split judge
+
+def _drag_rows():
+    series = ephemeris.drag_series()
+    area = ephemeris.swept_area(series)
+    a_scale = 10.0 / area[-1][1]
+    # every 4th row: same physics, affordable fitting
+    return [(round(t * 0.41, 5), round(a * a_scale, 5)) for t, a in area][::4]
+
+
+def test_the_judge_reproduces_the_second_law_verdict():
+    """The finding that created this scorer, now enforced by it: the saturating
+    shape that flattered on the interleaved split does not extrapolate; the true
+    shape (linear minus a small quadratic) does."""
+    rows = _drag_rows()
+    tanh = laws.judge("c1 * (1 - exp(-c2 * x1)) / (1 + exp(-c2 * x1))", rows)
+    naive = laws.judge("c1 * x1", rows)
+    true = laws.judge("c1 * x1 - c2 * x1 * x1", rows)
+    assert not tanh["extrapolates"]
+    assert tanh["extrapolation_penalty"] > laws.EXTRAPOLATION_TOLERANCE
+    assert not naive["extrapolates"], "pure linear misses the decay's future"
+    assert true["extrapolates"]
+    assert true["extrapolation"]["future_mean_abs_err"] < \
+        tanh["extrapolation"]["future_mean_abs_err"] / 5
+
+
+def test_a_machine_precision_law_is_not_punished_for_perfection():
+    """The conic interpolates the exact arc to a rounded 0.0; the ratio floor and
+    the absolute escape must keep such a law judged as extrapolating."""
+    verdict = laws.judge(CONIC, POINTS)
+    assert verdict["interpolation"]["holdout_mean_abs_err"] < 1e-4
+    assert verdict["extrapolates"]
+
+
+def test_the_judge_is_deterministic():
+    rows = _drag_rows()
+    assert laws.judge("c1 * x1", rows) == laws.judge("c1 * x1", rows)

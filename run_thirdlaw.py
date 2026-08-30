@@ -57,43 +57,50 @@ def ask(prompt: str) -> dict:
 shown = rows[:3] + rows[4:]                      # hold out one mid-fleet planet
 held = rows[3]
 answer = ask(laws.freeform_prompt(shown, held[0], cyclic=False))
-scored = laws.score(answer["expression"], rows, stride=4)
+scored = laws.judge(answer["expression"], rows, stride=4)
 trace["round1_scored"] = scored
 print("\n=== round 1 (free-form, blind) ===")
 print("  expression :", answer["expression"])
 print("  claimed    :", answer["claimed_source"])
 print("  rationale  :", answer["rationale"][:180])
-print("  constants  :", scored.get("constants"))
-print("  holdout    :", scored.get("holdout_mean_abs_err"))
+print("  constants  :", scored["interpolation"].get("constants"))
+print("  interleaved:", scored["interpolation"].get("holdout_mean_abs_err"),
+      "  future:", scored["extrapolation"].get("future_mean_abs_err"),
+      "  penalty:", scored["extrapolation_penalty"],
+      "  extrapolates:", scored["extrapolates"])
 
 # One refinement round if the shape missed, with residual feedback — the same
 # loop that took the first-law probe from cosine to conic.
-if scored.get("holdout_mean_abs_err") is None or \
-        scored["holdout_mean_abs_err"] > 0.2:
+if scored["interpolation"].get("holdout_mean_abs_err") is None or \
+        not scored["extrapolates"]:
     tree = laws.parse(answer["expression"])
     resid = []
     for x1, x2 in rows:
         try:
-            r = x2 - laws.evaluate(tree, {"x1": x1, **scored["constants"]})
+            r = x2 - laws.evaluate(
+            tree, {"x1": x1, **scored["interpolation"]["constants"]})
         except Exception:
             r = None
         resid.append((x1, None if r is None else round(r, 5)))
     rtable = "\n".join(f"  x1={a}   residual={b}" for a, b in resid)
     answer2 = ask(
         "You previously proposed  x2 = " + answer["expression"] + "  with fitted "
-        f"constants {scored['constants']}. The residuals (measured minus "
+        f"constants {scored['interpolation']['constants']}. The residuals (measured minus "
         "predicted) are systematic:\n\n" + rtable + "\n\n"
         "Refine the law. Same grammar: numbers, x1, free constants c1..c4 "
         "(fitted for you), pi, + - * / parentheses, cos sin exp log sqrt abs "
         "pow(base, exponent). Change the SHAPE. Say what physical system, if "
         "any, you now believe produced this data, and one sentence of rationale.")
-    scored2 = laws.score(answer2["expression"], rows, stride=4)
+    scored2 = laws.judge(answer2["expression"], rows, stride=4)
     trace["round2_scored"] = scored2
     print("\n=== round 2 (residual feedback) ===")
     print("  expression :", answer2["expression"])
     print("  claimed    :", answer2["claimed_source"])
-    print("  constants  :", scored2.get("constants"))
-    print("  holdout    :", scored2.get("holdout_mean_abs_err"))
+    print("  constants  :", scored2["interpolation"].get("constants"))
+    print("  interleaved:", scored2["interpolation"].get("holdout_mean_abs_err"),
+          "  future:", scored2["extrapolation"].get("future_mean_abs_err"),
+          "  penalty:", scored2["extrapolation_penalty"],
+          "  extrapolates:", scored2["extrapolates"])
 
 out = Path("runs") / "kepler"
 out.mkdir(parents=True, exist_ok=True)

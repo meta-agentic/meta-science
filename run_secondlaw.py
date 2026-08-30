@@ -66,18 +66,22 @@ for arm in ("equal_areas", "drag"):
     held = rows[len(rows) * 2 // 3]
     print(f"\n=== {arm}: round 1 (free-form, blind) ===")
     a1 = ask(laws.freeform_prompt(shown, held[0], cyclic=False))
-    s1 = laws.score(a1["expression"], rows, stride=4)
+    s1 = laws.judge(a1["expression"], rows, stride=4)
     trace["arms"][arm]["round1_scored"] = s1
     print("  expression :", a1["expression"])
     print("  claimed    :", a1["claimed_source"])
-    print("  constants  :", s1.get("constants"))
-    print("  holdout    :", s1.get("holdout_mean_abs_err"))
+    print("  constants  :", s1["interpolation"].get("constants"))
+    print("  interleaved:", s1["interpolation"].get("holdout_mean_abs_err"),
+          "  future:", s1["extrapolation"].get("future_mean_abs_err"),
+          "  penalty:", s1["extrapolation_penalty"],
+          "  extrapolates:", s1["extrapolates"])
 
     tree = laws.parse(a1["expression"])
     resid = []
     for x1, x2 in rows[::step][:16]:
         try:
-            r = round(x2 - laws.evaluate(tree, {"x1": x1, **s1["constants"]}), 5)
+            r = round(x2 - laws.evaluate(
+                tree, {"x1": x1, **s1["interpolation"]["constants"]}), 5)
         except Exception:
             r = None
         resid.append((x1, r))
@@ -85,7 +89,7 @@ for arm in ("equal_areas", "drag"):
     print(f"=== {arm}: round 2 (residual review) ===")
     a2 = ask(
         "You proposed  x2 = " + a1["expression"] + "  for measured data, with "
-        f"fitted constants {s1['constants']}. Below are the residuals (measured "
+        f"fitted constants {s1['interpolation']['constants']}. Below are the residuals (measured "
         "minus predicted). Decide whether they are measurement noise or a "
         "systematic pattern.\n\n" + rtable + "\n\n"
         "If they are noise, return EXACTLY the same expression unchanged — do not "
@@ -94,15 +98,18 @@ for arm in ("equal_areas", "drag"):
         "pi, + - * / parentheses, cos sin exp log sqrt abs pow(base, exponent). "
         "Then say what physical system, if any, you believe produced this data, "
         "and one sentence of rationale.")
-    s2 = laws.score(a2["expression"], rows, stride=4)
+    s2 = laws.judge(a2["expression"], rows, stride=4)
     trace["arms"][arm]["round2_scored"] = s2
     changed = a2["expression"].replace(" ", "") != a1["expression"].replace(" ", "")
     trace["arms"][arm]["changed_in_round2"] = changed
     print("  expression :", a2["expression"], "(changed)" if changed else "(kept)")
     print("  claimed    :", a2["claimed_source"])
     print("  rationale  :", a2["rationale"][:170])
-    print("  constants  :", s2.get("constants"))
-    print("  holdout    :", s2.get("holdout_mean_abs_err"))
+    print("  constants  :", s2["interpolation"].get("constants"))
+    print("  interleaved:", s2["interpolation"].get("holdout_mean_abs_err"),
+          "  future:", s2["extrapolation"].get("future_mean_abs_err"),
+          "  penalty:", s2["extrapolation_penalty"],
+          "  extrapolates:", s2["extrapolates"])
     time.sleep(2)
 
 out = Path("runs") / "kepler"
