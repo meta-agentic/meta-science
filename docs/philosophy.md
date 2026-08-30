@@ -93,4 +93,6 @@ Free for everyone, human or AI. That is not a license footnote; it is the thesis
 restated. Science is the practice of claims that anyone may check. We tried to build
 software the same way.
 
+*Ex probatione propria non sequitur veritas.* — including ours.
+
 — *Marco Vanadia (mova), built meta-agentically with an AI pair-engineer, August 2026*

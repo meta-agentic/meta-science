@@ -16,7 +16,9 @@ shows successes, which proves nothing: a system that *reports* it improved is
 indistinguishable from one that logs `"improved!"` and changes nothing.
 
 We wanted to build the version that can be checked — where the interesting artefact is
-not a system that improves, but one that **refuses to.**
+not a system that improves, but one that **refuses to.** Our first axiom, in the old
+tongue: *Ex probatione propria non sequitur veritas* — from one's own proving, truth
+does not follow.
 
 ## What it does
 

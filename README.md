@@ -44,6 +44,9 @@ The two turnstiles of logic: `⊢` is *syntactic* — what an agent can derive; 
 *semantic* — what actually holds. The axiom says the first never purchases the second
 when the prover judges itself: **derivation is not truth.** An agent has authority over
 its own proofs, never over the world; the gate exists to bridge that gap from outside.
+Or, as a philosopher would have carved it:
+
+> *Ex probatione propria non sequitur veritas.* — from one's own proving, truth does not follow.
 
 **A2 — Seeing is not doing.**
 
