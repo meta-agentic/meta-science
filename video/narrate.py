@@ -18,8 +18,9 @@ CAP = OUT / "captions"
 
 # Gemini's own TTS narrates the system's own demo — and when the API is not
 # reachable, macOS `say` keeps the build reproducible offline.
-TTS_MODEL = "gemini-2.5-flash-preview-tts"
-TTS_VOICE = "Charon"
+# Model cascade: the 3.1 preview has the fresher quota today; 2.5 is the fallback.
+TTS_MODELS = ("gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts")
+TTS_VOICE = "Kore"          # female, firm — documentary register
 STYLE = ("Read as a calm, confident documentary narrator. Measured pace, "
          "no hype, slight warmth: ")
 
@@ -65,15 +66,23 @@ def _gemini_tts(text: str, out_wav: Path) -> None:
         from google import genai
         from google.genai import types
         client = genai.Client(api_key=api_key())
-        r = client.models.generate_content(
-            model=TTS_MODEL,
-            contents=STYLE + text,
-            config=types.GenerateContentConfig(
-                response_modalities=["AUDIO"],
-                speech_config=types.SpeechConfig(
-                    voice_config=types.VoiceConfig(
-                        prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                            voice_name=TTS_VOICE)))))
+        last = None
+        for model in TTS_MODELS:
+            try:
+                r = client.models.generate_content(
+                    model=model,
+                    contents=STYLE + text,
+                    config=types.GenerateContentConfig(
+                        response_modalities=["AUDIO"],
+                        speech_config=types.SpeechConfig(
+                            voice_config=types.VoiceConfig(
+                                prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                                    voice_name=TTS_VOICE)))))
+                break
+            except Exception as exc:  # noqa: BLE001
+                last = exc
+        else:
+            raise last
         pcm = r.candidates[0].content.parts[0].inline_data.data
         with wave.open(str(out_wav), "wb") as w:
             w.setnchannels(1)
@@ -100,6 +109,10 @@ NARRATION = {
     "intro":
         "What would it take to trust a machine that says it made itself better? "
         "Not a bigger claim — a smaller one, that can be checked.",
+    "axioms":
+        "Every science begins with what it refuses to assume. No agent judges "
+        "its own claims. Seeing is not doing. And improvement only counts when "
+        "it is proven — on worlds the prover cannot see. The rest is engineering.",
     "corpus_world":
         "Start by taking everything away. No names, no context, no textbook to "
         "remember. What is left is the only thing that cannot be faked: the "
@@ -128,9 +141,10 @@ NARRATION = {
         "need repetition? It gave the statistician's answer — not here, not yet "
         "— and told us exactly what kind of world would change its mind.",
     "outro":
-        "One gated turn today. A thousand tomorrow — and every one of them "
-        "would still have to show a receipt. Meta-science. Free for everyone, "
-        "human or A.I.",
+        "One gated turn today. A thousand tomorrow — and every one of them would "
+        "still have to show a receipt. ... One more thing. The voice you have "
+        "been listening to... is Gemini. The system just narrated its own demo. "
+        "Meta-science. Free for everyone — human, or A.I.",
 }
 
 
@@ -156,17 +170,28 @@ def main() -> None:
 
         aiff = CAP / f"{name}.wav"
         synthesize(text, aiff, d)
+        # Awkward-pause control: a clip may outlast its narration by the trailing
+        # static hold. Trim at most that hold (bounded at 6s) so the voice never
+        # dies into dead air — but never cut into mid-scene reveals, and always
+        # leave breathing room to read. A 0.4s delay keeps the voice from slamming
+        # in on the first frame.
+        adur = float(subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", str(aiff)], capture_output=True, text=True).stdout)
+        target = max(adur + 2.6, d - 6.0)
+        target = min(d, target)
         merged = CAP / f"{name}_narrated.mp4"
         subprocess.run(
             ["ffmpeg", "-y", "-loglevel", "error", "-i", str(clip), "-i", str(aiff),
              "-c:v", "copy", "-c:a", "aac", "-b:a", "128k",
-             "-af", "apad", "-t", f"{d:.3f}", str(merged)], check=True)
+             "-af", "adelay=400|400,apad", "-t", f"{target:.3f}", str(merged)],
+            check=True)
         narrated.append(merged)
 
-        srt.append(f"{idx}\n{ts(t0 + 0.3)} --> {ts(t0 + d - 0.2)}\n{text}\n")
+        srt.append(f"{idx}\n{ts(t0 + 0.4)} --> {ts(t0 + target - 0.2)}\n{text}\n")
         idx += 1
-        t0 += d
-        print(f"  {name:22s} clip {d:5.1f}s")
+        t0 += target
+        print(f"  {name:22s} clip {d:5.1f}s -> {target:5.1f}s (voice {adur:4.1f}s)")
 
     (OUT / "final.srt").write_text("\n".join(srt))
     listfile = OUT / "narrated_list.txt"

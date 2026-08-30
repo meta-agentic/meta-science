@@ -87,6 +87,28 @@ so secrecy is not what protects the benchmark; the boundary is process-level —
 on the agent's path calls `ground_truth()` or the `/truth` endpoint — and anonymisation
 guards against retrieval from training, not against a person reading the answer.
 
+## Scope note: "seeing is not doing" and the quantum objection
+
+Axiom A2 invites a physicist's objection: in quantum mechanics there is no passive
+spectator — observation is physical interaction. The objection lands on the slogan and
+misses the substance. A2's formal content is Pearl's distinction between *conditioning*
+and *intervening* — P(Y|X) versus P(Y|do(X)) — and that distinction survives quantum
+mechanics intact: conditioning on a measurement outcome is post-selection, intervening
+is state preparation, and no interpretation of QM collapses the two into one operation.
+
+What the observer effect does say is that the idealized zero-back-action `observe()`
+does not physically exist at the quantum scale — every observation carries a small
+`do()` inside it. Our worlds are classical structural causal models, where a
+disturbance-free observation is not an assumption but a construction. The axiom is
+scoped to that regime, and the boundary is stated rather than hidden.
+
+It is also a roadmap item rather than a vulnerability: "measurement disturbs"
+translates directly into this AST as *an edge from the act of observing into the
+system*. A future world family adds observation back-action — each `observe(n)` nudges
+the state by ε — and the agent must discover that its own looking is weakly acting.
+Disentangling measurement disturbance from dynamics is exactly the kind of problem
+this benchmark exists to pose.
+
 ## Compound worlds — yes, with the AST as it stands
 
 The question "can the generator produce compound problems?" has a short answer: the

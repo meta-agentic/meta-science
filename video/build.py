@@ -48,6 +48,11 @@ F_BODY = font(HELV, 42)
 F_MONO = font(MENLO, 34)
 F_MONO_S = font(MENLO, 27)
 F_FOOT = font(HELV, 28)
+STIX = "/System/Library/Fonts/Supplemental/STIXGeneral.otf"
+F_GREEK_H = ImageFont.truetype(STIX, 88)
+F_GREEK = ImageFont.truetype(STIX, 46)
+F_MATH = ImageFont.truetype(STIX, 54)
+F_MATH_S = ImageFont.truetype(STIX, 38)
 
 
 class Scene:
@@ -143,6 +148,64 @@ def intro() -> Scene:
     d.text((W // 2, 680), "So we built the one that can refuse itself.",
            font=F_H, fill=BLUE, anchor="ma")
     s.hold(img, 6.0)
+    return s
+
+
+def axioms() -> Scene:
+    """The project's invariants, staged like a proof — because they are the proof
+    obligations everything else discharges. The mathematical script is reserved for
+    the mathematics; everything a judge must read is plain English."""
+    s = Scene("axioms")
+
+    BLOCKS = [
+        ("AXIOM", [
+            ("A1", "No agent is the judge of its own claims.", "A ⊬ ⊨ c(A)", ""),
+            ("A2", "Seeing is not doing.", "P(Y | X) ≠ P(Y | do(X))",
+             "correlation is not intervention"),
+        ]),
+        ("HYPOTHESIS", [
+            ("", "A model can improve its own method.", "∃ Μ′ : Μ′ ≻ Μ", ""),
+        ]),
+        ("THESIS", [
+            ("", "Improvement counts only when proven on worlds the proposer "
+                 "cannot see — by a margin, or not at all.",
+             "Μ′ ≻ Μ  ⟺  S(Μ′, W) ≥ S(Μ, W) + ε ,   W ∩ view(Μ′) = ∅", ""),
+        ]),
+    ]
+
+    def build(n_blocks):
+        img, d = s.base()
+        d.text((W // 2, 56), "Μ Ε Τ Α · Ε Π Ι Σ Τ Η Μ Η", font=F_GREEK, fill=INK3,
+               anchor="ma")
+        d.text((W // 2, 120), "The axioms", font=F_H, fill=INK1, anchor="ma")
+        d.line([W // 2 - 220, 208, W // 2 + 220, 208], fill=LINE, width=2)
+        y = 250
+        for title, rows in BLOCKS[:n_blocks]:
+            d.text((120, y), title, font=F_FOOT, fill=BLUE)
+            y += 46
+            for tag, maxim, formula, gloss in rows:
+                x = 160
+                if tag:
+                    d.text((x, y + 8), tag, font=F_FOOT, fill=INK3)
+                x += 60
+                wide = d.textlength(formula, font=F_MATH) > 820
+                if wide:
+                    # A formula too long for the right column goes UNDER its maxim,
+                    # full width, rather than colliding with it.
+                    yy = text_block(d, x, y, maxim, F_BODY, INK1, max_w=1560)
+                    d.text((x + 40, yy + 14), formula, font=F_MATH_S, fill=INK2)
+                    y = yy + 78
+                else:
+                    d.text((x, y), maxim, font=F_BODY, fill=INK1)
+                    d.text((1060, y - 6), formula, font=F_MATH, fill=INK2)
+                    if gloss:
+                        d.text((x, y + 56), gloss, font=F_FOOT, fill=INK3)
+                    y += 104 if gloss else 78
+            y += 30
+        return img
+
+    for n, dur in ((1, 6.5), (2, 3.5), (3, 7.0)):
+        s.hold(build(n), dur)
     return s
 
 
@@ -503,11 +566,30 @@ def outro() -> Scene:
     d.text((W // 2, 490), "The architecture exists so that a thousand turns", font=F_H, fill=BLUE, anchor="ma")
     d.text((W // 2, 580), "would still be falsifiable.", font=F_H, fill=BLUE, anchor="ma")
     d.text((W // 2, 760), "github.com/meta-agentic/meta-science", font=F_MONO, fill=INK2, anchor="ma")
-    s.hold(img, 6.5)
+    s.hold(img, 5.5)
+
+    # The reveal. True, and the whole project in one sentence: the narrator has been
+    # the system's own audited model all along.
+    img, d = s.base()
+    d.text((W // 2, 400), "One more thing.", font=F_H, fill=INK2, anchor="ma")
+    s.hold(img, 2.2)
+    img, d = s.base()
+    d.text((W // 2, 330), "One more thing.", font=F_H, fill=INK2, anchor="ma")
+    d.text((W // 2, 470), "The voice you've been listening to", font=F_H, fill=INK1, anchor="ma")
+    d.text((W // 2, 560), "is Gemini.", font=F_TITLE, fill=BLUE, anchor="ma")
+    s.hold(img, 3.2)
+    img, d = s.base()
+    d.text((W // 2, 330), "One more thing.", font=F_H, fill=INK2, anchor="ma")
+    d.text((W // 2, 470), "The voice you've been listening to", font=F_H, fill=INK1, anchor="ma")
+    d.text((W // 2, 560), "is Gemini.", font=F_TITLE, fill=BLUE, anchor="ma")
+    d.text((W // 2, 750), "The system narrated its own demo —", font=F_BODY, fill=INK2, anchor="ma")
+    d.text((W // 2, 810), "under the same rule as everything else here: verifiable.",
+           font=F_BODY, fill=ORANGE, anchor="ma")
+    s.hold(img, 5.5)
     return s
 
 
-CLIPS = [intro, corpus_world, corpus_trap, corpus_refutation,
+CLIPS = [intro, axioms, corpus_world, corpus_trap, corpus_refutation,
          corpus_evolution, corpus_evidence, corpus_stats, corpus_replication, outro]
 
 
