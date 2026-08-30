@@ -99,7 +99,7 @@ gate rules on both.
 git clone https://github.com/meta-agentic/meta-science && cd meta-science
 python3 -m pip install -r requirements.txt
 echo 'GEMINI_API_KEY=your-key' > .env          # https://aistudio.google.com/apikey
-python3 -m pytest -q                           # no key needed: 26 offline tests
+python3 -m pytest -q                           # no key needed: the full offline suite
 python3 run_evolution.py --offline             # no key needed: gate, both directions
 python3 run_evolution.py --generations 3       # live: Gemini proposes, gate decides
 ```

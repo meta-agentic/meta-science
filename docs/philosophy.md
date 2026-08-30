@@ -23,10 +23,9 @@ Everything in this system descends from two refusals, stated up front.
 **No agent is the judge of its own claims.** The model proposes hypotheses, designs
 experiments, and suggests improvements to its own method. It never scores itself, never
 sees the held-out worlds it will be judged on, and never writes to canon. Verdicts are
-computed, not solicited. This is not distrust of any particular model; it is the same
-constitutional insight that separates powers in courts and referees from players: the
-role of proposer and the role of judge corrupt each other when merged, whoever holds
-them.
+computed, not solicited. This is not distrust of any particular model; it is the
+constitutional insight behind separated powers and referees who do not play: the roles
+of proposer and judge corrupt each other when merged, whoever holds them.
 
 **Seeing is not doing.** Pearl's distinction — conditioning is not intervening,
 P(Y|X) ≠ P(Y|do(X)) — is what makes discovery *cost* something. Our worlds contain
@@ -41,10 +40,9 @@ author: quantum mechanics knows no passive spectator — observation *is* intera
 The objection sharpened us twice. First, the axiom's substance survives it: even in the
 quantum formalism, conditioning on an outcome (post-selection) and preparing a state
 (intervention) remain different operations; the slogan frays, the mathematics holds.
-Second, pushed further — through Landauer's "information is physical," down to the
-transistors that fire when `observe()` runs — the objection revealed what a simulated
+Second, pushed further, the objection revealed what a simulated
 benchmark actually is: the one place where the observer genuinely stands outside the
-ontology, because we built the ontology and enumerated its every edge. The side effects
+ontology — because we built the ontology and enumerated its every edge. The side effects
 are real, and they live in the host universe, not the guest one. Our determinism tests
 double as the experimental proof: the same seed builds bit-identical worlds on a hot
 CPU or a cold one. And where our own API leaks a miniature observer effect — unseeded
@@ -60,8 +58,7 @@ a receipt sufficient to recompute it. And an independent auditor — a different
 reads each promotion and may dissent, on the record, without veto.
 
 In the live runs, the gate promoted Gemini's first proposal and refused its next two.
-Both refusals were of *genuine improvements* — real gains, under the margin. We submit
-that those two refusals are worth more than any promotion we could show you. A system
+Both refusals were of *genuine improvements* — real gains, under the margin. Those two refusals are worth more than any promotion we could show you. A system
 that can only say yes to itself proves nothing by saying yes.
 
 ## The process was the philosophy
@@ -83,7 +80,7 @@ subject is a pose; applied to yourself, it becomes a practice.
 
 ## Toward a thousand turns
 
-Today the system takes one gated turn of self-improvement, demonstrated end to end.
+Today the system runs a few gated turns of self-improvement, demonstrated end to end.
 The architecture exists so that a thousand turns would still be falsifiable: margins
 against noise, auditors against metric-gaming, receipts for lineage, and — the quiet
 advantage of synthetic worlds — an inexhaustible supply of fresh, unseen tests, which
