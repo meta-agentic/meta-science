@@ -1,8 +1,15 @@
 # meta-science
 
-**An agent that does science on worlds it has never seen — forming hypotheses, designing
-its own experiments, and being refuted by them — and that improves its own scientific
-method only when a frozen benchmark proves the improvement real.**
+**Hypothesis: a model can improve its own scientific method. Thesis: improvement counts
+only when proven on worlds it cannot see, by a margin. We built the gate — and watched
+it refuse Gemini twice.**
+
+An agent does science on worlds it has never seen — forming hypotheses, designing its
+own experiments, and being refuted by them. When it proposes a better method, the gate
+decides. Never the agent.
+
+The ideas behind it — Popper, the two axioms, and how the process ended up
+disciplining its own authors: [docs/philosophy.md](docs/philosophy.md).
 
 Built on Gemini 3.5+ via the Google GenAI SDK, running on Cloud Run with a Firestore
 ledger, declared in Terraform.
@@ -37,7 +44,7 @@ gen 1  ✓ PROMOTED  gemini-1260
          diff   {'samples_per_arm': (200, 400)}
          champ +0.8704  challenger +0.8981
          beat the champion on held-out worlds by the required margin
-         audit  FLAGGED (gemini-3.5-flash-lite): Accuracy fell by 0.0278, which exceeds the noise threshold of 0.02, showing that the cos
+         audit  FLAGGED (gemini-3.5-flash-lite): Accuracy fell by 0.0278, which exceeds the noise threshold of 0.02 […]
          receipt 9a8617ec20fa372a
 
 gen 2  ✗ REFUSED   gemini-1740
@@ -66,7 +73,7 @@ disagree in writing. Both are on the record.
 both were refused for gaining less than the margin. Refusing marginal gains is what stops
 a system ratcheting itself forward on noise.
 
-**It stopped repeating itself.** After two refusals for shaving samples, the proposer moved
+**It stopped repeating itself.** After a second samples cut was refused, the proposer moved
 to a different knob entirely — verdicts return to it as structured history, not prose.
 
 Every verdict, promotion and refusal alike, writes a receipt carrying the diff, both
@@ -83,6 +90,51 @@ intervention, and finds out it was wrong.
 **Level 2 — self-evolution.** The agent proposes a change to *its own experiment-design
 strategy*. Champion versus challenger on 24 held-out worlds it has never seen. The same
 gate rules on both.
+
+---
+
+## Quickstart
+
+```bash
+git clone https://github.com/meta-agentic/meta-science && cd meta-science
+python3 -m pip install -r requirements.txt
+echo 'GEMINI_API_KEY=your-key' > .env          # https://aistudio.google.com/apikey
+python3 -m pytest -q                           # no key needed: 26 offline tests
+python3 run_evolution.py --offline             # no key needed: gate, both directions
+python3 run_evolution.py --generations 3       # live: Gemini proposes, gate decides
+```
+
+The `--offline` path runs the whole gate with a scripted proposer, so **the governance
+claim can be verified without an API key at all.**
+
+Serve it locally:
+
+```bash
+uvicorn app:app --reload --port 8080
+```
+
+| route | what it shows |
+|---|---|
+| `GET /world/7` | everything the agent is allowed to know |
+| `GET /discover/7` | a run, including which hypotheses its experiments killed |
+| `POST /evolve` | one generation: Gemini proposes, the gate decides |
+| `GET /receipts` | every verdict, promotions and refusals alike |
+| `GET /stats` | population figures over everything recorded |
+| `GET /export.csv` | one row per hypothesis, joined to ground truth |
+
+---
+
+### Deploy
+
+```bash
+./scripts/verify.sh     # everything that must hold before deploying
+cd infra
+terraform init
+terraform apply
+```
+
+Provisions Firestore, Cloud Run, a service account scoped to `roles/datastore.user`, and
+the API key in Secret Manager. See [docs/architecture.md](docs/architecture.md).
 
 ---
 
@@ -177,40 +229,12 @@ draw 400 samples or 25 — so the leanest strategy always wins and the metric ha
 trade-off in it. Independent, accuracy degrades as measurement is cut, and the extreme
 strategy correctly **loses** to the champion (+0.8357 against +0.8704).
 
-**Independent noise is now the default**, and the promotion the demo shows survives it:
-+0.9259 against +0.8704, a gain of +0.0555 against a required margin of +0.02. Both facts
-are asserted by tests. The point is not that we got
+**Independent noise is now the default**, and both demonstrated promotions survive it:
+the offline demo's (100 samples per arm) at +0.9259 against +0.8704, and the live run's
+(200 samples) at +0.8981 — gains of +0.0555 and +0.0277 against a required margin of
++0.02. Both facts are asserted by tests. The point is not that we got
 it right first time — we did not. It is that the benchmark was checked against the
 possibility that it was flattering us.
-
----
-
-## Every run is recorded as evidence
-
-The deployed service has an interactive page, but the more useful output is the data
-behind it. Each run is stored with its seeds, full strategy and code commit — enough to
-**recompute** the result, not merely read it.
-
-```bash
-python3 scripts/collect.py --worlds 48   # 384 runs, ~45s, offline, no API key
-python3 scripts/analyse.py               # the tables
-```
-
-From that study — 2,560 hypotheses across 8 arms — three results:
-
-- **Cutting measurement costs accuracy only under independent noise.** From 400 samples to
-  25 costs 5.4 accuracy points and quadruples the variance; with paired arms it costs
-  *nothing*, which is the artefact that once made this look like a free efficiency gain.
-- **83.9%** of observational priors on the confounded template are inverted by the
-  experiment that tests them.
-- Edge recovery: **recall 1.000, precision 0.786** — the agent never misses a real causal
-  edge and over-claims about one in five.
-
-`GET /export.csv` gives one row per hypothesis joined to ground truth, long format,
-straight into pandas or R. Full schema and findings in
-[docs/dataset.md](docs/dataset.md). How worlds are generated, worded (two views, one
-enforced boundary) and composed into compound problems: [docs/worlds.md](docs/worlds.md)
-and the live inspector at `/world/{seed}/inspect`.
 
 ---
 
@@ -262,48 +286,32 @@ estimate is an approximation there. That number is reported rather than tuned aw
 
 ---
 
-## Quickstart
+## Every run is recorded as evidence
+
+The deployed service has an interactive page, but the more useful output is the data
+behind it. Each run is stored with its seeds, full strategy and code commit — enough to
+**recompute** the result, not merely read it.
 
 ```bash
-git clone https://github.com/meta-agentic/meta-science && cd meta-science
-python3 -m pip install -r requirements.txt
-echo 'GEMINI_API_KEY=your-key' > .env          # https://aistudio.google.com/apikey
-python3 -m pytest -q                           # no key needed: 26 offline tests
-python3 run_evolution.py --offline             # no key needed: gate, both directions
-python3 run_evolution.py --generations 3       # live: Gemini proposes, gate decides
+python3 scripts/collect.py --worlds 48   # 384 runs, ~45s, offline, no API key
+python3 scripts/analyse.py               # the tables
 ```
 
-The `--offline` path runs the whole gate with a scripted proposer, so **the governance
-claim can be verified without an API key at all.**
+From that study — 2,560 hypotheses across 8 arms — three results:
 
-Serve it locally:
+- **Cutting measurement costs accuracy only under independent noise.** From 400 samples to
+  25 costs 5.4 accuracy points and quadruples the variance; with paired arms it costs
+  *nothing*, which is the artefact that once made this look like a free efficiency gain.
+- **83.9%** of observational priors on the confounded template are inverted by the
+  experiment that tests them.
+- Edge recovery: **recall 1.000, precision 0.786** — the agent never misses a real causal
+  edge and over-claims about one in five.
 
-```bash
-uvicorn app:app --reload --port 8080
-```
-
-| route | what it shows |
-|---|---|
-| `GET /world/7` | everything the agent is allowed to know |
-| `GET /discover/7` | a run, including which hypotheses its experiments killed |
-| `POST /evolve` | one generation: Gemini proposes, the gate decides |
-| `GET /receipts` | every verdict, promotions and refusals alike |
-| `GET /stats` | population figures over everything recorded |
-| `GET /export.csv` | one row per hypothesis, joined to ground truth |
-
----
-
-## Deploy
-
-```bash
-./scripts/verify.sh     # everything that must hold before deploying
-cd infra
-terraform init
-terraform apply
-```
-
-Provisions Firestore, Cloud Run, a service account scoped to `roles/datastore.user`, and
-the API key in Secret Manager. See [docs/architecture.md](docs/architecture.md).
+`GET /export.csv` gives one row per hypothesis joined to ground truth, long format,
+straight into pandas or R. Full schema and findings in
+[docs/dataset.md](docs/dataset.md). How worlds are generated, worded (two views, one
+enforced boundary) and composed into compound problems: [docs/worlds.md](docs/worlds.md)
+and the live inspector at `/world/{seed}/inspect`.
 
 ---
 
@@ -334,7 +342,7 @@ score, and cannot tune against — and which leaves a receipt either way.
 Known limits, stated rather than buried:
 
 - Effect estimation is linear, so genuinely multiplicative worlds (T1) are approximated.
-- One generation is demonstrated end-to-end, not an open-ended evolutionary run.
+- A three-generation run is demonstrated, not an open-ended evolutionary run.
 - The held-out set is 24 worlds. At 10, a single world flipping moves the mean by 0.10 —
   five times the promotion margin, which would make a "win" indistinguishable from noise.
 
@@ -364,6 +372,8 @@ runs on repetition, and repetition is the roadmap:
   auditor catches metric-gaming, receipts keep the lineage replayable, and ever-fresh
   generated held-out worlds are the pre-registration analogue that keeps a thousand
   repetitions from becoming p-hacking.
+
+---
 
 ## Licence
 

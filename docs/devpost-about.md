@@ -1,3 +1,6 @@
+<!-- Devpost 'About the project' — paste the body below into the form.
+     Devpost renders Markdown + LaTeX ($$...$$). -->
+
 # Devpost submission text
 
 ## Elevator pitch (200 chars)
@@ -46,6 +49,10 @@ domain names become `X₁…Xₙ`, labels shuffle per world, constants and expon
 the functional family varies. Otherwise the agent *retrieves* rather than discovers —
 Gemini already knows the gas laws and would emit one on recognising the shape, then design
 experiments confirming what it had already said.
+
+The thesis, as the gate enforces it:
+
+$$M' \\succ M \\iff S(M', W) \\ge S(M, W) + \\varepsilon\\ ,\\quad W \\cap \\mathrm{view}(M') = \\varnothing$$
 
 **The gate.** Every record lives in one of three tiers — `raw` (anything the agent
 produces), `wiki` (candidate findings), `output` (accepted canon) — and a record's tier
