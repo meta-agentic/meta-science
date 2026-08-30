@@ -159,7 +159,11 @@ def axioms() -> Scene:
 
     BLOCKS = [
         ("AXIOM", [
-            ("A1", "No agent is the judge of its own claims.", "A ⊬ ⊨ c(A)", ""),
+            # ⊢ is syntactic (derives), ⊨ is semantic (holds): an agent's own
+            # derivation never entails truth. The earlier "A ⊬ ⊨ c(A)" juxtaposed
+            # two turnstiles with no operand between them — malformed, caught by
+            # the author.
+            ("A1", "No agent is the judge of its own claims.", "A ⊢ c  ⇏  ⊨ c", ""),
             ("A2", "Seeing is not doing.", "P(Y | X) ≠ P(Y | do(X))",
              "correlation is not intervention"),
         ]),
