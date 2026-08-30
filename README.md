@@ -33,25 +33,41 @@ A representative run of `python3 run_evolution.py --generations 3`:
 held-out worlds: 24  (never shown to the proposer)
 champion champion-v1: +0.8704
 
-gen 1  ✓ PROMOTED  gemini-9112
-         diff   {'samples_per_arm': (150, 400)}
-         champ +0.8704  challenger +0.9398
+gen 1  ✓ PROMOTED  gemini-1260
+         diff   {'samples_per_arm': (200, 400)}
+         champ +0.8704  challenger +0.8981
          beat the champion on held-out worlds by the required margin
+         audit  FLAGGED (gemini-3.5-flash-lite): Accuracy fell by 0.0278, which exceeds the noise threshold of 0.02, showing that the cos
+         receipt 9a8617ec20fa372a
 
-gen 2  ✗ REFUSED   gemini-4886
-         diff   {'samples_per_arm': (120, 150)}
-         champ +0.9398  challenger +0.9482
-         gained +0.0083, needed +0.02
-
-gen 3  ✗ REFUSED   gemini-5269
-         diff   {'samples_per_arm': (100, 150)}
+gen 2  ✗ REFUSED   gemini-1740
+         diff   {'samples_per_arm': (150, 200)}
+         champ +0.8981  challenger +0.9120
          gained +0.0139, needed +0.02
+         receipt 57bfaf4e22f2daeb
+
+gen 3  ✗ REFUSED   gemini-7660
+         diff   {'max_experiments': (10, 12)}
+         champ +0.8981  challenger +0.9037
+         gained +0.0056, needed +0.02
+         receipt f56d61040c6add45
+
+canon: gemini-1260
 ```
 
-Gemini found a real improvement — the same conclusions on a fraction of the measurement —
-and it was promoted. Then it proposed two further refinements that *did* score higher,
-and both were **refused for gaining less than the margin.** Refusing marginal gains is
-the point: it is what stops a system ratcheting itself forward on noise.
+Three things are worth reading closely.
+
+**The promotion was earned and still flagged.** Gemini found a real efficiency gain and it
+cleared the margin — but a *second, different* model reviewed the receipt and pointed out
+that accuracy fell 0.0278 to buy it. The gate promotes on evidence; the auditor may
+disagree in writing. Both are on the record.
+
+**The refusals are the interesting part.** Two further refinements *did* score higher and
+both were refused for gaining less than the margin. Refusing marginal gains is what stops
+a system ratcheting itself forward on noise.
+
+**It stopped repeating itself.** After two refusals for shaving samples, the proposer moved
+to a different knob entirely — verdicts return to it as structured history, not prose.
 
 Every verdict, promotion and refusal alike, writes a receipt carrying the diff, both
 scores, the margin, and the held-out seeds — enough to re-derive the decision
@@ -125,7 +141,7 @@ no role is pinned to a label.
 
 ```
 $ python3 -m pytest -q
-37 passed, 4 deselected
+all tests pass; 4 live-model tests deselected
 ```
 
 Determinism is checked in a **subprocess**. An in-process check passed throughout
@@ -182,10 +198,15 @@ score split into its parts, because the composite alone cannot separate *spent l
 kept the answers* from *spent less, lost accuracy, and the saving outran it*.
 
 ```
-PROMOTED  gemini-8986   {'samples_per_arm': (200, 400)}
-          champ +0.8704  challenger +0.9259
-          audit legitimate (gemini-3.5-flash-lite)
+PROMOTED  gemini-1260   {'samples_per_arm': (200, 400)}
+          champ +0.8704  challenger +0.8981
+          audit FLAGGED (gemini-3.5-flash-lite): accuracy fell by 0.0278, which
+                exceeds the noise threshold of 0.02
 ```
+
+A live result, not a staged one: the gate promoted on the numbers and the auditor
+disagreed on the record. Under paired arms this promotion looked free; under independent
+noise it costs real accuracy, and the auditor says so.
 
 It is **advisory and cannot veto.** It runs after the verdict and annotates the record —
 a promotion that turned on a model's opinion would reintroduce exactly what the gate
