@@ -22,6 +22,10 @@ check "worlds reproduce across processes" python3 -m pytest tests/test_worlds.py
 check "terraform validates"             bash -c 'cd infra && terraform validate'
 check "terraform is formatted"          bash -c 'cd infra && terraform fmt -check'
 check "no secrets tracked by git"       bash -c '! git ls-files | grep -qE "^\.env$|tfvars$"'
+# Agent tooling writes a policy store wherever it is run from, subdirectories
+# included, and that store carries machine identity. Two copies reached this repo
+# before anyone noticed, so it is checked rather than remembered.
+check "no agent tooling tracked"        bash -c '! git ls-files | grep -qE "claude-flow|\.swarm|agentic-qe|ruvnet"'
 
 printf '\n  %d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
