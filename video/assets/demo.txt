@@ -1,0 +1,39 @@
+
+[1] What the agent is allowed to know
+────────────────────────────────────────────────────────────────────
+  {'world_id': 'W-7', 'variables': ['X2', 'X1'], 'affordances': ['observe(n)', 'intervene(var, value, n)']}
+  No names, no units, no documentation. Two affordances: look, or act.
+
+[2] What passive observation says
+────────────────────────────────────────────────────────────────────
+  corr(X2, X1) = -0.961
+  Strong, clean, and completely wrong. A hidden common cause is doing it.
+
+[3] What the agent finds when it acts
+────────────────────────────────────────────────────────────────────
+  predicted X1->X2 sign -1  measured -0.043  REFUTED
+  predicted X2->X1 sign -1  measured +1.183  REFUTED
+  The prediction was written down before the experiment ran. The verdict is a comparison,
+  not a question put to the model.
+
+[4] The agent proposes a change to its own method
+────────────────────────────────────────────────────────────────────
+  champion champion-v1: +0.8704   (24 held-out worlds, never shown to the proposer)
+  proposer: scripted (offline)
+
+  PROMOTED  frugal-v2   {'samples_per_arm': (100, 400)}
+            champion +0.8704   challenger +0.9259
+            beat the champion on held-out worlds by the required margin
+            receipt 6f229aa9fdd6a026
+
+
+[5] And is refused when the evidence does not support it
+────────────────────────────────────────────────────────────────────
+  REFUSED   greedy-v3   {'effect_threshold': (2.5, 0.15)}
+            champion +0.9259   challenger +0.5301
+            gained -0.3958, needed +0.02
+            receipt 1a49fc855b1c493d
+
+  canon holds: frugal-v2
+  A refused proposal changed nothing. That is the whole claim.
+
