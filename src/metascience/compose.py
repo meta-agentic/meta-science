@@ -79,11 +79,30 @@ def compose(a: World, b: World, seed: int, n_bridges: int = 1) -> World:
     return world
 
 
-def generate_compound(seed: int) -> World:
-    """Deterministic compound: two templates and the bridge, all derived from the seed."""
+MAX_DEPTH = 7
+
+
+def generate_compound(seed: int, depth: int = 1) -> World:
+    """Deterministic compound chain: `depth` compositions folded left, so a world is
+    depth+1 templates. depth 0 is the atomic world — one code path for every depth,
+    which keeps the API's depth parameter honest rather than special-cased.
+
+    Everything — template picks, sub-seeds, bridge counts — derives from the one seed,
+    so a depth-7 chain replays exactly like an atom. Capped at MAX_DEPTH: past that the
+    layered drawing and the agent's experiment budget both stop being meaningful, and a
+    cap that exists only in the UI is not a cap.
+    """
+    if not 0 <= depth <= MAX_DEPTH:
+        raise ValueError(f"depth must be 0..{MAX_DEPTH}, got {depth}")
+    if depth == 0:
+        # The atomic world, unchanged: /world/7 at depth 0 must be the same W-7 it has
+        # always been, not a sibling derived from a shifted seed.
+        return generate(seed)
     pick = _stable_hash(f"compound-{seed}")
-    t1 = TEMPLATE_IDS[pick % len(TEMPLATE_IDS)]
-    t2 = TEMPLATE_IDS[(pick // 7) % len(TEMPLATE_IDS)]
-    a = generate(seed * 2 + 1, t1)
-    b = generate(seed * 2 + 2, t2)
-    return compose(a, b, seed, n_bridges=1 + pick % 2)
+    world = generate(seed * 2 + 1, TEMPLATE_IDS[pick % len(TEMPLATE_IDS)])
+    for i in range(depth):
+        template = TEMPLATE_IDS[(pick // 7 ** (i + 1)) % len(TEMPLATE_IDS)]
+        part = generate(seed * 2 + 2 + i, template)
+        world = compose(world, part, seed * 31 + i, n_bridges=1 + (pick >> i) % 2)
+    world.world_id = f"W-{seed}d{depth}"
+    return world

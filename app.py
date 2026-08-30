@@ -31,7 +31,6 @@ from metascience.reasoner import HeuristicReasoner  # noqa: E402
 from metascience.strategy import Strategy  # noqa: E402
 from metascience.compose import generate_compound  # noqa: E402
 from metascience.narrate import agent_brief, observer_narrative  # noqa: E402
-from metascience.templates import generate  # noqa: E402
 
 load_env()
 app = FastAPI(title="meta-science", description="An agent that does science, and can be refuted.")
@@ -70,19 +69,21 @@ def health() -> dict:
     return {"ok": True, "model": model_name()}
 
 
-def _world(seed: int, compound: bool):
-    return generate_compound(seed) if compound else generate(seed)
+def _world(seed: int, depth: int, compound: bool):
+    # `compound` is the legacy boolean from before depth existed; it means depth 1.
+    return generate_compound(seed, depth or (1 if compound else 0))
 
 
 @app.get("/world/{seed}")
-def world(seed: int, compound: bool = False) -> dict:
+def world(seed: int, depth: int = Query(0, ge=0, le=7), compound: bool = False) -> dict:
     """The agent's entire view. No structure, no domain terms, no ground truth."""
-    w = _world(seed, compound)
+    w = _world(seed, depth, compound)
     return w.describe() | {"brief": agent_brief(w)}
 
 
 @app.get("/world/{seed}/truth")
-def world_truth(seed: int, compound: bool = False) -> dict:
+def world_truth(seed: int, depth: int = Query(0, ge=0, le=7),
+                compound: bool = False) -> dict:
     """OBSERVER VIEW — ground truth for humans studying the benchmark.
 
     Public on purpose: the repo is public and any reader can compute this from the
@@ -90,7 +91,7 @@ def world_truth(seed: int, compound: bool = False) -> dict:
     — nothing on the agent's path calls this — and anonymisation guards against
     retrieval from training, not against a person reading the answer.
     """
-    w = _world(seed, compound)
+    w = _world(seed, depth, compound)
     return {
         "world_id": w.world_id,
         "seed": w.seed,
