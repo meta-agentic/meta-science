@@ -1,0 +1,15 @@
+{
+  "world": "unmemorisable planet, seed 7",
+  "model": {
+    "depends_on_x1": true,
+    "family": "focus_conic",
+    "predicted_x2": 1.2373,
+    "claimed_source": "Keplerian orbit",
+    "rationale": "The inverse of x2 is a linear combination of the sine and cosine of 2*pi*x1, which perfectly fits a focus conic representing a Keplerian orbit with an eccentricity of 0.06."
+  },
+  "held_out": {
+    "x1": 0.70645,
+    "x2": 1.23744
+  },
+  "abs_error": 0.00014
+}

@@ -71,6 +71,42 @@ labelled). The model is good at recognising the class of law and mediocre at the
 arithmetic of it — which is precisely the division of labour this project's harness
 exists for: the agent proposes, the machinery computes.
 
+## The propagated arms: the trilogy completed
+
+The historical dataset has two limits — Mars is maximally memorised, and nobody can
+act on it. isohub's `space-flight-dynamics` service (Orekit behind
+`contracts/sfd/openapi.yaml`, `POST /api/v1/trajectories/propagate`, central body
+`SUN` supported) lifts both. Three arcs were recorded from the live service into
+`tests/fixtures/` with full request provenance; every number below replays offline.
+One operational note a future integrator needs: heliocentric propagation requires an
+explicit all-zero force model — the service's default is Earth-tuned and underflows
+the integrator's minimum step around the Sun.
+
+**A planet that has never existed** (seed 7 → a=1.60 AU, e=0.06, perihelion at 67°;
+548 days, 138 states): the fitted conic returns **e=0.06, θ₀=67.0°** — the injected
+law rediscovered exactly, at machine-precision held-out error. Full closure of the
+pipeline, pinned by test.
+
+**The law-breaking twin**: the identical orbit around an oblate primary (degree-8
+gravity). The conic's held-out error jumps three orders of magnitude (0.00000 →
+0.01641), it stops being the best family, and the fitted perihelion drifts 34° —
+the ellipse is precessing under the data, and no closed r(θ) exists. This is the
+anti-recall instrument: an agent answering "Kepler's first law" from memory inherits
+that error floor; only an agent that reads residuals notices the law itself moved.
+Both facts pinned by test against the paired control.
+
+**The blind probe on the unmemorisable planet**: eleven anonymised rows, no
+provenance. Gemini inferred the dependence, chose the conic, stated *"an
+eccentricity of 0.06"* in its rationale — the injected value, recovered blind — and
+predicted the held-out point with error **0.00014**. Asked what system produced the
+data, it said "Keplerian orbit" and could name nothing, because there is nothing to
+name. (Record: [`docs/kepler/1788123084-ephemeris-probe.json`](kepler/1788123084-ephemeris-probe.json).)
+
+Read together with the Tycho arms, the picture sharpens: on clean dense data, blind
+inference is essentially perfect and recall adds nothing; on four noisy historical
+points, naming Mars was worth 3.2×. Memorisation is a crutch for sparse data, not a
+substitute for physics — which is a publishable sentence, and now a measured one.
+
 ## What this is not
 
 Not part of the hackathon submission's frozen claims — it lives on a branch, one live

@@ -1,0 +1,4052 @@
+{
+ "request": {
+  "spacecraftId": "metascience",
+  "startEpoch": "2026-01-01T00:00:00Z",
+  "duration": "P10D",
+  "stepSize": "PT2H",
+  "backend": "OREKIT",
+  "orbit": {
+   "centralBody": "EARTH",
+   "frame": "EME2000",
+   "epoch": "2026-01-01T00:00:00Z",
+   "semiMajorAxis": {
+    "value": 7159.0,
+    "unit": "km"
+   },
+   "eccentricity": 0.060000000000000005,
+   "inclination": {
+    "value": 0.0,
+    "unit": "\u00b0"
+   },
+   "raan": {
+    "value": 0.0,
+    "unit": "\u00b0"
+   },
+   "argumentOfPerigee": {
+    "value": 67.0,
+    "unit": "\u00b0"
+   },
+   "trueAnomaly": {
+    "value": 0.0,
+    "unit": "\u00b0"
+   }
+  },
+  "forceModel": {
+   "atmosphericDrag": false,
+   "moonGravity": false,
+   "sunGravity": false,
+   "solarRadiationPressure": false,
+   "gravityDegree": 0,
+   "gravityOrder": 0
+  }
+ },
+ "response": {
+  "spacecraftId": "metascience",
+  "startEpoch": "2026-01-01T00:00:00Z",
+  "endEpoch": "2026-01-11T00:00:00Z",
+  "states": [
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T00:00:00Z",
+    "x": {
+     "value": 2629409.499923428,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6194500.591114059,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7293.866246284926,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3096.0625343492334,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T02:00:00Z",
+    "x": {
+     "value": -5662158.625371861,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4175653.299696158,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -4849.607699046186,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5840.951624941029,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T04:00:00Z",
+    "x": {
+     "value": -6417828.970863657,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3876647.627134698,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3452.131908920571,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6223.284575258173,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T06:00:00Z",
+    "x": {
+     "value": 488046.73320398136,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7521376.146273853,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7046.704249894043,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 659.284731160392,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T08:00:00Z",
+    "x": {
+     "value": 6684321.208893455,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2424456.50458601,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2135.99214013128,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7202.5346286998365,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T10:00:00Z",
+    "x": {
+     "value": 3807828.638328951,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5557669.171967278,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6579.543362769757,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 4400.342371698616,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T12:00:00Z",
+    "x": {
+     "value": -4751745.9706360195,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5090293.003682799,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5877.251305065633,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4925.7144552489,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T14:00:00Z",
+    "x": {
+     "value": -6912419.323220193,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2774717.4073355305,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2371.811599435531,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6761.969420085007,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T16:00:00Z",
+    "x": {
+     "value": -706556.8930401744,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7532764.628228553,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7029.723460917182,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -522.8493066974793,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T18:00:00Z",
+    "x": {
+     "value": 6219572.779979673,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3599850.6462031724,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3331.7683337256362,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6644.959081139221,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T20:00:00Z",
+    "x": {
+     "value": 4844444.766406213,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4713772.805829645,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5625.911647767552,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5532.812731587927,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-01T22:00:00Z",
+    "x": {
+     "value": -3681087.5293510873,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5832951.258272437,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6734.5127499576065,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3814.2506212156986,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T00:00:00Z",
+    "x": {
+     "value": -7216114.346039478,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1596289.9665167467,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 1201.7212592421881,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7123.553890720781,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T02:00:00Z",
+    "x": {
+     "value": -1882590.4293640123,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7345661.334332155,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6828.362666363734,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -1680.5755250000223,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T04:00:00Z",
+    "x": {
+     "value": 5563594.015007667,
+     "unit": "m"
+    },
+    "y": {
+     "value": -4664795.322636808,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 4389.955013205838,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5903.456167633374,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T06:00:00Z",
+    "x": {
+     "value": 5702438.047023969,
+     "unit": "m"
+    },
+    "y": {
+     "value": 3695922.7595290984,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -4478.537086773213,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6448.1801577982,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T08:00:00Z",
+    "x": {
+     "value": -2482755.235537666,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6372916.926137759,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7378.205035623812,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -2538.3038843485233,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T10:00:00Z",
+    "x": {
+     "value": -7315836.950378356,
+     "unit": "m"
+    },
+    "y": {
+     "value": -372889.19524092,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -32.339710745784856,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7290.312031933641,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T12:00:00Z",
+    "x": {
+     "value": -3009376.9968425953,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6966307.570914073,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6449.457396334597,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -2789.2055846532066,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T14:00:00Z",
+    "x": {
+     "value": 4741689.462779704,
+     "unit": "m"
+    },
+    "y": {
+     "value": -5590861.0489580305,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5288.129592801674,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5010.340183291821,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T16:00:00Z",
+    "x": {
+     "value": 6353477.353925044,
+     "unit": "m"
+    },
+    "y": {
+     "value": 2543760.4270311645,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -3191.330298690684,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7114.95339838936,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T18:00:00Z",
+    "x": {
+     "value": -1196169.9343506377,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6685848.131983538,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7771.272256128055,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -1141.2499832355022,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T20:00:00Z",
+    "x": {
+     "value": -7203242.231366834,
+     "unit": "m"
+    },
+    "y": {
+     "value": 861166.6702711752,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -1300.227532982383,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7247.147981751926,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-02T22:00:00Z",
+    "x": {
+     "value": -4057573.1480592974,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6405029.932832603,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5901.905418847912,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3825.142167369027,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T00:00:00Z",
+    "x": {
+     "value": 3782362.287906859,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6355148.42908847,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6010.776828766991,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3998.3732234499894,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T02:00:00Z",
+    "x": {
+     "value": 6778735.0487965895,
+     "unit": "m"
+    },
+    "y": {
+     "value": 1301003.1623871974,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -1821.8270831026214,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7516.516260198138,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T04:00:00Z",
+    "x": {
+     "value": 133764.1562697488,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6755650.925101199,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7886.647594221513,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 323.23231910373374,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T06:00:00Z",
+    "x": {
+     "value": -6875476.335788127,
+     "unit": "m"
+    },
+    "y": {
+     "value": 2069310.3292020697,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -2567.225736402823,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6982.830852119955,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T08:00:00Z",
+    "x": {
+     "value": -4999516.113983326,
+     "unit": "m"
+    },
+    "y": {
+     "value": -5676075.086368504,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5196.672002637663,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4765.656112489297,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T10:00:00Z",
+    "x": {
+     "value": 2716231.1005491167,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6940261.537802839,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6548.252020696466,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 2899.6403780304577,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T12:00:00Z",
+    "x": {
+     "value": 6969116.860490302,
+     "unit": "m"
+    },
+    "y": {
+     "value": 12957.386492755342,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -426.758752151548,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7650.488060900718,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T14:00:00Z",
+    "x": {
+     "value": 1458656.1889660915,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6576002.998226544,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7710.733547362696,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 1794.026658307674,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T16:00:00Z",
+    "x": {
+     "value": -6335946.584468032,
+     "unit": "m"
+    },
+    "y": {
+     "value": 3213507.2037601075,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -3794.169080837556,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6491.545468764662,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T18:00:00Z",
+    "x": {
+     "value": -5809586.104013507,
+     "unit": "m"
+    },
+    "y": {
+     "value": -4797476.8742572,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 4346.959083842637,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5588.735368563689,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T20:00:00Z",
+    "x": {
+     "value": 1575124.8898831175,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7334131.541504162,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6895.738744348597,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 1744.8902020704734,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-03T22:00:00Z",
+    "x": {
+     "value": 6924809.785366714,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1275742.736587997,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 941.4975801494571,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7526.786717671944,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T00:00:00Z",
+    "x": {
+     "value": 2729132.6027075206,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6151271.073427984,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7245.795371303641,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3206.815064292867,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T02:00:00Z",
+    "x": {
+     "value": -5595028.154086292,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4255321.336458889,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -4938.099687720459,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5774.675866104245,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T04:00:00Z",
+    "x": {
+     "value": -6464609.587106442,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3790939.632198395,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3368.515834006953,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6273.05242351385,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T06:00:00Z",
+    "x": {
+     "value": 391346.41907805216,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7529760.891792955,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7052.316053383449,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 563.2385738515126,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T08:00:00Z",
+    "x": {
+     "value": 6654325.930079554,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2522998.339337282,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2237.299447036063,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7164.958964408815,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T10:00:00Z",
+    "x": {
+     "value": 3897610.364283308,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5496630.2114588795,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6510.66948651943,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 4499.1496786241905,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T12:00:00Z",
+    "x": {
+     "value": -4670601.9258804135,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5157291.293075241,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5953.631439854902,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4842.644221512738,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T14:00:00Z",
+    "x": {
+     "value": -6944325.111099241,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2681713.611444771,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2280.0607980515915,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6798.098329495466,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T16:00:00Z",
+    "x": {
+     "value": -802920.4267805916,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7524940.76734616,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7020.198307722613,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -617.8676704570732,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T18:00:00Z",
+    "x": {
+     "value": 6173244.1569964,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3690633.762067348,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3422.9464880916685,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6591.32088489927,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T20:00:00Z",
+    "x": {
+     "value": 4921024.846556099,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4637309.505375313,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5539.508075298373,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5615.550098461438,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-04T22:00:00Z",
+    "x": {
+     "value": -3588292.023429879,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5884602.670109481,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6795.144370903869,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3716.517557215487,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T00:00:00Z",
+    "x": {
+     "value": -7231927.177823745,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1498430.0443998943,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 1103.773037003968,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7144.533823831562,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T02:00:00Z",
+    "x": {
+     "value": -1976091.2559614957,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7321977.715453378,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6804.174474633782,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -1772.5199321648834,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T04:00:00Z",
+    "x": {
+     "value": 5502833.808672261,
+     "unit": "m"
+    },
+    "y": {
+     "value": -4745314.342785901,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 4468.908489915155,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5836.320081098502,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T06:00:00Z",
+    "x": {
+     "value": 5763187.073691297,
+     "unit": "m"
+    },
+    "y": {
+     "value": 3607034.4460826134,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -4378.722098172631,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6511.756966501712,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T08:00:00Z",
+    "x": {
+     "value": -2381260.3708284805,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6406986.325526457,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7419.806979021225,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -2428.996523234715,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T10:00:00Z",
+    "x": {
+     "value": -7314694.905289135,
+     "unit": "m"
+    },
+    "y": {
+     "value": -272854.77674943325,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -134.21022349821192,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7294.808000300957,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T12:00:00Z",
+    "x": {
+     "value": -3097584.1277930224,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6927451.024143822,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6411.251152706714,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -2876.127421527014,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T14:00:00Z",
+    "x": {
+     "value": 4668702.919032189,
+     "unit": "m"
+    },
+    "y": {
+     "value": -5659054.489658368,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5353.357932491149,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 4932.361551172559,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T16:00:00Z",
+    "x": {
+     "value": 6396508.677780515,
+     "unit": "m"
+    },
+    "y": {
+     "value": 2445870.245650028,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -3082.6923336837494,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7157.468529336709,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T18:00:00Z",
+    "x": {
+     "value": -1089431.5738772638,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6700701.586028256,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7791.2294692623245,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -1024.3611248808088,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T20:00:00Z",
+    "x": {
+     "value": -7184699.379214757,
+     "unit": "m"
+    },
+    "y": {
+     "value": 960488.6754299926,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -1403.379699340425,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7234.087602344389,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-05T22:00:00Z",
+    "x": {
+     "value": -4138178.7776409686,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6352010.438946516,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5850.491048195672,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3905.17076993085,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T00:00:00Z",
+    "x": {
+     "value": 3699563.9360823897,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6409404.080191031,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6061.294691915355,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3912.1875806848884,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T02:00:00Z",
+    "x": {
+     "value": 6802951.902503313,
+     "unit": "m"
+    },
+    "y": {
+     "value": 1197753.9653475813,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -1709.045531406324,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7537.266129020274,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T04:00:00Z",
+    "x": {
+     "value": 241925.507427172,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6750395.843771196,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7883.316474530642,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 442.9803646122324,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T06:00:00Z",
+    "x": {
+     "value": -6839565.500669907,
+     "unit": "m"
+    },
+    "y": {
+     "value": 2164881.5303294254,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -2668.6480347217384,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6951.518801642861,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T08:00:00Z",
+    "x": {
+     "value": -5070364.032151527,
+     "unit": "m"
+    },
+    "y": {
+     "value": -5610213.975286688,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5133.032239157908,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4836.983233364808,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T10:00:00Z",
+    "x": {
+     "value": 2626164.8173848293,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6979406.69634146,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6583.503041408757,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 2807.7939940738183,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T12:00:00Z",
+    "x": {
+     "value": 6974199.079466926,
+     "unit": "m"
+    },
+    "y": {
+     "value": -91982.75279453812,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -314.2777825936578,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7649.850906458036,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T14:00:00Z",
+    "x": {
+     "value": 1564241.823183839,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6550588.130514106,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7683.685584545069,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 1911.4790189439075,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T16:00:00Z",
+    "x": {
+     "value": -6283240.161510736,
+     "unit": "m"
+    },
+    "y": {
+     "value": 3302212.95836972,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -3890.509949919509,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6441.800982070269,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T18:00:00Z",
+    "x": {
+     "value": -5868702.514723446,
+     "unit": "m"
+    },
+    "y": {
+     "value": -4720397.041937513,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 4272.269704385261,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5649.60749947243,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T20:00:00Z",
+    "x": {
+     "value": 1480398.2243365326,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7357414.42812834,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6915.514764611267,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 1649.8039966934075,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-06T22:00:00Z",
+    "x": {
+     "value": 6911152.439196562,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1378847.8804725807,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 1049.7070569652947,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7506.025821318832,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T00:00:00Z",
+    "x": {
+     "value": 2828184.080769643,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6106527.76082541,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7195.943526751872,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3316.7735320463285,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T02:00:00Z",
+    "x": {
+     "value": -5526689.576457047,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4334070.531077875,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5025.749528795338,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5706.982751360339,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T04:00:00Z",
+    "x": {
+     "value": -6510238.257441541,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3704556.1246191226,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3284.176168612936,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6321.774787195655,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T06:00:00Z",
+    "x": {
+     "value": 294577.6291116464,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7536828.1758781,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7056.68857466956,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 467.1968361690051,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T08:00:00Z",
+    "x": {
+     "value": 6622945.9746578345,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2621015.1816146215,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2337.879616208818,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7125.991549381667,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T10:00:00Z",
+    "x": {
+     "value": 3986436.648208734,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5434243.828163465,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6440.240393466392,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 4596.796593379712,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T12:00:00Z",
+    "x": {
+     "value": -4588417.979044822,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5223141.305785294,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6028.8684906162025,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4758.294269074815,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T14:00:00Z",
+    "x": {
+     "value": -6974968.361917346,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2588222.2630124935,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2187.731631070205,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6833.0545499649925,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T16:00:00Z",
+    "x": {
+     "value": -899145.0164559999,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7515814.709147161,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7009.465482660781,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -712.7117703197549,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T18:00:00Z",
+    "x": {
+     "value": 6125671.131797284,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3780672.930299614,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3513.2040525121556,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6536.491870498798,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T20:00:00Z",
+    "x": {
+     "value": 4996411.126275696,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4559721.224921102,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5451.8561465434095,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5696.835209975991,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-07T22:00:00Z",
+    "x": {
+     "value": -3494674.5832309253,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5934906.137746113,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6854.349904123821,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3617.7193031693396,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T00:00:00Z",
+    "x": {
+     "value": -7246393.633724151,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1400291.164350802,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 1005.4176838239756,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7164.22542567182,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T02:00:00Z",
+    "x": {
+     "value": -2069252.3185855607,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7297035.171279757,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6778.824663157842,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -1864.1288897668219,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T04:00:00Z",
+    "x": {
+     "value": 5440997.870537109,
+     "unit": "m"
+    },
+    "y": {
+     "value": -4824905.726728256,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 4546.798674232765,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5768.206641405921,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T06:00:00Z",
+    "x": {
+     "value": 5822560.795492288,
+     "unit": "m"
+    },
+    "y": {
+     "value": 3517285.3559145117,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -4278.018132817698,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6573.682238411246,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T08:00:00Z",
+    "x": {
+     "value": -2279206.261097954,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6439551.005670669,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7459.741966448175,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -2318.9152392301007,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T10:00:00Z",
+    "x": {
+     "value": -7312154.050966757,
+     "unit": "m"
+    },
+    "y": {
+     "value": -172768.1867624818,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -236.2878401616306,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7297.917640142875,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T12:00:00Z",
+    "x": {
+     "value": -3185259.614087086,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6887405.505196569,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6371.9427317370255,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -2962.559636645328,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T14:00:00Z",
+    "x": {
+     "value": 4594829.587469421,
+     "unit": "m"
+    },
+    "y": {
+     "value": -5726173.043186578,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5417.425153236792,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 4853.620948025357,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T16:00:00Z",
+    "x": {
+     "value": 6438046.279972491,
+     "unit": "m"
+    },
+    "y": {
+     "value": 2347408.892584534,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -2973.5458605449644,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7198.231420439645,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T18:00:00Z",
+    "x": {
+     "value": -982432.0661533714,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6713948.778414317,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7809.346622286411,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -907.0569152623782,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T20:00:00Z",
+    "x": {
+     "value": -7164741.713681251,
+     "unit": "m"
+    },
+    "y": {
+     "value": 1059621.5326391356,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -1506.5087119853665,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7219.568829005078,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-08T22:00:00Z",
+    "x": {
+     "value": -4218072.084423443,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6297897.547903779,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5798.047469279341,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3984.561130890912,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T00:00:00Z",
+    "x": {
+     "value": 3616080.99557654,
+     "unit": "m"
+    },
+    "y": {
+     "value": -6462473.710276599,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6110.591548995698,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3825.450201915388,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T02:00:00Z",
+    "x": {
+     "value": 6825620.753447925,
+     "unit": "m"
+    },
+    "y": {
+     "value": 1094232.2118312765,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -1596.128002406156,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7556.256376213343,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T04:00:00Z",
+    "x": {
+     "value": 350027.98207351787,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6743498.063565294,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7878.062781510954,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 562.7375884692422,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T06:00:00Z",
+    "x": {
+     "value": -6802265.358448082,
+     "unit": "m"
+    },
+    "y": {
+     "value": 2260012.9741780967,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -2769.787641340248,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6918.712594870586,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T08:00:00Z",
+    "x": {
+     "value": -5140332.5305180615,
+     "unit": "m"
+    },
+    "y": {
+     "value": -5543379.814471174,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 5068.450966276862,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4907.528080611403,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T10:00:00Z",
+    "x": {
+     "value": 2535623.562638277,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7017289.564652743,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6617.504247250559,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 2715.596911732705,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T12:00:00Z",
+    "x": {
+     "value": 6977739.7663294505,
+     "unit": "m"
+    },
+    "y": {
+     "value": -196902.5702696484,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -202.0025784639626,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7647.526509757616,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T14:00:00Z",
+    "x": {
+     "value": 1669443.4042925911,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6523564.969203609,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7654.738389453573,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 2028.5154918871533,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T16:00:00Z",
+    "x": {
+     "value": -6229216.081752331,
+     "unit": "m"
+    },
+    "y": {
+     "value": 3390226.1961387834,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -3986.2838507524925,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6390.574761861407,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T18:00:00Z",
+    "x": {
+     "value": -5926788.65222602,
+     "unit": "m"
+    },
+    "y": {
+     "value": -4642488.530057586,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 4196.743365249125,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5709.557749257653,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T20:00:00Z",
+    "x": {
+     "value": 1385408.8876125729,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7379391.888504103,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6934.037168988716,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 1554.5572098818025,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-09T22:00:00Z",
+    "x": {
+     "value": 6896014.1882448625,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1481657.5779070212,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 1157.4147699011223,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7483.7117849409715,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T00:00:00Z",
+    "x": {
+     "value": 2926539.6044836226,
+     "unit": "m"
+    },
+    "y": {
+     "value": 6060281.76414741,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -7144.325423485045,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 3425.9061171945586,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T02:00:00Z",
+    "x": {
+     "value": -5457154.612568906,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4411881.498691654,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5112.532688956143,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -5637.880693643872,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T04:00:00Z",
+    "x": {
+     "value": -6554705.130694859,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3617511.5183581416,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3199.12378526358,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6369.441041205674,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T06:00:00Z",
+    "x": {
+     "value": 197757.34925733868,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7542578.156049113,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 7059.823789489825,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 371.1736347982238,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T08:00:00Z",
+    "x": {
+     "value": 6590191.438374792,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2718488.046666055,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2437.7149892646853,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 7085.647874034242,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T10:00:00Z",
+    "x": {
+     "value": 4074286.308540807,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5370526.123198855,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6368.278263253003,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 4693.256387409458,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T12:00:00Z",
+    "x": {
+     "value": -4505209.973940052,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5287825.586396292,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6102.938565233505,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -4672.679062378247,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T14:00:00Z",
+    "x": {
+     "value": -7004341.230167792,
+     "unit": "m"
+    },
+    "y": {
+     "value": -2494259.5156792053,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 2094.8369571450203,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -6866.828216903719,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T16:00:00Z",
+    "x": {
+     "value": -995214.1182390245,
+     "unit": "m"
+    },
+    "y": {
+     "value": -7505388.935693276,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 6997.528200415451,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -807.3682506792495,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T18:00:00Z",
+    "x": {
+     "value": 6076866.42436586,
+     "unit": "m"
+    },
+    "y": {
+     "value": -3869951.932756768,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 3602.5276464366966,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 6480.489027741938,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T20:00:00Z",
+    "x": {
+     "value": 5070586.670444449,
+     "unit": "m"
+    },
+    "y": {
+     "value": 4481028.021346879,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -5362.983433450918,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": 5776.648319949465,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-10T22:00:00Z",
+    "x": {
+     "value": -3400254.9178037266,
+     "unit": "m"
+    },
+    "y": {
+     "value": 5983847.191911048,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": -6912.107927780981,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -3517.8766561954235,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   },
+   {
+    "spacecraftId": "metascience",
+    "epoch": "2026-01-11T00:00:00Z",
+    "x": {
+     "value": -7259508.2324232925,
+     "unit": "m"
+    },
+    "y": {
+     "value": -1301891.058289854,
+     "unit": "m"
+    },
+    "z": {
+     "value": 0.0,
+     "unit": "m"
+    },
+    "vx": {
+     "value": 906.6702990118634,
+     "unit": "m/s"
+    },
+    "vy": {
+     "value": -7182.620005348161,
+     "unit": "m/s"
+    },
+    "vz": {
+     "value": 0.0,
+     "unit": "m/s"
+    },
+    "dryMass": {
+     "value": 1000.0,
+     "unit": "kg"
+    },
+    "propagatorUsed": "OREKIT-NumericalPropagator-DOP853"
+   }
+  ],
+  "propagationMetadata": {
+   "propagatorUsed": "OREKIT-NumericalPropagator-DOP853",
+   "forceModels": [
+    "HolmesFeatherstone-0x0"
+   ],
+   "integrator": "DormandPrince853",
+   "absoluteTolerance": 0.001,
+   "relativeTolerance": 1e-10
+  }
+ }
+}

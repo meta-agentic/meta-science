@@ -218,6 +218,23 @@ def leave_one_out(points=None) -> dict:
     return out
 
 
+def holdout_score(points, stride: int = 5) -> dict:
+    """Per-family error on every stride-th point, fitted on the rest.
+
+    The dense-arc version of leave-one-out: one fit per family, honest held-out
+    prediction, cheap enough for a hundred points.
+    """
+    train = [p for i, p in enumerate(points) if i % stride]
+    test = [p for i, p in enumerate(points) if not i % stride]
+    out = {}
+    for name, fitter in FAMILIES.items():
+        _, predict = fitter(train)
+        errs = [abs(predict(t) - r) for t, r in test]
+        out[name] = {"mean_abs_err": round(sum(errs) / len(errs), 6),
+                     "worst_abs_err": round(max(errs), 6)}
+    return out
+
+
 def full_fits(points=None) -> dict:
     points = points if points is not None else mars_points()
     return {name: fitter(points)[0] for name, fitter in FAMILIES.items()}
