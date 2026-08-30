@@ -1,0 +1,312 @@
+% LNCS submission — Springer Computer Science Proceedings.
+% Paper A of a two-paper plan: the meta-science system paper. The companion
+% instrument paper ("Recall or Discovery?") lives on branch paper-instrument.
+% Rule of the pair: no result is reported in both.
+%
+% Style per the author guidelines (Hofmann et al.): abstract 70-150 words;
+% middot keywords; two numbered heading levels; table captions above; numbered
+% equations without section counters; [n] citations; Springer references;
+% American English.
+\documentclass{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{url}
+
+\begin{document}
+
+\title{Meta-Science: Falsifiable Scientific Reasoning by Agents\\
+on Anonymized Causal Worlds}
+
+\author{Marco Vanadia}
+\institute{Independent Researcher, Warsaw, Poland\\
+\email{marco.vanadia@gmail.com}}
+
+\maketitle
+
+\begin{abstract}
+``Self-improving agent'' is the most repeated unfalsifiable claim in the
+field: a system that reports its own improvement is indistinguishable from one
+that logs ``improved'' and changes nothing. We present a system built around
+the opposite artifact---one that refuses. An agent does science on randomly
+generated causal mini-worlds it has never seen: it commits falsifiable
+predictions before each experiment, is refuted by its own interventions, and
+proposes changes to its own method that are promoted only when they beat the
+incumbent by a margin on held-out worlds the proposer cannot enumerate.
+Anonymization is a tested property, not an assertion: reading observations
+alone, a frontier model recovers the causal direction in zero of four
+confounded worlds; allowed to intervene, four of four. Across three published
+live runs the gate promoted once and refused twice---every time---and each
+verdict carries a receipt sufficient to recompute it without trusting us.
+\keywords{Falsifiability \and Agents \and Causal inference \and
+Self-improvement \and Benchmarks \and Scientific method}
+\end{abstract}
+
+
+\section{Introduction}
+
+Karl Popper's demarcation criterion applies to demonstrations of artificial
+scientists as much as to theories~\cite{popper}: a demonstration that cannot
+fail is empty. Yet demonstrations of ``self-improving'' agents typically
+exhibit successes on benchmarks chosen after the fact, judged by the agent
+itself or by nothing at all. The interesting artifact, we argue, is not a
+system that improves; it is a system that \emph{refuses to}---and can show,
+number by number, why.
+
+This paper describes such a system, built on two refusals stated up front:
+\begin{equation}
+A \vdash c \;\;\not\Rightarrow\;\; \vDash c ,
+\end{equation}
+\emph{no agent is the judge of its own claims}---that an agent derives a
+conclusion never entails that the conclusion holds, so verdicts are computed,
+never solicited; and
+\begin{equation}
+P(Y \mid \mathrm{do}(X)) \;\not\equiv\; P(Y \mid X) ,
+\end{equation}
+\emph{seeing is not doing}~\cite{pearl}---the two coincide exactly when
+confounding is absent, and that absence may never be assumed. The first axiom
+becomes an architecture (Sect.~\ref{sec:gate}); the second becomes a world
+generator whose observational surface actively lies (Sect.~\ref{sec:worlds}).
+
+The system operates on two levels under one gate. Level~1: an agent meets a
+world it has never seen---opaque variable names, no documentation, two
+affordances (look, or act)---forms a falsifiable hypothesis, designs an
+intervention, and finds out whether it was wrong. Level~2: the agent proposes
+a change to its own experiment-design strategy, evaluated as champion versus
+challenger on held-out worlds it never sees, promoted only past a margin, with
+an independent auditor free to dissent in writing and every verdict written to
+a replayable receipt.
+
+Our contributions: (i)~a generator of anonymized causal worlds whose
+anonymization is \emph{tested} rather than asserted
+(Sect.~\ref{sec:worlds}); (ii)~a promotion gate for self-modification with
+margins against noise-ratcheting, receipts for lineage, and an advisory
+auditor against metric gaming (Sect.~\ref{sec:gate}); (iii)~measurements,
+including a 384-run study of discovery by refutation and three published live
+runs of gated self-evolution whose headline behaviors reproduce run over run
+(Sect.~\ref{sec:results}); and (iv)~a methodological confession log---our
+benchmark flattered us once, our published figures drifted from the code once,
+and both failures, with their fixes, are part of the record
+(Sect.~\ref{sec:honesty}).
+
+\section{Related Work}
+
+Automated scientific discovery has substantial prior art: active
+learning~\cite{settles}, constraint-based causal discovery~\cite{spirtes},
+distilling laws from data~\cite{schmidt}, and rule induction in the
+Zendo/Eleusis tradition of hidden-rule games~\cite{gardner}. Recent
+LLM-as-scientist systems~\cite{aiscientist} close the loop from hypothesis to
+paper but are evaluated on their successes. This is not the first artificial
+scientist and does not claim to be. The narrower claim is \emph{falsifiable
+self-improvement}: a loop whose every promotion is earned against evidence the
+proposer cannot see, score, or tune against---leaving a receipt either way. A
+companion paper~\cite{companion} builds a recall-versus-inference instrument
+on this framework; no result is reported in both.
+
+\section{Anonymized Causal Worlds}\label{sec:worlds}
+
+Worlds are structural causal models seeded from real scientific
+topologies---state relations, exponential response, transport chains,
+compartment flows, inheritance, confounding---because real science supplies
+non-trivial structure and known ground truth for free. Six frozen templates
+rotate by seed; every retrievable surface is stripped at birth: domain names
+become $X_1..X_n$, labels shuffle per world, constants and exponents
+randomize, and the functional family varies. Generation is deterministic from
+the seed via a stable hash, so the same seed builds a bit-identical world in
+every process---asserted in a subprocess, because an in-process check cannot
+see the failure mode (Sect.~\ref{sec:honesty}).
+
+One template family is required to \emph{invert}: a hidden confounder gives
+the observational correlation the opposite sign of the true causal effect
+(Simpson-style), with inversion realized in 83.9\,\% of generated confounded
+worlds across the study. On such worlds an agent that only looks concludes
+the opposite of the truth.
+
+\textbf{Anonymization as a tested property.} A banned lexicon is necessary
+but not sufficient---the real question is whether a model can answer without
+experimenting. So it is tested adversarially: give the model the anonymized
+observations, forbid experiments, and ask for the causal direction
+(Table~\ref{tab:blind}). Observation alone recovers zero of four confounded
+worlds; the same loop allowed to intervene recovers four of four. The
+comparison shows simultaneously that the disguise holds (if the model could
+recognize the worlds, looking would have sufficed) and that intervention does
+real work rather than decorating a conclusion the model already had.
+
+\begin{table}
+\caption{The measurement that anchors both axioms: identical anonymized
+worlds; the only difference is the ability to act.}\label{tab:blind}
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+ & Confounded worlds recovered\\
+\midrule
+Frontier model, observation only & 0 / 4\\
+The same loop, allowed to intervene & 4 / 4\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{The Gate}\label{sec:gate}
+
+Every record lives in one of three tiers---raw (anything the agent produces),
+wiki (candidate findings), output (accepted canon)---and a record's tier
+\emph{is} its status: nothing is promoted by assertion, only by moving up.
+The agent never sees the held-out seeds, never runs the scorer, and never
+writes above raw. Promotion of a challenger method $M'$ over champion $M$
+requires
+\begin{equation}
+M' \succ M \iff S(M', W) \ge S(M, W) + \varepsilon,
+\qquad W \cap \mathrm{view}(M') = \varnothing ,
+\end{equation}
+with $\varepsilon = 0.02$ on a score that separates accuracy from measurement
+cost. The margin exists because a gate without one ratchets on noise: a
+thousand tiny lucky wins launder randomness into ``progress.'' Every verdict,
+promotion and refusal alike, writes a receipt carrying the diff, both scores,
+the margin, the score decomposition, and the held-out seeds---enough to
+recompute the decision independently, and cheap enough that refusals are
+documented as thoroughly as successes.
+
+An \emph{independent auditor}---a different model---reads each promotion's
+receipt and may dissent on the record, without veto. Advisory status is
+deliberate: the auditor is a language model and not deterministic
+(Sect.~\ref{sec:results}); a gate whose verdicts depended on it would inherit
+that variance.
+
+\section{Measurements}\label{sec:results}
+
+\textbf{Discovery by refutation.} Predictions are committed to the trace
+before each experiment runs; the verdict compares prediction to result, and
+the model is never asked whether it was right---a hypothesis recorded after
+the result is a description, not a hypothesis. Across a 384-run study the
+loop attains recall 1.000 and precision 0.786 on true causal edges, and an
+observational pre-screening heuristic shows no benefit over direct
+experimentation (a null result, reported as such).
+
+\textbf{Gated self-evolution, three published runs.} From the same starting
+champion and note, three consecutive live runs were recorded and all three
+published---none discarded, none re-rolled (Table~\ref{tab:runs}). The shape
+reproduces exactly: one promotion, two refusals, every time. The promoted
+change was always a large cut in measurement (samples per arm 400 to 150--200);
+everything after it was refused---four of the six refusals were of candidates
+that genuinely scored \emph{higher} and missed the margin, which is the gate
+doing the one thing it exists to do. In every run the proposer, given
+structured verdict history, stopped repeating refused proposals and changed
+knobs by generation three.
+
+\begin{table}
+\caption{Three live runs of gated self-evolution. Scores are on 24 held-out
+worlds; margin $\varepsilon=0.02$. The auditor disagreement in runs 1 and 3
+(identical promotion, opposite audit) is retained, not resolved.}\label{tab:runs}
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+ & Run 1 & Run 2 & Run 3\\
+\midrule
+Gen 1 & promoted $+0.0416$ & promoted $+0.0277$ & promoted $+0.0416$\\
+Gen 2 & refused $+0.0084$ & refused $+0.0139$ & refused $+0.0139$\\
+Gen 3 & refused $-0.0287$ & refused $-0.0259$ & refused $+0.0042$\\
+Audit & flagged & flagged & legitimate\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{What does not reproduce is reported.} Runs 1 and 3 contain the
+identical promotion---same diff, same scores---and the auditor flagged it in
+one and called it legitimate in the other. The disagreement is preserved on
+both receipts. The margin decides either way; the auditor annotates the
+record rather than controlling it.
+
+\section{The Process Was the Philosophy}\label{sec:honesty}
+
+Building the system forced its discipline onto its builders, and the failures
+are part of the evidence.
+
+\textbf{Our benchmark flattered us.} Intervention arms initially shared
+random draws (common random numbers), which cancels noise so completely that
+cutting measurement was free score---very likely why the proposer kept
+winning by asking for fewer samples. We measured both regimes: at 25 samples
+per arm, accuracy holds at 98.1\,\% under shared noise and falls to 84.3\,\%
+under honest independent noise. Independent noise is now the default, the
+extreme strategy correctly loses, and both facts are asserted by tests.
+
+\textbf{Our published figures drifted from the code.} World generation was
+seeded with a per-process randomized hash, so the same seed built a different
+world in every process and the replayability the receipts promise did not
+hold. The fix (a stable content hash) is guarded by a subprocess determinism
+test, and every published figure is pinned to the code by a test that fails
+when either moves.
+
+\textbf{Our first metric was gameable.} Cost initially charged the number of
+experiments, leaving sample size free; a challenger bought accuracy with data
+and appeared to have learned. Cost now charges total measurement, and that
+candidate loses.
+
+None of this was planned; all of it is the point. A method applied only to
+one's subject is a pose. Applied to oneself, it becomes a practice.
+
+\section{Limitations}
+
+The live evidence is three runs of three generations with one model family
+proposing; variance estimates need a repetition campaign. The worlds'
+mechanisms are simple (the study's replication analysis found repetition
+cost-neutral under i.i.d.\ Gaussian noise---worlds kind enough that
+replication has nothing to catch, which is a statement about the worlds, not
+about replication). The auditor's non-determinism is documented rather than
+solved. The system recovers causal directions and magnitudes, not yet laws;
+law induction is the companion paper's subject~\cite{companion}.
+
+\section{Conclusion}
+
+We set out to build not a self-improving agent but the gate such an agent
+would have to pass, and only then the agent. The result improves rarely and
+refuses often, which is precisely its value: the refusals carry information,
+the promotions carry receipts, and every number in this paper can be
+recomputed from committed artifacts without trusting its authors.
+\emph{Ex probatione propria non sequitur veritas}: from one's own proving,
+truth does not follow. The gate exists so that it does not have to.
+
+\subsubsection*{Acknowledgements.} The system was built meta-agentically: an
+AI pair-engineer proposing at speed, a human judging, refusing, and
+redirecting---neither trusted as the judge of its own claims.
+
+\begin{thebibliography}{9}
+% NOTE: verify every entry against the actual editions before submission.
+\bibitem{popper}
+Popper, K.: Logik der Forschung. Julius Springer, Vienna (1934). English
+edition: The Logic of Scientific Discovery. Hutchinson, London (1959)
+
+\bibitem{pearl}
+Pearl, J.: Causality: Models, Reasoning, and Inference. 2nd edn. Cambridge
+University Press, Cambridge (2009)
+
+\bibitem{settles}
+Settles, B.: Active Learning. Synthesis Lectures on Artificial Intelligence
+and Machine Learning. Morgan \& Claypool (2012)
+
+\bibitem{spirtes}
+Spirtes, P., Glymour, C., Scheines, R.: Causation, Prediction, and Search.
+2nd edn. MIT Press, Cambridge (2000)
+
+\bibitem{schmidt}
+Schmidt, M., Lipson, H.: Distilling free-form natural laws from experimental
+data. Science 324(5923), 81--85 (2009)
+
+\bibitem{gardner}
+Gardner, M.: Mathematical games: about the game of Eleusis, in which players
+frame laws and solve them by induction. Scientific American 200(6), 160--168
+(1959)
+
+\bibitem{aiscientist}
+Lu, C., Lu, C., Lange, R.T., Foerster, J., Clune, J., Ha, D.: The AI
+Scientist: towards fully automated open-ended scientific discovery.
+arXiv:2408.06292 (2024)
+
+\bibitem{companion}
+Vanadia, M.: Recall or Discovery? A Falsifiable Instrument for Law Induction
+with Language Models. Companion paper, in preparation (2026)
+\end{thebibliography}
+
+\end{document}
