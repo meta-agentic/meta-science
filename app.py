@@ -20,9 +20,10 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from metascience.config import load_env, model_name  # noqa: E402
 from metascience.discovery import run_discovery, score_on_held_out  # noqa: E402
-from metascience.evolution import (evaluate_strategy, held_out_seeds,  # noqa: E402
-                                   run_generation)
-from metascience.gemini import GeminiProposer, GeminiReasoner  # noqa: E402
+from metascience.auditor import audit_promotion  # noqa: E402
+from metascience.evolution import (evaluate_detailed, evaluate_strategy,  # noqa: E402
+                                   held_out_seeds, run_generation)
+from metascience.gemini import TUNABLE, GeminiProposer, GeminiReasoner  # noqa: E402
 from metascience.ledger import FileLedger, PromotionGate  # noqa: E402
 from metascience.reasoner import HeuristicReasoner  # noqa: E402
 from metascience.strategy import Strategy  # noqa: E402
@@ -88,7 +89,9 @@ def evolve() -> dict:
     """Gemini proposes a change to the scientist's own method; the gate rules on it."""
     seeds = held_out_seeds(24)
     ledger = _ledger()
-    gate = PromotionGate(ledger, evaluate_strategy, margin=0.02)
+    gate = PromotionGate(
+        ledger, evaluate_strategy, margin=0.02, detailed=evaluate_detailed,
+        auditor=lambda r: audit_promotion(r, {k: t.__name__ for k, t in TUNABLE.items()}))
     champion = Strategy()
     _, receipt = run_generation(
         ledger, gate, champion, GeminiProposer(), seeds,
@@ -103,6 +106,9 @@ def evolve() -> dict:
         "reason": receipt.reason,
         "digest": receipt.digest(),
         "held_out_worlds": len(seeds),
+        "score_parts": {"champion": receipt.champion_parts,
+                        "challenger": receipt.challenger_parts},
+        "audit": receipt.audit,
     }
 
 

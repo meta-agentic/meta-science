@@ -11,9 +11,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from metascience.config import load_env  # noqa: E402
-from metascience.evolution import (ScriptedProposer, evaluate_strategy,  # noqa: E402
-                                   held_out_seeds, run_generation)
-from metascience.gemini import GeminiProposer  # noqa: E402
+from metascience.auditor import audit_promotion  # noqa: E402
+from metascience.evolution import (ScriptedProposer, evaluate_detailed,  # noqa: E402
+                                   evaluate_strategy, held_out_seeds, run_generation)
+from metascience.gemini import TUNABLE, GeminiProposer  # noqa: E402
 from metascience.ledger import FileLedger, PromotionGate  # noqa: E402
 from metascience.strategy import Strategy  # noqa: E402
 
@@ -25,7 +26,12 @@ args = ap.parse_args()
 load_env()
 seeds = held_out_seeds(24)
 ledger = FileLedger("runs")
-gate = PromotionGate(ledger, evaluate_strategy, margin=0.02)
+gate = PromotionGate(
+    ledger, evaluate_strategy, margin=0.02,
+    detailed=evaluate_detailed,
+    auditor=(None if args.offline
+             else lambda r: audit_promotion(r, {k: t.__name__ for k, t in TUNABLE.items()})),
+)
 proposer = (ScriptedProposer([("blunt-v2", {"effect_threshold": 2.5}),
                               ("frugal-v2", {"samples_per_arm": 100})])
             if args.offline else GeminiProposer())
@@ -42,6 +48,11 @@ for i in range(args.generations):
     print(f"         diff   {r.diff}")
     print(f"         champ {r.champion_score:+.4f}  challenger {r.challenger_score:+.4f}")
     print(f"         {r.reason}")
+    if r.audit:
+        verdict = {True: "legitimate", False: "FLAGGED", None: "unavailable"}[r.audit["legitimate"]]
+        concern = (r.audit.get("concern") or "").strip()
+        detail = f": {concern[:88]}" if concern else ""
+        print(f"         audit  {verdict} ({r.audit.get('auditor_model')}){detail}")
     print(f"         receipt {r.digest()}\n")
     notes = (f"{r.candidate} scored {r.challenger_score:+.4f} against champion "
              f"{r.champion_score:+.4f}. Verdict {r.verdict}.")
