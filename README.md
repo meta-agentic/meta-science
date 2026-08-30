@@ -265,6 +265,7 @@ uvicorn app:app --reload --port 8080
 ## Deploy
 
 ```bash
+./scripts/verify.sh     # everything that must hold before deploying
 cd infra
 terraform init
 terraform apply

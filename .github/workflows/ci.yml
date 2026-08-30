@@ -21,14 +21,13 @@ jobs:
       # No API key in CI. The anonymisation suite and the whole promotion gate run
       # offline by design, so the governance claim is verifiable without credentials —
       # tests that need a key skip themselves rather than failing the build.
-      - name: Test
-        # Default deselects the `slow` marks: those make live model calls against a
-        # rate-limited endpoint, so including them makes a green build depend on quota
-        # rather than on the code.
-        run: python -m pytest -q
+      # verify.sh runs the suite plus the behavioural checks. The default pytest run
+      # deselects the `slow` marks: those make live model calls against a rate-limited
+      # endpoint, so including them makes a green build depend on quota, not on the code.
 
-      - name: The gate must still refuse
-        run: python run_evolution.py --offline | tee /tmp/out.txt && grep -q REFUSED /tmp/out.txt
+      - name: Verify
+        # The same script a human runs locally, so CI and the desk cannot drift apart.
+        run: ./scripts/verify.sh
 
   terraform:
     runs-on: ubuntu-latest
