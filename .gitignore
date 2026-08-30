@@ -20,3 +20,4 @@ tfplan
 .ruvnet-brain/
 .claude/
 video/out/
+.DS_Store
