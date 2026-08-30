@@ -12,6 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ ./src/
+COPY static/ ./static/
 COPY app.py ./
 
 # Non-root: the service reads a secret and writes a ledger; it has no reason to be root.

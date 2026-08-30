@@ -1,0 +1,150 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>meta-science</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--bg:#fff;--fg:#18181b;--dim:#71717a;--line:#e4e4e7;--card:#fafafa;
+        --red:#b91c1c;--green:#15803d;--blue:#1d4ed8;--accent:#0369a1}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0b0d;--fg:#e4e4e7;--dim:#a1a1aa;
+        --line:#27272a;--card:#141417;--red:#f87171;--green:#4ade80;--blue:#93c5fd;--accent:#38bdf8}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+       font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  main{max-width:56rem;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+  h1{font-size:1.9rem;margin:0 0 .35rem;letter-spacing:-.02em}
+  .lede{color:var(--dim);margin:0 0 2rem;max-width:44rem}
+  section{border:1px solid var(--line);border-radius:10px;padding:1.25rem;margin:0 0 1.25rem;
+          background:var(--card)}
+  h2{font-size:1rem;margin:0 0 .75rem;text-transform:uppercase;letter-spacing:.06em;
+     color:var(--dim);font-weight:600}
+  button{font:inherit;font-weight:500;padding:.5rem 1rem;border-radius:7px;cursor:pointer;
+         border:1px solid var(--accent);background:var(--accent);color:#fff}
+  button.ghost{background:transparent;color:var(--accent)}
+  button[disabled]{opacity:.5;cursor:progress}
+  input{font:inherit;padding:.45rem .6rem;border:1px solid var(--line);border-radius:7px;
+        width:6rem;background:var(--bg);color:var(--fg)}
+  .row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+  pre{background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:.85rem;
+      overflow-x:auto;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;margin:.85rem 0 0}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:.85rem}
+  th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  td.num{font-variant-numeric:tabular-nums;text-align:right}
+  .REFUTED,.FLAGGED,.REFUSED{color:var(--red);font-weight:600}
+  .SUPPORTED,.PROMOTED{color:var(--green);font-weight:600}
+  .note{color:var(--dim);font-size:.87rem;margin:.6rem 0 0}
+  .stat{display:inline-block;margin:0 2rem .5rem 0}
+  .stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+  .stat span{color:var(--dim);font-size:.8rem}
+  a{color:var(--accent)}
+</style>
+<main>
+  <h1>meta-science</h1>
+  <p class="lede">An agent that does science on worlds it has never seen — forming
+  hypotheses, designing its own experiments, and being refuted by them — and that improves
+  its own method only when a frozen benchmark proves the improvement real.</p>
+
+  <section>
+    <h2>1 · What the agent is allowed to know</h2>
+    <div class="row">
+      <label>world seed <input id="seed" type="number" value="7"></label>
+      <button id="peek">Look at the world</button>
+    </div>
+    <p class="note">Opaque labels, no units, no documentation. Two affordances: observe, or
+    intervene.</p>
+    <pre id="world">—</pre>
+  </section>
+
+  <section>
+    <h2>2 · Run the discovery loop</h2>
+    <div class="row">
+      <button id="run">Run experiments on this world</button>
+      <span class="note" id="runnote"></span>
+    </div>
+    <p class="note">Each prediction is committed <em>before</em> its experiment. The verdict
+    is a comparison, never a question put to the model.</p>
+    <div id="trial"></div>
+  </section>
+
+  <section>
+    <h2>3 · Let it improve its own method</h2>
+    <div class="row">
+      <button id="evolve">Propose a change, and rule on it</button>
+      <span class="note" id="evolvenote">Calls Gemini and scores 24 held-out worlds — takes a minute.</span>
+    </div>
+    <div id="gen"></div>
+  </section>
+
+  <section>
+    <h2>4 · The evidence base</h2>
+    <div id="stats"><span class="note">loading…</span></div>
+    <div class="row" style="margin-top:1rem">
+      <button class="ghost" id="refresh">Refresh</button>
+      <a href="/export.csv">Download CSV</a>
+      <a href="/experiments">Raw JSON</a>
+    </div>
+    <p class="note">Every run here is stored with its seeds, strategy and code commit —
+    enough to recompute the result rather than merely read it.</p>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const get = async (u, opts) => (await fetch(u, opts)).json();
+const busy = (b, on, label) => { b.disabled = on; b.textContent = on ? "working…" : label; };
+
+$("peek").onclick = async () => {
+  $("world").textContent = JSON.stringify(await get(`/world/${$("seed").value}`), null, 2);
+};
+
+$("run").onclick = async e => {
+  busy(e.target, true);
+  try {
+    const d = await get(`/discover/${$("seed").value}`);
+    const rows = d.experiments.map(x => {
+      const h = x.hypothesis;
+      const sign = h.predicted_sign > 0 ? "+1" : h.predicted_sign < 0 ? "−1" : "0";
+      return `<tr><td>${h.cause} → ${h.effect}</td><td class=num>${sign}</td>
+              <td class=num>${x.observed_effect.toFixed(3)}</td>
+              <td class="${x.verdict}">${x.verdict}</td></tr>`;
+    }).join("");
+    $("trial").innerHTML = `<table><tr><th>hypothesis</th><th>predicted</th>
+      <th>measured</th><th>verdict</th></tr>${rows}</table>`;
+    $("runnote").textContent =
+      `${d.refutation_count} of ${d.experiments.length} refuted · held-out direction accuracy `
+      + `${d.held_out_score.direction_accuracy} · run ${d.run_id}`;
+  } finally { busy(e.target, false, "Run experiments on this world"); }
+};
+
+$("evolve").onclick = async e => {
+  busy(e.target, true);
+  try {
+    const r = await get("/evolve", {method: "POST"});
+    const a = r.audit || {};
+    const auditText = a.legitimate === true ? "legitimate"
+                    : a.legitimate === false ? "FLAGGED" : "unavailable";
+    $("gen").innerHTML = `<pre><span class="${r.verdict}">${r.verdict}</span>  ${r.candidate}
+diff        ${JSON.stringify(r.diff)}
+champion    ${r.champion_score}
+challenger  ${r.challenger_score}   (margin ${r.margin_required})
+${r.reason}
+audit       <span class="${a.legitimate === false ? "FLAGGED" : ""}">${auditText}</span> — ${a.concern || "—"}
+receipt     ${r.digest}</pre>`;
+    load();
+  } finally { busy(e.target, false, "Propose a change, and rule on it"); }
+};
+
+async function load() {
+  const s = await get("/stats");
+  const cell = (v, l) => `<div class="stat"><b>${v ?? "—"}</b><span>${l}</span></div>`;
+  $("stats").innerHTML =
+    cell(s.records, "runs recorded") +
+    cell(s.hypotheses_tested, "hypotheses tested") +
+    cell(s.hypotheses_refuted, "refuted by experiment") +
+    cell(s.refutation_rate, "refutation rate") +
+    cell(s.promotions, "promotions") +
+    cell(s.refusals, "refusals");
+}
+$("refresh").onclick = load;
+$("peek").click();
+load();
+</script>

@@ -45,20 +45,9 @@ def _ledger():
 
 @app.get("/", response_class=HTMLResponse)
 def index() -> str:
-    return """<!doctype html><meta charset=utf-8>
-<title>meta-science</title>
-<style>body{font:16px/1.6 system-ui;max-width:46rem;margin:3rem auto;padding:0 1rem}
-code{background:#f4f4f5;padding:.1rem .35rem;border-radius:3px}</style>
-<h1>meta-science</h1>
-<p>An agent that does science on worlds it has never seen &mdash; forming hypotheses,
-designing its own experiments, and being refuted by them &mdash; and that improves its
-own method only when a frozen benchmark proves the improvement real.</p>
-<ul>
-<li><code>GET /world/7</code> &mdash; everything the agent is allowed to know</li>
-<li><code>GET /discover/7</code> &mdash; a run, with the hypotheses its experiments killed</li>
-<li><code>POST /evolve</code> &mdash; one generation: Gemini proposes, the gate decides</li>
-<li><code>GET /receipts</code> &mdash; every verdict, promotions and refusals alike</li>
-</ul>"""
+    """The interactive surface. Self-contained: no CDN, no external fetches."""
+    page = Path(__file__).parent / "static" / "index.html"
+    return page.read_text(encoding="utf-8")
 
 
 @app.get("/health")

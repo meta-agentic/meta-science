@@ -60,7 +60,24 @@ def test_the_offline_routes_work_without_an_api_key(cloud_run_env):
     """A judge hitting /world or /discover must not need our credentials."""
     from fastapi.testclient import TestClient
     c = TestClient(cloud_run_env.app)
-    assert c.get("/healthz").status_code == 200
+    # /health, not /healthz: Google's frontend intercepts the latter and returns its own
+    # 404 before the request reaches the container. Caught only against the deployment.
+    assert c.get("/health").status_code == 200
     assert c.get("/world/7").json()["variables"]
     body = c.get("/discover/7").json()
     assert body["refutation_count"] >= 1
+
+
+def test_the_image_copies_the_static_page():
+    """The index route reads static/index.html at request time; if COPY misses it the
+    landing page 500s in production while every local test passes."""
+    dockerfile = (ROOT / "Dockerfile").read_text()
+    assert "COPY static/" in dockerfile
+    assert (ROOT / "static" / "index.html").exists()
+
+
+def test_the_landing_page_makes_no_external_requests(cloud_run_env):
+    """Self-contained by design: no CDN to go down, nothing leaving the viewer's browser."""
+    html = (ROOT / "static" / "index.html").read_text()
+    for scheme in ("http://", "https://", "//cdn", "//unpkg", "//fonts."):
+        assert scheme not in html, f"external reference found: {scheme}"
