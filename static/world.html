@@ -115,8 +115,7 @@
     <p class="empty" style="max-width:52rem">One card per variable. The <em>shape</em> does the
     identification: a bell is a gaussian source, a straight line a linear response, a power
     curve a multiplicative one, a blow-up an exponential, an S a saturating response.
-    Curves are drawn from each variable's actual parameters; for multi-parent mechanisms
-    the curve runs along the strongest parent with the others held fixed.</p>
+    Curves are drawn from each variable's actual parameters, and each family shares one scale across its cards — a narrow sigma is a tall spike, a steep slope is visibly steeper — so cards compare against each other, not only against their own box. Multi-parent mechanisms run the curve along one parent: the strongest for additive families, and for multiplicative the exponent farthest from 1, since x^0.95 would draw as a straight line and defeat recognition by silhouette.</p>
   </div>
   <div id="atlas" class="atlas"></div>
 
@@ -312,8 +311,12 @@ function curveCard(name, spec, isHidden) {
     const x = spec.x0 + (spec.x1 - spec.x0) * (i / N);
     samples.push([x, spec.fn(x)]);
   }
-  let lo = Math.min(...samples.map(s => s[1]));
-  let hi = Math.max(...samples.map(s => s[1]));
+  // A card normalised to itself erases its own parameters: every gaussian fills
+  // its box with the same bell, every slope draws at 45 degrees. The group hands
+  // each family a SHARED range, so height and slope mean the same thing on every
+  // card and the eye can compare across them.
+  let lo = spec.yr ? spec.yr[0] : Math.min(...samples.map(s => s[1]));
+  let hi = spec.yr ? spec.yr[1] : Math.max(...samples.map(s => s[1]));
   if (hi - lo < 1e-9) { hi += 1; lo -= 1; }             // a constant is a flat line
   const px = x => PADX + (x - spec.x0) / (spec.x1 - spec.x0) * (W - 2 * PADX);
   const py = v => H - PADY - (v - lo) / (hi - lo) * (H - 2 * PADY);
@@ -328,11 +331,16 @@ function curveCard(name, spec, isHidden) {
   svg.append(el("path", {d, fill: "none", "stroke-width": 2,
     stroke: isHidden ? "var(--discordant)" : "var(--concordant)",
     "stroke-dasharray": isHidden ? "5 4" : "none"}));
-  // Gaussian cards shade the bell so distribution reads differently from response.
-  if (spec.family === "gaussian")
+  // Gaussian cards shade the bell so distribution reads differently from response,
+  // and mark the mean so position on the shared axis is legible.
+  if (spec.family === "gaussian") {
     svg.append(el("path", {d: d + ` L${px(spec.x1)},${py(lo)} L${px(spec.x0)},${py(lo)} Z`,
       fill: isHidden ? "var(--discordant)" : "var(--concordant)", opacity: 0.15,
       stroke: "none"}));
+    if (spec.mean !== undefined && spec.mean > spec.x0 && spec.mean < spec.x1)
+      svg.append(el("line", {x1: px(spec.mean), x2: px(spec.mean),
+        y1: py(lo), y2: py(lo) - 6, stroke: "var(--ink-3)", "stroke-width": 1.5}));
+  }
 
   const card = document.createElement("div");
   card.className = "vcard" + (isHidden ? " hiddenvar" : "");
@@ -349,10 +357,13 @@ function atlasSpec(name, truth) {
   const fmt = v => (+v).toPrecision(3);
   if (!m) {
     const e = truth.exogenous[name] || {mean: 0, sd: 1};
+    // TRUE pdf height (1/σ√2π), not a normalised bump: a narrow sigma must draw as
+    // a tall spike and a wide one as a low mound, or the parameters are invisible.
+    // The shared domain and y-range arrive from the group in renderAtlas.
     return {
-      family: "gaussian",
+      family: "gaussian", mean: e.mean, sd: e.sd,
       x0: e.mean - 3.2 * e.sd, x1: e.mean + 3.2 * e.sd,
-      fn: x => Math.exp(-((x - e.mean) ** 2) / (2 * e.sd * e.sd)),
+      fn: x => Math.exp(-((x - e.mean) ** 2) / (2 * e.sd * e.sd)) / (e.sd * Math.sqrt(2 * Math.PI)),
       formula: "𝒩(μ, σ)",
       params: `μ ${fmt(e.mean)} · σ ${fmt(e.sd)}`,
     };
@@ -395,8 +406,32 @@ function renderAtlas(truth) {
   box.replaceChildren();
   const hidden = new Set(truth.hidden);
   const names = Object.keys(truth.ground_truth.edges);
-  for (const n of names)
-    box.append(curveCard(n, atlasSpec(n, truth), hidden.has(n)));
+  const specs = names.map(n => [n, atlasSpec(n, truth)]);
+
+  // Gaussians share one x-domain, so mu shows as position and sigma as width.
+  const bells = specs.filter(([, s]) => s.family === "gaussian");
+  if (bells.length) {
+    const gx0 = Math.min(...bells.map(([, s]) => s.x0));
+    const gx1 = Math.max(...bells.map(([, s]) => s.x1));
+    for (const [, s] of bells) { s.x0 = gx0; s.x1 = gx1; }
+  }
+
+  // Every family shares a y-range across its cards, computed from the actual curves.
+  const byFamily = {};
+  for (const [, s] of specs) {
+    for (let i = 0; i <= 40; i++) {
+      const v = s.fn(s.x0 + (s.x1 - s.x0) * i / 40);
+      const r = byFamily[s.family] ??= [v, v];
+      r[0] = Math.min(r[0], v); r[1] = Math.max(r[1], v);
+    }
+  }
+  for (const [, s] of specs) {
+    const [lo, hi] = byFamily[s.family];
+    s.yr = s.family === "gaussian" ? [0, hi] : [lo, hi];
+  }
+
+  for (const [n, s] of specs)
+    box.append(curveCard(n, s, hidden.has(n)));
 }
 
 async function load() {
