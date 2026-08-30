@@ -1,0 +1,33 @@
+{
+  "gemini r1 (capacitor)": {
+    "expression": "c1 * (1 - exp(-c2 * x1))",
+    "constants": {
+      "c1": 95.281976,
+      "c2": 0.052597
+    },
+    "future_mean_abs_err": 0.19601
+  },
+  "gemini r2 (tanh)": {
+    "expression": "c1 * (1 - exp(-c2 * x1)) / (1 + exp(-c2 * x1))",
+    "constants": {
+      "c1": 40.755274,
+      "c2": 0.241153
+    },
+    "future_mean_abs_err": 0.08799
+  },
+  "linear (Kepler II)": {
+    "expression": "c1 * x1",
+    "constants": {
+      "c1": 4.893206
+    },
+    "future_mean_abs_err": 0.02181
+  },
+  "linear - quadratic": {
+    "expression": "c1 * x1 - c2 * x1 * x1",
+    "constants": {
+      "c1": 4.902814,
+      "c2": 0.010421
+    },
+    "future_mean_abs_err": 0.00392
+  }
+}
