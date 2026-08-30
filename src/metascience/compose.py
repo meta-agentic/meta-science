@@ -73,8 +73,15 @@ def compose(a: World, b: World, seed: int, n_bridges: int = 1) -> World:
 
     observable = tuple(a.observable) + tuple(mapping_b[v] for v in b.observable)
     hidden = tuple(a.hidden) + tuple(mapping_b[v] for v in b.hidden)
+    # Complex groupings survive composition. A grouping's own name is not a node, so
+    # the node mapping does not cover it — remap it with the same offset by hand, or
+    # a chain built on a complex part silently loses its z.
+    complex_vars = dict(a.complex_vars)
+    for z, (re_c, im_c) in b.complex_vars.items():
+        zid = int(re.fullmatch(r"X(\d+)", z).group(1))
+        complex_vars[f"X{zid + max_idx}"] = (mapping_b[re_c], mapping_b[im_c])
     world = World(f"W-{seed}c", f"{a.template_id}+{b.template_id}",
-                  nodes, observable, hidden, seed)
+                  nodes, observable, hidden, seed, complex_vars=complex_vars)
     world._topo_order()          # cycle guard runs now, not on first sample
     return world
 
@@ -82,7 +89,8 @@ def compose(a: World, b: World, seed: int, n_bridges: int = 1) -> World:
 MAX_DEPTH = 7
 
 
-def generate_compound(seed: int, depth: int = 1) -> World:
+def generate_compound(seed: int, depth: int = 1,
+                      include_complex: bool = False) -> World:
     """Deterministic compound chain: `depth` compositions folded left, so a world is
     depth+1 templates. depth 0 is the atomic world — one code path for every depth,
     which keeps the API's depth parameter honest rather than special-cased.
@@ -96,10 +104,15 @@ def generate_compound(seed: int, depth: int = 1) -> World:
         raise ValueError(f"depth must be 0..{MAX_DEPTH}, got {depth}")
     if depth == 0:
         # The atomic world, unchanged: /world/7 at depth 0 must be the same W-7 it has
-        # always been, not a sibling derived from a shifted seed.
-        return generate(seed)
+        # always been, not a sibling derived from a shifted seed. With the complex
+        # toggle on, the seed's atomic world is the complex-capable one instead —
+        # still derived from the seed alone, still behind the master switch.
+        return generate(seed, "T7") if include_complex else generate(seed)
     pick = _stable_hash(f"compound-{seed}")
-    world = generate(seed * 2 + 1, TEMPLATE_IDS[pick % len(TEMPLATE_IDS)])
+    # With the toggle on, the chain's first part is the complex-capable world; every
+    # other part still comes from the real-domain rotation.
+    world = (generate(seed * 2 + 1, "T7") if include_complex
+             else generate(seed * 2 + 1, TEMPLATE_IDS[pick % len(TEMPLATE_IDS)]))
     for i in range(depth):
         template = TEMPLATE_IDS[(pick // 7 ** (i + 1)) % len(TEMPLATE_IDS)]
         part = generate(seed * 2 + 2 + i, template)

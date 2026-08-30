@@ -174,3 +174,26 @@ def test_t7_is_deterministic_across_processes():
     outs = {subprocess.run([sys.executable, "-c", script], capture_output=True,
                            text=True, check=True).stdout for _ in range(2)}
     assert len(outs) == 1
+
+
+def test_the_complex_toggle_carries_through_a_chain(monkeypatch):
+    """complex=true at depth n starts the chain from the complex world; the grouping
+    must survive every composition, not just exist at depth 0."""
+    monkeypatch.setenv("METASCIENCE_COMPLEX", "1")
+    for depth in (0, 1, 3):
+        w = generate_compound(5, depth, include_complex=True)
+        assert w.complex_vars, f"complex grouping lost at depth {depth}"
+        z, (re_, im_) = next(iter(w.complex_vars.items()))
+        assert re_ in w.nodes and im_ in w.nodes, "components must map to real nodes"
+        forms = {m["form"] for m in w.ground_truth()["mechanisms"].values()}
+        assert "modulus" in forms
+    run = run_discovery(generate_compound(5, 2, include_complex=True),
+                        HeuristicReasoner(), Strategy(max_experiments=6), seed=5)
+    assert run.experiments
+
+
+def test_the_complex_toggle_respects_the_master_switch(monkeypatch):
+    import pytest as _pytest
+    monkeypatch.delenv("METASCIENCE_COMPLEX", raising=False)
+    with _pytest.raises(ValueError, match="disabled by default"):
+        generate_compound(5, 2, include_complex=True)

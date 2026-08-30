@@ -31,7 +31,7 @@ from metascience.reasoner import HeuristicReasoner  # noqa: E402
 from metascience.strategy import Strategy  # noqa: E402
 from metascience.compose import generate_compound  # noqa: E402
 from metascience.narrate import agent_brief, observer_narrative  # noqa: E402
-from metascience.templates import EXTRA_TEMPLATES, TEMPLATE_IDS, generate  # noqa: E402
+from metascience.templates import generate  # noqa: E402
 
 load_env()
 app = FastAPI(title="meta-science", description="An agent that does science, and can be refuted.")
@@ -70,36 +70,30 @@ def health() -> dict:
     return {"ok": True, "model": model_name()}
 
 
-_TEMPLATE_CHOICES = set(TEMPLATE_IDS) | set(EXTRA_TEMPLATES)
-
-
-def _world(seed: int, depth: int, compound: bool, template: str | None = None):
+def _world(seed: int, depth: int, compound: bool, use_complex: bool = False):
     # `compound` is the legacy boolean from before depth existed; it means depth 1.
-    # An explicit template applies to the atomic world only — compounds derive their
-    # parts from the seed, and mixing the two would make depth silently ignore it.
-    if template:
-        if template not in _TEMPLATE_CHOICES:
-            from fastapi import HTTPException
-            raise HTTPException(422, f"template must be one of {sorted(_TEMPLATE_CHOICES)}")
-        try:
-            return generate(seed, template)
-        except ValueError as exc:          # the complex master switch, surfaced honestly
-            from fastapi import HTTPException
-            raise HTTPException(422, str(exc)) from exc
-    return generate_compound(seed, depth or (1 if compound else 0))
+    # `use_complex` is a per-request toggle layered UNDER the deployment's master
+    # switch: with METASCIENCE_COMPLEX unset the generator refuses, and that refusal
+    # is surfaced honestly rather than masked.
+    try:
+        return generate_compound(seed, depth or (1 if compound else 0),
+                                 include_complex=use_complex)
+    except ValueError as exc:
+        from fastapi import HTTPException
+        raise HTTPException(422, str(exc)) from exc
 
 
 @app.get("/world/{seed}")
 def world(seed: int, depth: int = Query(0, ge=0, le=7), compound: bool = False,
-          template: str | None = None) -> dict:
+          use_complex: bool = Query(False, alias="complex")) -> dict:
     """The agent's entire view. No structure, no domain terms, no ground truth."""
-    w = _world(seed, depth, compound, template)
+    w = _world(seed, depth, compound, use_complex)
     return w.describe() | {"brief": agent_brief(w)}
 
 
 @app.get("/world/{seed}/truth")
-def world_truth(seed: int, depth: int = Query(0, ge=0, le=7),
-                compound: bool = False, template: str | None = None) -> dict:
+def world_truth(seed: int, depth: int = Query(0, ge=0, le=7), compound: bool = False,
+                use_complex: bool = Query(False, alias="complex")) -> dict:
     """OBSERVER VIEW — ground truth for humans studying the benchmark.
 
     Public on purpose: the repo is public and any reader can compute this from the
@@ -107,7 +101,7 @@ def world_truth(seed: int, depth: int = Query(0, ge=0, le=7),
     — nothing on the agent's path calls this — and anonymisation guards against
     retrieval from training, not against a person reading the answer.
     """
-    w = _world(seed, depth, compound, template)
+    w = _world(seed, depth, compound, use_complex)
     return {
         "world_id": w.world_id,
         "seed": w.seed,
