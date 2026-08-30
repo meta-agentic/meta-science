@@ -246,6 +246,16 @@ score, and cannot tune against — and which leaves a receipt either way.
 
 Known limits, stated rather than buried:
 
+- **The efficiency gains are flattered by the world design.** The two arms of an
+  intervention draw the *same* noise — common random numbers, a deliberate variance
+  reduction so the paired difference isolates the causal effect. A consequence is that
+  effect estimates are already precise at small n, so sample size affects accuracy far
+  less here than it would against independent draws. That is very likely *why* the
+  proposer kept winning by cutting samples. The gate measured correctly and the
+  promotions were earned under the stated metric — but "it discovered a real efficiency
+  gain" is a weaker claim than it first appears, and against independent noise the same
+  change would cost accuracy. This was found by auditing our own results and is reported
+  rather than left for a reviewer to notice.
 - Effect estimation is linear, so genuinely multiplicative worlds (T1) are approximated.
 - One generation is demonstrated end-to-end, not an open-ended evolutionary run.
 - The held-out set is 24 worlds. At 10, a single world flipping moves the mean by 0.10 —

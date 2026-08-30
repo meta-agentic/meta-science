@@ -101,7 +101,19 @@ class World:
 
     def intervene(self, var: str, value: float, n: int = 200,
                   seed: int | None = None) -> list[dict[str, float]]:
-        """do(var := value). Severs incoming edges — the only route to causal truth."""
+        """do(var := value). Severs incoming edges — the only route to causal truth.
+
+        With an explicit `seed`, two arms of the same contrast draw the SAME noise:
+        `intervene(x, lo, seed=s)` and `intervene(x, hi, seed=s)` differ only by the
+        intervention. This is common random numbers, a deliberate variance reduction —
+        the paired difference isolates the causal effect instead of measuring it through
+        two independent noise draws.
+
+        It has a consequence worth stating plainly: because the noise cancels, effect
+        estimates are precise at small n, so **sample size matters far less here than it
+        would against independent draws**. Anything scored on measurement efficiency
+        should be read with that in mind (see README, "Limits").
+        """
         if var not in self.observable:
             raise KeyError(f"not an observable variable: {var}")
         return [self._sample({var: value}, self._rng(seed, i)) for i in range(n)]
@@ -148,13 +160,21 @@ class World:
         return {k: round(v, 6) for k, v in vals.items() if k in self.observable}
 
     def _topo_order(self) -> list[str]:
+        """Parents before children. Raises on a cycle rather than recursing forever."""
         seen: list[str] = []
+        in_progress: set[str] = set()
+
         def visit(n: str) -> None:
             if n in seen:
                 return
+            if n in in_progress:
+                raise ValueError(f"causal graph contains a cycle through {n!r}")
+            in_progress.add(n)
             for p in self.nodes[n].parents:
                 visit(p)
+            in_progress.discard(n)
             seen.append(n)
+
         for n in self.nodes:
             visit(n)
         return seen

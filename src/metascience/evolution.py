@@ -41,6 +41,8 @@ def evaluate_detailed(strategy: Strategy, world_seeds: list[int],
     "spent less, lost accuracy, and the cost saving outran the loss". Those are exactly
     the two cases an audit exists to tell apart, so the parts travel with the verdict.
     """
+    if not world_seeds:
+        raise ValueError("no held-out worlds: a verdict on an empty benchmark is not a verdict")
     reasoner = reasoner or HeuristicReasoner()
     totals, accs, costs = [], [], []
     for seed in world_seeds:

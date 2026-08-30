@@ -91,6 +91,14 @@ Identical worlds. The only difference is the ability to act. That single compari
 the anonymisation holds *and* that intervention is doing real work rather than decorating
 a conclusion the model already had.
 
+**Auditing our own headline result.** Late on, we checked whether the two arms of an
+intervention share random draws. They do — common random numbers, which makes the paired
+difference isolate the causal effect. But it also means sample size barely affects
+accuracy in these worlds, which is very likely why the proposer kept winning by cutting
+samples. The promotions were earned under the stated metric, and the gate did its job;
+but "it found a real efficiency gain" is a weaker claim than it looked, and we say so in
+the README rather than leaving a reviewer to find it.
+
 ## What we learned
 
 That the hard part of a self-improving system is not the improving. It is building the

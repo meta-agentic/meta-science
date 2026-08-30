@@ -6,6 +6,8 @@ memorised law, and every number downstream measures recall instead of discovery.
 import json
 import statistics as st
 import sys
+
+import pytest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -78,3 +80,35 @@ def test_intervention_severs_incoming_edges():
     corr = st.correlation([r[a] for r in obs], [r[b] for r in obs])
     assert abs(corr) > 0.5, "T5 should look strongly associated"
     assert abs(w.causal_effect(a, b)) < 0.15, "but intervening on a must not move b"
+
+
+def test_paired_arms_share_noise_so_the_contrast_isolates_the_effect():
+    """Common random numbers: the two arms differ only by the intervention.
+
+    Asserted rather than assumed, because the whole measurement-efficiency story
+    depends on this property being real and understood.
+    """
+    w = generate(7, "T6")
+    cause, effect = w.observable
+    lo = w.intervene(cause, -1.0, 12, seed=42)
+    hi = w.intervene(cause, +1.0, 12, seed=42)
+    diffs = {round(h[effect] - l[effect], 6) for h, l in zip(hi, lo)}
+    assert len(diffs) == 1, "paired arms must differ only by the intervention"
+
+
+def test_a_cyclic_graph_is_rejected_rather_than_recursing_forever():
+    from metascience.worlds import Mechanism, Node, World
+    cyclic = World("W", "X", {
+        "A": Node("A", ("B",), Mechanism("linear", {"B": 1.0}, 0, 0.1)),
+        "B": Node("B", ("A",), Mechanism("linear", {"A": 1.0}, 0, 0.1)),
+    }, ("A", "B"), (), 1)
+    with pytest.raises(ValueError, match="cycle"):
+        cyclic.observe(1, seed=1)
+
+
+def test_an_empty_benchmark_is_refused():
+    """Scoring nothing and returning 0.0 would read as a legitimate verdict."""
+    from metascience.evolution import evaluate_detailed
+    from metascience.strategy import Strategy
+    with pytest.raises(ValueError, match="empty benchmark"):
+        evaluate_detailed(Strategy(), [])
