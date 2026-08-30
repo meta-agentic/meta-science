@@ -116,9 +116,14 @@ it.
 
 ## What's next
 
-Open-ended generations rather than the single demonstrated turn; non-linear effect
-estimation so genuinely multiplicative worlds are not approximated; and a larger held-out
-set so smaller margins become measurable.
+Level 3: open-ended, repeated self-evolution scored on *law recovery under replication* —
+every hypothesis replicated across fresh seeds with verdicts by meta-analysis, the model
+proposing functional forms rather than effect sizes, and the promotion gate doing for
+many generations what it does today for one: margins against noise-ratcheting, an
+independent auditor against metric-gaming, receipts for the whole lineage, and
+ever-fresh generated worlds as the pre-registration analogue that keeps repetition from
+becoming p-hacking. Plus the smaller debts: non-linear effect estimation, and a larger
+held-out set so smaller margins become measurable.
 
 ## Built with
 

@@ -340,6 +340,25 @@ Known limits, stated rather than buried:
 
 ---
 
+## What's next — Level 3
+
+The demonstrated system is Level 1 (discover effects in one world) and Level 2 (one
+gated turn of self-evolution). The honest gap: each hypothesis gets one experiment and
+one verdict, and the agent estimates *effects* — it never guesses the *law*. Science
+runs on repetition, and repetition is the roadmap:
+
+- **Replicated experiments** — every hypothesis re-run across fresh seeds, verdicts by
+  meta-analysis rather than a single-shot threshold. Synthetic worlds make replication
+  free and uncontaminated.
+- **Law recovery** — the model proposes structure, mechanism family and parameters,
+  scored against held-out interventions. Today it recovers directions and magnitudes:
+  causal discovery, not yet a law.
+- **Open-ended repeated self-evolution** — many generations, not one turn. The gate is
+  what makes that safe rather than reckless: the margin stops ratcheting on noise, the
+  auditor catches metric-gaming, receipts keep the lineage replayable, and ever-fresh
+  generated held-out worlds are the pre-registration analogue that keeps a thousand
+  repetitions from becoming p-hacking.
+
 ## Licence
 
 **GPL-3.0-or-later** — copyleft, as science should be: free for everyone, human or AI.
