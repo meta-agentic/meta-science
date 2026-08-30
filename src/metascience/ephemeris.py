@@ -201,3 +201,81 @@ def measure_planet(seed: int) -> dict:
 
 def third_law_table() -> list[dict]:
     return [measure_planet(s) for s in THIRD_LAW_SEEDS]
+
+
+# ----------------------------------------------------------------- the second law
+#
+# Equal areas is a statement about time, so these arcs carry their timestamps and
+# their sampling must respect the clock: the swept area between samples is the
+# chord triangle 1/2*|r_i x r_i+1|, which is honest only while the step stays a
+# small fraction of a revolution. The heliocentric arm samples ~3 deg per step;
+# the drag arm samples ~19 steps per revolution of a ~93-minute orbit.
+#
+# Physics note that shaped the design: our oblate world does NOT break the second
+# law — J2 is axially symmetric, so equatorial angular momentum is conserved and
+# equal areas survives. Breaking it takes a non-central force. Drag is one, and
+# it is dissipative: the areal rate does not wobble, it decays.
+
+def drag_orbit(seed: int) -> dict:
+    """Low perigee (~230 km), equatorial: deep enough for drag to bite in days."""
+    return {
+        "centralBody": "EARTH",
+        "frame": "EME2000",
+        "epoch": "2026-01-01T00:00:00Z",
+        "semiMajorAxis": _quantity(6800.0, "km"),
+        "eccentricity": 0.028,
+        "inclination": _quantity(0.0, "°"),
+        "raan": _quantity(0.0, "°"),
+        "argumentOfPerigee": _quantity(float((seed * 61) % 360), "°"),
+        "trueAnomaly": _quantity(0.0, "°"),
+    }
+
+
+# 100 m2 for five days decays the areal rate ~1.1% and the orbit survives;
+# 150 m2 for six days does not — the shrinking orbit drives the integrator into
+# its minimum step. The knob is calibrated to the strongest surviving signal.
+DRAG = {**TWO_BODY, "atmosphericDrag": True, "dragCoefficient": 2.2,
+        "dragCrossSection": {"value": 100.0, "unit": "m²"}}
+
+
+def _with_days(pts) -> list[tuple[float, float, float]]:
+    t0 = _epoch_seconds(pts[0][0])
+    return [((_epoch_seconds(e) - t0) / 86400.0, th, r) for e, th, r in pts]
+
+
+def equal_areas_series(seed: int = 5) -> list[tuple[float, float, float]]:
+    """(t_days, theta_deg, r_au) for one finely-sampled orbit of a fictional
+    planet — the world where the second law holds."""
+    return _with_days(arc(f"secondlaw-planet-{seed}", fictional_planet(seed),
+                          "P28D", "PT6H", TWO_BODY))
+
+
+def drag_series(seed: int = 7) -> list[tuple[float, float, float]]:
+    """(t_days, theta_deg, r_re) under drag — the world where it fails."""
+    return _with_days(arc(f"secondlaw-drag-{seed}", drag_orbit(seed),
+                          "P5D", "PT5M", DRAG))
+
+
+def no_drag_series(seed: int = 7) -> list[tuple[float, float, float]]:
+    """The identical orbit without drag: the paired control."""
+    return _with_days(arc(f"secondlaw-nodrag-{seed}", drag_orbit(seed),
+                          "P5D", "PT5M", TWO_BODY))
+
+
+def swept_area(series) -> list[tuple[float, float]]:
+    """(t_days, cumulative area) — the radius vector's sweep, chord triangles."""
+    out, total = [(series[0][0], 0.0)], 0.0
+    for (t1, th1, r1), (t2, th2, r2) in zip(series, series[1:]):
+        dtheta = math.radians(((th2 - th1 + 180.0) % 360.0) - 180.0)
+        total += abs(0.5 * r1 * r2 * math.sin(dtheta))
+        out.append((t2, total))
+    return out
+
+
+def areal_rates(series) -> list[float]:
+    """The per-interval sweep rate — the second law says these are all equal."""
+    rates = []
+    for (t1, th1, r1), (t2, th2, r2) in zip(series, series[1:]):
+        dtheta = math.radians(((th2 - th1 + 180.0) % 360.0) - 180.0)
+        rates.append(abs(0.5 * r1 * r2 * math.sin(dtheta)) / (t2 - t1))
+    return rates
