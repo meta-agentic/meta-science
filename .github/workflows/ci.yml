@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: pip install -r requirements.txt pytest
+
+      # No API key in CI. The anonymisation suite and the whole promotion gate run
+      # offline by design, so the governance claim is verifiable without credentials —
+      # tests that need a key skip themselves rather than failing the build.
+      - name: Test
+        run: python -m pytest tests/ -q
+
+      - name: The gate must still refuse
+        run: python run_evolution.py --offline | tee /tmp/out.txt && grep -q REFUSED /tmp/out.txt
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Format and validate
+        run: |
+          terraform -chdir=infra fmt -check
+          terraform -chdir=infra init -backend=false
+          terraform -chdir=infra validate
