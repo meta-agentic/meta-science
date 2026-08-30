@@ -145,18 +145,20 @@ why the proposer kept winning by asking for fewer samples.
 
 So we measured it, on 24 held-out worlds:
 
-| strategy | paired arms | independent arms |
+| strategy | paired: accuracy · score | independent: accuracy · score |
 |---|---|---|
-| champion, 400 samples | acc 0.981 · **+0.8704** | acc 0.981 · **+0.8704** |
-| frugal, 100 samples | acc 0.981 · **+0.9537** | acc 0.968 · **+0.9398** |
-| very lean, 25 samples | acc 0.981 · **+0.9745** | acc 0.875 · **+0.8681** |
+| champion, 400 samples | 0.9815 · **+0.8704** | 0.9815 · **+0.8704** |
+| frugal, 100 samples | 0.9815 · **+0.9537** | 0.9398 · **+0.9120** |
+| very lean, 25 samples | 0.9815 · **+0.9745** | 0.8287 · **+0.8218** |
 
-Paired, accuracy never moves and the leanest strategy always wins — a benchmark with no
-trade-off in it is not measuring anything. Independent, there is a real cost to cutting
-too far, and the extreme strategy correctly *loses* to the champion.
+Read the accuracy columns. **Paired, accuracy does not move at all** — 0.9815 whether you
+draw 400 samples or 25 — so the leanest strategy always wins and the metric has no
+trade-off in it. Independent, accuracy degrades as measurement is cut, and the extreme
+strategy correctly **loses** to the champion (+0.8218 against +0.8704).
 
-**Independent noise is now the default**, and the promotion the demo shows survives it
-(+0.9398 against +0.8704). Both facts are asserted by tests. The point is not that we got
+**Independent noise is now the default**, and the promotion the demo shows survives it:
++0.9120 against +0.8704, a gain of +0.0417 against a required margin of +0.02. Both facts
+are asserted by tests. The point is not that we got
 it right first time — we did not. It is that the benchmark was checked against the
 possibility that it was flattering us.
 
@@ -176,7 +178,7 @@ kept the answers* from *spent less, lost accuracy, and the saving outran it*.
 
 ```
 PROMOTED  gemini-8986   {'samples_per_arm': (200, 400)}
-          champ +0.8704  challenger +0.9398
+          champ +0.8704  challenger +0.9120
           audit legitimate (gemini-3.5-flash-lite)
 ```
 

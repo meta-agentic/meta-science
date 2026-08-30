@@ -96,8 +96,8 @@ arms of an intervention share random draws. They did — common random numbers, 
 the paired difference isolate the causal effect. Elegant, and a trap: with the noise
 cancelled, estimates stay precise however few samples are drawn, so cutting measurement
 was free score. That is very likely why the proposer kept winning by asking for fewer
-samples. We measured both regimes: at 25 samples per arm, accuracy holds at 0.981 paired
-and collapses to 0.875 independent. Independent noise is now the default, the extreme
+samples. We measured both regimes: at 25 samples per arm, accuracy holds at 0.9815 paired
+and falls to 0.8287 independent. Independent noise is now the default, the extreme
 strategy correctly loses, and the promotion the demo shows survives the harder regime.
 Both facts are asserted by tests.
 
