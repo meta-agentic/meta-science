@@ -1,0 +1,9 @@
+.git/
+.env
+.env.*
+runs/
+infra/
+tests/
+__pycache__/
+*.pyc
+.terraform/
