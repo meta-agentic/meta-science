@@ -65,7 +65,8 @@ they lead: [docs/philosophy.md](docs/philosophy.md).
 
 ## What actually happens
 
-A representative run of `python3 run_evolution.py --generations 3`:
+One live run of `python3 run_evolution.py --generations 3`. The receipts are committed,
+so this transcript can be checked rather than believed:
 
 ```
 held-out worlds: 24  (never shown to the proposer)
@@ -75,20 +76,20 @@ gen 1  ✓ PROMOTED  gemini-1260
          diff   {'samples_per_arm': (200, 400)}
          champ +0.8704  challenger +0.8981
          beat the champion on held-out worlds by the required margin
-         audit  FLAGGED (gemini-3.5-flash-lite): Accuracy fell by 0.0278, which exceeds the noise threshold of 0.02 […]
-         receipt 9a8617ec20fa372a
+         audit  FLAGGED (gemini-3.5-flash-lite): The score increase was driven by a significant drop in measurement cost that outweighed […]
+         receipt b3e1652e80a0e2d9
 
 gen 2  ✗ REFUSED   gemini-1740
          diff   {'samples_per_arm': (150, 200)}
          champ +0.8981  challenger +0.9120
          gained +0.0139, needed +0.02
-         receipt 57bfaf4e22f2daeb
+         receipt ec154612250ff465
 
-gen 3  ✗ REFUSED   gemini-7660
-         diff   {'max_experiments': (10, 12)}
-         champ +0.8981  challenger +0.9037
-         gained +0.0056, needed +0.02
-         receipt f56d61040c6add45
+gen 3  ✗ REFUSED   gemini-2550
+         diff   {'max_experiments': (8, 12)}
+         champ +0.8981  challenger +0.8722
+         gained -0.0259, needed +0.02
+         receipt f723040336b97f9e
 
 canon: gemini-1260
 ```
@@ -96,20 +97,27 @@ canon: gemini-1260
 Three things are worth reading closely.
 
 **The promotion was earned and still flagged.** Gemini found a real efficiency gain and it
-cleared the margin — but a *second, different* model reviewed the receipt and pointed out
-that accuracy fell 0.0278 to buy it. The gate promotes on evidence; the auditor may
-disagree in writing. Both are on the record.
+cleared the margin — but a *second, different* model read the receipt and objected that the
+gain was bought by letting accuracy fall from 0.9815 to 0.9537. The gate promotes on
+evidence; the auditor may dissent in writing. Both are on the record.
 
-**The refusals are the interesting part.** Two further refinements *did* score higher and
-both were refused for gaining less than the margin. Refusing marginal gains is what stops
-a system ratcheting itself forward on noise.
+**The refusals are the interesting part.** The second proposal genuinely scored *higher* and
+was refused anyway, for gaining +0.0139 where the margin asks +0.02. Refusing a real gain is
+what stops a system ratcheting itself forward on noise. The third scored worse outright. The
+gate need not tell those two cases apart — neither clears the bar — but the receipts do.
 
 **It stopped repeating itself.** After a second samples cut was refused, the proposer moved
 to a different knob entirely — verdicts return to it as structured history, not prose.
 
 Every verdict, promotion and refusal alike, writes a receipt carrying the diff, both
-scores, the margin, and the held-out seeds — enough to re-derive the decision
-independently.
+scores, the margin, the score decomposition and the held-out seeds — enough to re-derive
+the decision independently.
+
+**We ran it three times and published all three.** One promotion and two refusals in every
+run. The proposer moved on to `max_experiments` by generation three in every run. Four of
+the six refusals were of candidates that scored *higher* and missed the margin. The runs,
+the receipts, and the one thing that did not reproduce — the auditor's verdict on an
+identical promotion — are in [docs/receipts/](docs/receipts/).
 
 ---
 

@@ -1,0 +1,23 @@
+held-out worlds: 24  (never shown to the proposer)
+champion champion-v1: +0.8704
+
+gen 1  ✓ PROMOTED  gemini-1740
+         diff   {'samples_per_arm': (150, 400)}
+         champ +0.8704  challenger +0.9120
+         beat the champion on held-out worlds by the required margin
+         audit  FLAGGED (gemini-3.5-flash-lite): The system accepted a substantial accuracy drop of 0.0278, which exceeds the noise thres
+         receipt 451cbb77e596cf43
+
+gen 2  ✗ REFUSED   gemini-5808
+         diff   {'samples_per_arm': (120, 150)}
+         champ +0.9120  challenger +0.9204
+         gained +0.0083, needed +0.02
+         receipt 2e6871dc19fc2a3a
+
+gen 3  ✗ REFUSED   gemini-2550
+         diff   {'max_experiments': (8, 12)}
+         champ +0.9120  challenger +0.8833
+         gained -0.0287, needed +0.02
+         receipt 29ee3d3f06b437c1
+
+canon: gemini-1740

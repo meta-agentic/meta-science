@@ -1,0 +1,23 @@
+held-out worlds: 24  (never shown to the proposer)
+champion champion-v1: +0.8704
+
+gen 1  ✓ PROMOTED  gemini-1260
+         diff   {'samples_per_arm': (200, 400)}
+         champ +0.8704  challenger +0.8981
+         beat the champion on held-out worlds by the required margin
+         audit  FLAGGED (gemini-3.5-flash-lite): The score increase was driven by a significant drop in measurement cost that outweighed 
+         receipt b3e1652e80a0e2d9
+
+gen 2  ✗ REFUSED   gemini-1740
+         diff   {'samples_per_arm': (150, 200)}
+         champ +0.8981  challenger +0.9120
+         gained +0.0139, needed +0.02
+         receipt ec154612250ff465
+
+gen 3  ✗ REFUSED   gemini-2550
+         diff   {'max_experiments': (8, 12)}
+         champ +0.8981  challenger +0.8722
+         gained -0.0259, needed +0.02
+         receipt f723040336b97f9e
+
+canon: gemini-1260

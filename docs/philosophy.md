@@ -60,10 +60,11 @@ how a thousand tiny lucky wins launder randomness into "progress." Every verdict
 a receipt sufficient to recompute it. And an independent auditor — a different model —
 reads each promotion and may dissent, on the record, without veto.
 
-In the live run, the gate promoted Gemini's first proposal and refused its next two.
-Both refusals were of *measured improvements* — real gains, under the margin. Those
-two refusals are worth more than any promotion we could show you. A system that can
-only say yes to itself proves nothing by saying yes.
+In three live runs, all published, the gate promoted Gemini's first proposal and
+refused its next two — every time. Most of those refusals were of *measured
+improvements*: real gains, turned down for falling under the margin. Those refusals are
+worth more than any promotion we could show you. A system that can only say yes to
+itself proves nothing by saying yes.
 
 ## The process was the philosophy
 

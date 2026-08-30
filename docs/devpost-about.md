@@ -31,11 +31,15 @@ experiment-design strategy, and that proposal is evaluated on 24 held-out worlds
 never seen and cannot enumerate. It is promoted only if it beats the champion by a margin — and refused otherwise,
 with a receipt saying why.
 
-In a representative run, Gemini found a genuine improvement — half the measurement
-for a small, audited accuracy cost — and it was promoted. It then proposed two further
-refinements that *did* score higher, and both were refused for gaining less than the
-margin. Refusing marginal gains is the point: it is what stops a system ratcheting
-forward on noise.
+In a live run, Gemini found a genuine improvement — half the measurement for a small,
+audited accuracy cost — and it was promoted. It then proposed two further refinements.
+One scored *higher* and was refused anyway, for gaining +0.0139 where the margin asks
++0.02; the other scored worse. Refusing a real gain is the point: it is what stops a
+system ratcheting forward on noise.
+
+We ran the loop three times and published all three, receipts included: one promotion
+and two refusals every time, and four of the six refusals were of candidates that scored
+higher and missed the margin.
 
 One number up front: reading observations alone, Gemini recovers the causal direction in
 0 of 4 confounded worlds; the same loop, allowed to intervene, recovers 4 of 4.

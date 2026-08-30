@@ -1,0 +1,56 @@
+{
+  "verdict": "REFUSED",
+  "candidate": "gemini-5808",
+  "parent": "gemini-1740",
+  "diff": {
+    "samples_per_arm": [
+      120,
+      150
+    ]
+  },
+  "champion_score": 0.912,
+  "challenger_score": 0.9204,
+  "margin_required": 0.02,
+  "world_seeds": [
+    10000,
+    10001,
+    10002,
+    10003,
+    10004,
+    10005,
+    10006,
+    10007,
+    10008,
+    10009,
+    10010,
+    10011,
+    10012,
+    10013,
+    10014,
+    10015,
+    10016,
+    10017,
+    10018,
+    10019,
+    10020,
+    10021,
+    10022,
+    10023
+  ],
+  "reason": "gained +0.0083, needed +0.02",
+  "created_at": 1788114292.583672,
+  "champion_parts": {
+    "score": 0.9120375,
+    "accuracy": 0.9537041666666667,
+    "cost": 0.04166666666666668,
+    "worlds": 24
+  },
+  "challenger_parts": {
+    "score": 0.9203708333333332,
+    "accuracy": 0.9537041666666667,
+    "cost": 0.03333333333333333,
+    "worlds": 24
+  },
+  "audit": null,
+  "digest": "2e6871dc19fc2a3a"
+}

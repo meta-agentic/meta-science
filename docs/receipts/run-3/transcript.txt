@@ -1,0 +1,23 @@
+held-out worlds: 24  (never shown to the proposer)
+champion champion-v1: +0.8704
+
+gen 1  ✓ PROMOTED  gemini-1740
+         diff   {'samples_per_arm': (150, 400)}
+         champ +0.8704  challenger +0.9120
+         beat the champion on held-out worlds by the required margin
+         audit  legitimate (gemini-3.5-flash-lite)
+         receipt d2fe370a27abcff4
+
+gen 2  ✗ REFUSED   gemini-6396
+         diff   {'samples_per_arm': (100, 150)}
+         champ +0.9120  challenger +0.9259
+         gained +0.0139, needed +0.02
+         receipt 036f14d7eb0eb3a7
+
+gen 3  ✗ REFUSED   gemini-7660
+         diff   {'max_experiments': (10, 12)}
+         champ +0.9120  challenger +0.9162
+         gained +0.0042, needed +0.02
+         receipt 3f5592d6038b7cd7
+
+canon: gemini-1740
