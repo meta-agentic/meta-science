@@ -16,8 +16,10 @@ from metascience.config import load_env  # noqa: E402
 from metascience.ledger import Receipt  # noqa: E402
 
 load_env(Path(__file__).resolve().parents[1] / ".env")
-pytestmark = pytest.mark.skipif(not os.environ.get("GEMINI_API_KEY"),
-                                reason="needs GEMINI_API_KEY")
+pytestmark = [
+    pytest.mark.skipif(not os.environ.get("GEMINI_API_KEY"), reason="needs GEMINI_API_KEY"),
+    pytest.mark.slow,   # two live calls to the auditor model
+]
 
 TUNABLES = {"samples_per_arm": "int", "effect_threshold": "float",
             "max_experiments": "int", "screen_observationally": "bool"}

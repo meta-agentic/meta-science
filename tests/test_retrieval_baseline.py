@@ -19,8 +19,10 @@ from metascience.config import load_env  # noqa: E402
 from metascience.templates import generate  # noqa: E402
 
 load_env(Path(__file__).resolve().parents[1] / ".env")
-pytestmark = pytest.mark.skipif(not os.environ.get("GEMINI_API_KEY"),
-                                reason="needs GEMINI_API_KEY")
+pytestmark = [
+    pytest.mark.skipif(not os.environ.get("GEMINI_API_KEY"), reason="needs GEMINI_API_KEY"),
+    pytest.mark.slow,   # three live calls with large observation payloads
+]
 
 
 def _ask_sign(world, cause, effect, observations) -> int:

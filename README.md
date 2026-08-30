@@ -103,7 +103,7 @@ also the adversarial test of anonymisation: if the surface leaked, the model wou
 recognised the system and answered from memory instead of following the correlation into
 the trap. It followed the correlation, every time.
 
-Reproduce with `python3 -m pytest tests/test_retrieval_baseline.py -q` (needs a key).
+Reproduce with `python3 -m pytest -m slow -q` (needs a key).
 
 ---
 
@@ -124,9 +124,14 @@ agent can see, on every template, on every seed, plus checks that constants vary
 no role is pinned to a label.
 
 ```
-$ python3 -m pytest tests/ -q
-7 passed
+$ python3 -m pytest -q
+26 passed, 4 deselected
 ```
+
+The four deselected tests make live model calls; run them with `python3 -m pytest -m slow`
+and a key. They are excluded by default because each is several round trips to a
+rate-limited endpoint, so including them makes a green run depend on quota rather than on
+the code.
 
 ---
 
@@ -179,7 +184,7 @@ estimate is an approximation there. That number is reported rather than tuned aw
 git clone https://github.com/meta-agentic/meta-science && cd meta-science
 python3 -m pip install -r requirements.txt
 echo 'GEMINI_API_KEY=your-key' > .env          # https://aistudio.google.com/apikey
-python3 -m pytest tests/ -q                    # no key needed: anonymisation suite
+python3 -m pytest -q                           # no key needed: 26 offline tests
 python3 run_evolution.py --offline             # no key needed: gate, both directions
 python3 run_evolution.py --generations 3       # live: Gemini proposes, gate decides
 ```

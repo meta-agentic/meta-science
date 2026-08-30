@@ -22,7 +22,10 @@ jobs:
       # offline by design, so the governance claim is verifiable without credentials —
       # tests that need a key skip themselves rather than failing the build.
       - name: Test
-        run: python -m pytest tests/ -q
+        # Default deselects the `slow` marks: those make live model calls against a
+        # rate-limited endpoint, so including them makes a green build depend on quota
+        # rather than on the code.
+        run: python -m pytest -q
 
       - name: The gate must still refuse
         run: python run_evolution.py --offline | tee /tmp/out.txt && grep -q REFUSED /tmp/out.txt
