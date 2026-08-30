@@ -26,70 +26,82 @@
   body{margin:0}
   .viz-root{background:var(--surface-1);color:var(--ink-1);
     font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif;min-height:100vh}
-  main{max-width:54rem;margin:0 auto;padding:2.2rem 1.25rem 5rem}
+  main{max-width:76rem;margin:0 auto;padding:2.2rem 1.25rem 5rem}
   h1{font-size:1.6rem;margin:0 0 .3rem;letter-spacing:-.02em}
-  .lede{color:var(--ink-2);margin:0 0 1.4rem;max-width:46rem}
-  .row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:0 0 1.1rem}
+  .lede{color:var(--ink-2);margin:0 0 1.4rem;max-width:52rem}
+  .row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:0 0 1.3rem}
   input{font:inherit;padding:.4rem .6rem;border:1px solid var(--line);border-radius:7px;
-        width:6.5rem;background:var(--surface-1);color:var(--ink-1)}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-  .seg button{font:inherit;font-size:.88rem;padding:.4rem .85rem;border:0;cursor:pointer;
-    background:transparent;color:var(--ink-2)}
-  .seg button[aria-pressed="true"]{background:var(--concordant);color:#fff}
+        background:var(--surface-1);color:var(--ink-1)}
   label.sw{font-size:.88rem;color:var(--ink-2);display:inline-flex;gap:.4rem;align-items:center}
-  section{border:1px solid var(--line);border-radius:10px;padding:1.2rem;margin:0 0 1.2rem;
-          background:var(--card)}
-  section h2{font-size:.85rem;margin:0 0 .7rem;text-transform:uppercase;
-             letter-spacing:.06em;color:var(--ink-3);font-weight:650}
-  .banner{font-size:.8rem;border-radius:6px;padding:.35rem .6rem;display:inline-block;
-          margin:0 0 .8rem;font-weight:600}
-  .agentside{background:color-mix(in oklab,var(--concordant) 14%,transparent);color:var(--concordant)}
-  .observerside{background:color-mix(in oklab,var(--discordant) 14%,transparent);color:var(--discordant)}
+
+  /* One grid, three row-pairs: each perspective sits beside its counterpart, so what
+     the agent lacks is visible at every level of representation. */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .cell{border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;
+        background:var(--card);min-width:0}
+  .colhead{border:0;background:transparent;padding:.2rem 0 0}
+  .colhead h2{font-size:.95rem;margin:0 0 .35rem;text-transform:uppercase;
+              letter-spacing:.06em;color:var(--ink-3);font-weight:650}
+  .banner{font-size:.8rem;border-radius:6px;padding:.3rem .6rem;display:inline-block;
+          font-weight:600}
+  .agentside{background:color-mix(in oklab,var(--concordant) 14%,transparent);
+             color:var(--concordant)}
+  .observerside{background:color-mix(in oklab,var(--discordant) 14%,transparent);
+                color:var(--discordant)}
+  .cell h3{font-size:.75rem;margin:0 0 .6rem;text-transform:uppercase;
+           letter-spacing:.07em;color:var(--ink-3);font-weight:650}
   pre{background:var(--surface-1);border:1px solid var(--line);border-radius:7px;
-      padding:.85rem;overflow-x:auto;font:12.5px/1.55 ui-monospace,Menlo,monospace;
-      margin:0;white-space:pre-wrap}
+      padding:.8rem;overflow:auto;font:12.5px/1.55 ui-monospace,Menlo,monospace;
+      margin:0;white-space:pre-wrap;max-height:26rem}
   svg{display:block;max-width:100%;height:auto}
   svg text{font:12px ui-sans-serif,system-ui;fill:var(--ink-1)}
   svg .mech{font-size:10px;fill:var(--ink-3)}
-  .hiddennote{color:var(--ink-3);font-size:.8rem;margin:.6rem 0 0}
+  .empty{color:var(--ink-3);font-size:.82rem;margin:.5rem 0 0}
+  .foot{color:var(--ink-3);font-size:.8rem;margin:1.4rem 0 0;max-width:60rem}
   a{color:var(--concordant)}
 </style>
 <div class="viz-root"><main>
   <h1>World inspector</h1>
   <p class="lede">Every world is generated from a seed: a causal DAG drawn from an
-  anonymised template, or two templates bridged into a compound. The agent surface and
-  the observer truth are shown separately below — the separation on this page is the
-  same one the code enforces.</p>
+  anonymised template, or up to eight templates bridged into a chain (the depth
+  control). Left column: what the agent can know. Right column: what only analysis and
+  humans can. The same boundary, shown at every level of representation.</p>
 
   <div class="row">
-    <label>seed <input id="seed" type="number" value="7"></label>
+    <label class="sw">seed <input id="seed" type="number" value="7" style="width:6rem"></label>
     <label class="sw">compound depth
       <input id="depth" type="number" min="0" max="7" value="0" style="width:4rem">
       <span style="color:var(--ink-3)">0 = atomic · n = n bridged templates chained</span></label>
-    <span class="seg" id="fmt">
-      <button data-f="diagram" aria-pressed="true">Diagram</button>
-      <button data-f="prose" aria-pressed="false">Prose</button>
-      <button data-f="json" aria-pressed="false">JSON</button>
-    </span>
   </div>
 
-  <section>
-    <h2>Agent surface</h2>
-    <span class="banner agentside">everything the agent is allowed to know</span>
-    <div id="agent"></div>
-  </section>
+  <div class="grid">
+    <div class="cell colhead">
+      <h2>Agent surface</h2>
+      <span class="banner agentside">everything the agent is allowed to know</span>
+    </div>
+    <div class="cell colhead">
+      <h2>Observer truth</h2>
+      <span class="banner observerside">never shown to the agent — analysis and humans only</span>
+    </div>
 
-  <section>
-    <h2>Observer truth</h2>
-    <span class="banner observerside">never shown to the agent — analysis and humans only</span>
-    <div id="observer"></div>
-    <p class="hiddennote">Public on purpose: any reader of the public repo can compute
-    this from the seed. The benchmark's boundary is process-level — nothing on the
-    agent's path calls this endpoint — and anonymisation guards against retrieval from
-    training, not against a person reading the answer.</p>
-  </section>
+    <div class="cell"><h3>Prose</h3><div id="a-prose"></div></div>
+    <div class="cell"><h3>Prose</h3><div id="o-prose"></div></div>
 
-  <p><a href="/">← demo</a> · <a href="/evidence">the evidence</a></p>
+    <div class="cell"><h3>Diagram</h3><div id="a-diagram"></div>
+      <p class="empty">The same quantities, deliberately without edges: the structure on
+      the right is exactly what the agent does not get.</p></div>
+    <div class="cell"><h3>Diagram</h3><div id="o-diagram"></div></div>
+
+    <div class="cell"><h3>JSON</h3><div id="a-json"></div></div>
+    <div class="cell"><h3>JSON</h3><div id="o-json"></div></div>
+  </div>
+
+  <p class="foot">Truth is public on purpose: any reader of the public repo can compute
+  it from the seed, so secrecy is not what protects the benchmark. The boundary is
+  process-level — nothing on the agent's path calls the truth endpoint — and
+  anonymisation guards against retrieval from training, not against a person reading
+  the answer. <a href="/">← demo</a> · <a href="/evidence">the evidence</a></p>
 </main></div>
 <script>
 const NS = "http://www.w3.org/2000/svg";
@@ -100,10 +112,13 @@ const el = (n, a, text) => {
   if (text != null) x.textContent = text;
   return x;
 };
-let fmt = "diagram";
+const pre = text => {
+  const p = document.createElement("pre");
+  p.textContent = text;
+  return p;
+};
 
 function layers(truth) {
-  // Topological layering: a node sits one layer past its deepest parent.
   const edges = truth.ground_truth.edges;
   const depth = {};
   const d = n => depth[n] ??= (edges[n] || []).length
@@ -115,47 +130,42 @@ function layers(truth) {
   return {cols, depth, edges};
 }
 
-function diagram(truth) {
+// The observer's DAG: layered layout, radial edge trimming, bowed layer-skips,
+// distribution families with parameters under each node.
+function dagDiagram(truth) {
   const {cols, depth, edges} = layers(truth);
   const hidden = new Set(truth.hidden);
   const mechs = truth.ground_truth.mechanisms;
   const exo = truth.exogenous || {};
   const mnoise = truth.noise || {};
-  const CW = 170, RH = 92, PAD = 40;   // row pitch leaves room for two caption lines
-  const W = Math.max(560, cols.length * CW + PAD * 2);
+  const CW = 170, RH = 92, PAD = 40, R = 22;
+  const W = Math.max(520, cols.length * CW + PAD * 2);
   const H = Math.max(...cols.map(c => c.length)) * RH + PAD * 2 + 10;
   const pos = {};
   cols.forEach((col, ci) => col.forEach((n, ri) => {
-    const free = H - PAD * 2 - (col.length) * RH;
+    const free = H - PAD * 2 - col.length * RH;
     pos[n] = [PAD + ci * CW + 60, PAD + ri * RH + free / 2 + RH / 2];
   }));
   const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
     "aria-label": "Causal graph of the world, hidden nodes dashed"});
-  svg.append(el("defs", {}));
+  const defs = el("defs", {});
   const marker = el("marker", {id: "arr", viewBox: "0 0 10 10", refX: 9, refY: 5,
     markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse"});
   marker.append(el("path", {d: "M0,0 L10,5 L0,10 z",
     fill: getComputedStyle(document.querySelector(".viz-root")).getPropertyValue("--ink-3")}));
-  svg.querySelector("defs").append(marker);
-  const R = 22;                       // node radius
+  defs.append(marker);
+  svg.append(defs);
   for (const [child, parents] of Object.entries(edges)) {
     for (const p of parents) {
       const [x1, y1] = pos[p], [x2, y2] = pos[child];
-      // Trim both ends RADIALLY along the edge's own direction, so an arrow meets
-      // the circle's rim wherever the edge actually arrives. The old fixed
-      // horizontal offsets were only right for horizontal edges — diagonals
-      // pierced the circles, and every edge into a node landed on the same point.
       const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy);
       const ux = dx / len, uy = dy / len;
       const sx = x1 + ux * (R + 3), sy = y1 + uy * (R + 3);
-      const ex = x2 - ux * (R + 9), ey = y2 - uy * (R + 9);   // +arrowhead room
+      const ex = x2 - ux * (R + 9), ey = y2 - uy * (R + 9);
       const attrs = {stroke: "var(--ink-3)", "stroke-width": 1.5, fill: "none",
         "marker-end": "url(#arr)", opacity: 0.85,
         "stroke-dasharray": hidden.has(p) ? "4 4" : "none"};
       if (Math.abs(depth[child] - depth[p]) > 1) {
-        // A layer-skipping edge would run straight through the intermediate
-        // column's nodes: bow it. The bow side alternates with the child's row
-        // parity so two skips in the same lane do not stack on one arc.
         const bow = (28 + 6 * Math.abs(depth[child] - depth[p]))
                     * (pos[child][1] <= H / 2 ? -1 : 1);
         const mx = (sx + ex) / 2 - uy * bow, my = (sy + ey) / 2 + ux * bow;
@@ -167,17 +177,13 @@ function diagram(truth) {
   }
   for (const [n, [x, y]] of Object.entries(pos)) {
     const isH = hidden.has(n);
-    svg.append(el("circle", {cx: x, cy: y, r: 22,
+    svg.append(el("circle", {cx: x, cy: y, r: R,
       fill: isH ? "none" : "var(--concordant)",
       stroke: isH ? "var(--discordant)" : "none",
       "stroke-width": isH ? 2 : 0, "stroke-dasharray": isH ? "5 4" : "none"}));
     svg.append(el("text", {x, y: y + 4, "text-anchor": "middle",
-      fill: isH ? "var(--discordant)" : "#fff",
-      style: "font-weight:650"}, n));
+      fill: isH ? "var(--discordant)" : "#fff", style: "font-weight:650"}, n));
     const m = mechs[n];
-    // Precise families, not the vague "noise": every source node here is a gaussian
-    // draw, and it is labelled as such with its parameters; mechanism nodes carry
-    // their functional family with constant and observation noise.
     const line1 = m ? m.form : (isH ? "hidden · gaussian" : "gaussian");
     let line2;
     if (m) {
@@ -193,6 +199,27 @@ function diagram(truth) {
   return svg;
 }
 
+// The agent's diagram: the same circles, deliberately no edges — visual parity with
+// the DAG makes the absence of structure legible instead of merely stated.
+function surfaceDiagram(surface) {
+  const vars = surface.variables;
+  const PER = 6, R = 22;
+  const rows = Math.ceil(vars.length / PER);
+  const W = 520, RH = 66;
+  const H = rows * RH + 30;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "The agent's view: labels only, no structure"});
+  vars.forEach((v, i) => {
+    const perRow = Math.min(PER, vars.length - Math.floor(i / PER) * PER);
+    const x = (W / (perRow + 1)) * ((i % PER) + 1);
+    const y = Math.floor(i / PER) * RH + RH / 2 + 6;
+    svg.append(el("circle", {cx: x, cy: y, r: R, fill: "var(--concordant)"}));
+    svg.append(el("text", {x, y: y + 4, "text-anchor": "middle",
+      fill: "#fff", style: "font-weight:650"}, v));
+  });
+  return svg;
+}
+
 async function load() {
   const seed = $("seed").value || 7;
   const depth = Math.min(7, Math.max(0, +$("depth").value || 0));
@@ -201,38 +228,16 @@ async function load() {
     (await fetch(`/world/${seed}${q}`)).json(),
     (await fetch(`/world/${seed}/truth${q}`)).json(),
   ]);
-  const agent = $("agent"), obs = $("observer");
-  agent.replaceChildren(); obs.replaceChildren();
-
-  if (fmt === "json") {
-    const a = document.createElement("pre");
-    const {brief, ...surfaceJson} = surface;
-    a.textContent = JSON.stringify(surfaceJson, null, 2);
-    agent.append(a);
-    const o = document.createElement("pre");
-    o.textContent = JSON.stringify(truth.ground_truth, null, 2);
-    obs.append(o);
-  } else if (fmt === "prose") {
-    const a = document.createElement("pre"); a.textContent = surface.brief; agent.append(a);
-    const o = document.createElement("pre"); o.textContent = truth.narrative; obs.append(o);
-  } else {
-    // The agent's "diagram" is deliberately structureless: labels in a row. Drawing
-    // edges here would grant the agent view the very thing it does not have.
-    const a = document.createElement("pre");
-    a.textContent = surface.variables.join("   ") +
-      "\n\n(no structure — the agent sees labels and affordances, nothing more)";
-    agent.append(a);
-    obs.append(diagram(truth));
-  }
+  const {brief, ...surfaceJson} = surface;
+  $("a-prose").replaceChildren(pre(brief));
+  $("o-prose").replaceChildren(pre(truth.narrative));
+  $("a-diagram").replaceChildren(surfaceDiagram(surface));
+  $("o-diagram").replaceChildren(dagDiagram(truth));
+  $("a-json").replaceChildren(pre(JSON.stringify(surfaceJson, null, 2)));
+  $("o-json").replaceChildren(pre(JSON.stringify(truth.ground_truth, null, 2)));
 }
-document.querySelectorAll("#fmt button").forEach(b => b.onclick = () => {
-  document.querySelectorAll("#fmt button").forEach(x =>
-    x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-  fmt = b.dataset.f; load();
-});
-// `change` alone misses typed digits until blur — a number field edited by keyboard
-// looks dead. `input` catches keystrokes and spinner clicks alike.
 $("seed").onchange = load;
+// change alone misses typed digits until blur; input catches keystrokes and spinners.
 $("depth").oninput = load; $("depth").onchange = load;
 load();
 </script>
