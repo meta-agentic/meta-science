@@ -3,60 +3,93 @@
 <title>meta-science</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  :root{--bg:#fff;--fg:#18181b;--dim:#71717a;--line:#e4e4e7;--card:#fafafa;
-        --red:#b91c1c;--green:#15803d;--blue:#1d4ed8;--accent:#0369a1}
-  @media (prefers-color-scheme:dark){:root{--bg:#0b0b0d;--fg:#e4e4e7;--dim:#a1a1aa;
-        --line:#27272a;--card:#141417;--red:#f87171;--green:#4ade80;--blue:#93c5fd;--accent:#38bdf8}}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);
-       font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif}
-  main{max-width:56rem;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+  .viz-root{
+    color-scheme:light;
+    --surface-1:#fcfcfb; --line:#e4e4e7; --card:#f4f4f2;
+    --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#8a8983;
+    --concordant:#2a78d6; --discordant:#eb6834;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:where(:not([data-theme="light"])) .viz-root{
+      color-scheme:dark;
+      --surface-1:#1a1a19; --line:#33322f; --card:#222220;
+      --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8a8983;
+      --concordant:#3987e5; --discordant:#d95926;
+    }
+  }
+  :root[data-theme="dark"] .viz-root{
+    color-scheme:dark;
+    --surface-1:#1a1a19; --line:#33322f; --card:#222220;
+    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8a8983;
+    --concordant:#3987e5; --discordant:#d95926;
+  }
+  body{margin:0}
+  .viz-root{background:var(--surface-1);color:var(--ink-1);
+    font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif;min-height:100vh}
+  main{max-width:56rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
   h1{font-size:1.9rem;margin:0 0 .35rem;letter-spacing:-.02em}
-  .lede{color:var(--dim);margin:0 0 2rem;max-width:44rem}
+  .lede{color:var(--ink-2);margin:0 0 1.6rem;max-width:46rem}
   section{border:1px solid var(--line);border-radius:10px;padding:1.25rem;margin:0 0 1.25rem;
           background:var(--card)}
   h2{font-size:1rem;margin:0 0 .75rem;text-transform:uppercase;letter-spacing:.06em;
-     color:var(--dim);font-weight:600}
+     color:var(--ink-3);font-weight:600}
   button{font:inherit;font-weight:500;padding:.5rem 1rem;border-radius:7px;cursor:pointer;
-         border:1px solid var(--accent);background:var(--accent);color:#fff}
-  button.ghost{background:transparent;color:var(--accent)}
+         border:1px solid var(--concordant);background:var(--concordant);color:#fff}
+  button.ghost{background:transparent;color:var(--concordant)}
+  button.reveal{border-color:var(--discordant);background:var(--discordant)}
   button[disabled]{opacity:.5;cursor:progress}
   input{font:inherit;padding:.45rem .6rem;border:1px solid var(--line);border-radius:7px;
-        width:6rem;background:var(--bg);color:var(--fg)}
-  .row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
-  pre{background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:.85rem;
-      overflow-x:auto;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;margin:.85rem 0 0}
+        background:var(--surface-1);color:var(--ink-1)}
+  .row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+  label.sw{font-size:.88rem;color:var(--ink-2);display:inline-flex;gap:.4rem;align-items:center}
+  pre{background:var(--surface-1);border:1px solid var(--line);border-radius:7px;padding:.85rem;
+      overflow-x:auto;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;margin:.85rem 0 0;
+      white-space:pre-wrap}
   table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:.85rem}
   th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid var(--line)}
-  th{color:var(--dim);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  th{color:var(--ink-3);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
   td.num{font-variant-numeric:tabular-nums;text-align:right}
-  .REFUTED,.FLAGGED,.REFUSED{color:var(--red);font-weight:600}
-  .SUPPORTED,.PROMOTED{color:var(--green);font-weight:600}
-  .note{color:var(--dim);font-size:.87rem;margin:.6rem 0 0}
+  .REFUTED,.FLAGGED,.REFUSED{color:var(--discordant);font-weight:600}
+  .SUPPORTED,.PROMOTED{color:var(--concordant);font-weight:600}
+  .note{color:var(--ink-3);font-size:.87rem;margin:.6rem 0 0}
   .stat{display:inline-block;margin:0 2rem .5rem 0}
   .stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
-  .stat span{color:var(--dim);font-size:.8rem}
-  a{color:var(--accent)}
+  .stat span{color:var(--ink-2);font-size:.8rem}
+  .banner{font-size:.8rem;border-radius:6px;padding:.3rem .6rem;display:inline-block;
+          font-weight:600;margin:0 0 .7rem}
+  .agentside{background:color-mix(in oklab,var(--concordant) 14%,transparent);color:var(--concordant)}
+  .observerside{background:color-mix(in oklab,var(--discordant) 14%,transparent);color:var(--discordant)}
+  svg{display:block;max-width:100%;height:auto}
+  svg text{font:12px ui-sans-serif,system-ui;fill:var(--ink-1)}
+  svg .mech{font-size:10px;fill:var(--ink-3)}
+  a{color:var(--concordant)}
+  footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);
+         color:var(--ink-3);font-size:.8rem}
 </style>
-<main>
+<div class="viz-root"><main>
   <h1>meta-science</h1>
   <p class="lede">An agent that does science on worlds it has never seen — forming
   hypotheses, designing its own experiments, and being refuted by them — and that improves
   its own method only when a frozen benchmark proves the improvement real.</p>
 
   <section>
-    <h2>1 · What the agent is allowed to know</h2>
-    <div class="row">
-      <label>world seed <input id="seed" type="number" value="7"></label>
-      <button id="peek">Look at the world</button>
+    <h2>The world under study</h2>
+    <div class="row" style="margin-bottom:.9rem">
+      <label class="sw">seed <input id="seed" type="number" value="7" style="width:6rem"></label>
+      <label class="sw">compound depth
+        <input id="depth" type="number" min="0" max="7" value="0" style="width:4rem"></label>
+      <label class="sw"><input type="checkbox" id="complex">
+        complex variables (z = a + j·b)</label>
     </div>
-    <p class="note">Opaque labels, no units, no documentation. Two affordances: observe, or
-    intervene.</p>
-    <pre id="world">—</pre>
+    <span class="banner agentside">this page works on the agent's side of the boundary</span>
+    <div id="agentview"></div>
+    <p class="note">Opaque labels, two affordances, no structure — everything below runs
+    against exactly this view. The truth exists, but it is <em>revealed</em>, never used:
+    <a id="inspectlink" href="/world/7/inspect">full inspector →</a></p>
   </section>
 
   <section>
-    <h2>2 · Run the discovery loop</h2>
+    <h2>1 · Run the discovery loop</h2>
     <div class="row">
       <button id="run">Run experiments on this world</button>
       <span class="note" id="runnote"></span>
@@ -64,44 +97,80 @@
     <p class="note">Each prediction is committed <em>before</em> its experiment. The verdict
     is a comparison, never a question put to the model.</p>
     <div id="trial"></div>
+    <div id="revealbox" style="display:none;margin-top:1rem">
+      <button class="reveal" id="reveal">Reveal this world's hidden truth</button>
+      <span class="note">— the observer view, for the same world the agent just worked blind.</span>
+      <div id="truthview" style="margin-top:1rem"></div>
+    </div>
   </section>
 
   <section>
-    <h2>3 · Let it improve its own method</h2>
+    <h2>2 · Let it improve its own method</h2>
     <div class="row">
       <button id="evolve">Propose a change, and rule on it</button>
-      <span class="note" id="evolvenote">Calls Gemini and scores 24 held-out worlds — takes a minute.</span>
+      <span class="note" id="evolvenote">Gemini proposes against 24 held-out worlds — takes a
+      minute. The benchmark is always the frozen real-domain set, whatever the controls above
+      say: history stays comparable.</span>
     </div>
     <div id="gen"></div>
   </section>
 
   <section>
-    <h2>4 · The evidence base</h2>
+    <h2>3 · The evidence base</h2>
     <div id="stats"><span class="note">loading…</span></div>
     <div class="row" style="margin-top:1rem">
       <button class="ghost" id="refresh">Refresh</button>
       <a href="/evidence"><b>The evidence — four figures from the frozen study</b></a>
-      <a href="/world/7/inspect"><b>World inspector — agent surface vs observer truth</b></a>
-      <a href="/export.csv">Download CSV</a>
+      <a href="/export.csv">CSV</a>
       <a href="/experiments">Raw JSON</a>
     </div>
     <p class="note">Every run here is stored with its seeds, strategy and code commit —
     enough to recompute the result rather than merely read it.</p>
   </section>
-</main>
+
+  <footer>© 2026 <b>Marco Vanadia</b> · mova ·
+    <a href="https://github.com/meta-agentic/meta-science">meta-agentic/meta-science</a> ·
+    <a href="https://github.com/meta-agentic/meta-science/blob/main/LICENSE">GPL-3.0</a>
+    — free for everyone, human or AI</footer>
+</main></div>
+<script src="/static/worldviz.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const get = async (u, opts) => (await fetch(u, opts)).json();
 const busy = (b, on, label) => { b.disabled = on; b.textContent = on ? "working…" : label; };
 
-$("peek").onclick = async () => {
-  $("world").textContent = JSON.stringify(await get(`/world/${$("seed").value}`), null, 2);
+const params = () => {
+  const q = new URLSearchParams();
+  const depth = Math.min(7, Math.max(0, +$("depth").value || 0));
+  if (depth) q.set("depth", depth);
+  if ($("complex").checked) q.set("complex", "true");
+  return q;
 };
+const withParams = (base, extra) => {
+  const q = params();
+  for (const [k, v] of Object.entries(extra || {})) q.set(k, v);
+  const s = q.toString();
+  return s ? `${base}?${s}` : base;
+};
+const seed = () => $("seed").value || 7;
+
+async function showWorld() {
+  try {
+    const surface = await get(withParams(`/world/${seed()}`));
+    const view = $("agentview");
+    view.replaceChildren(surfaceDiagram(surface), pre(surface.brief));
+    $("inspectlink").href = `/world/${seed()}/inspect`;
+    $("runnote").textContent = "";
+  } catch { $("agentview").replaceChildren(pre("world unavailable — check the controls")); }
+  $("revealbox").style.display = "none";
+  $("truthview").replaceChildren();
+  $("trial").replaceChildren();
+}
 
 $("run").onclick = async e => {
   busy(e.target, true);
   try {
-    const d = await get(`/discover/${$("seed").value}`);
+    const d = await get(withParams(`/discover/${seed()}`));
     const rows = d.experiments.map(x => {
       const h = x.hypothesis;
       const sign = h.predicted_sign > 0 ? "+1" : h.predicted_sign < 0 ? "−1" : "0";
@@ -114,7 +183,27 @@ $("run").onclick = async e => {
     $("runnote").textContent =
       `${d.refutation_count} of ${d.experiments.length} refuted · held-out direction accuracy `
       + `${d.held_out_score.direction_accuracy} · run ${d.run_id}`;
+    $("revealbox").style.display = "block";
+    load();
   } finally { busy(e.target, false, "Run experiments on this world"); }
+};
+
+$("reveal").onclick = async e => {
+  busy(e.target, true);
+  try {
+    const truth = await get(withParams(`/world/${seed()}/truth`));
+    const box = $("truthview");
+    box.replaceChildren();
+    const banner = document.createElement("span");
+    banner.className = "banner observerside";
+    banner.textContent = "observer truth — the agent never saw any of this";
+    box.append(banner, dagDiagram(truth), pre(truth.narrative));
+    const more = document.createElement("p");
+    more.className = "note";
+    more.innerHTML = `Variable atlas, side-by-side JSON and prose:
+      <a href="/world/${seed()}/inspect">full inspector →</a>`;
+    box.append(more);
+  } finally { busy(e.target, false, "Reveal this world's hidden truth"); }
 };
 
 $("evolve").onclick = async e => {
@@ -129,7 +218,7 @@ diff        ${JSON.stringify(r.diff)}
 champion    ${r.champion_score}
 challenger  ${r.challenger_score}   (margin ${r.margin_required})
 ${r.reason}
-audit       <span class="${a.legitimate === false ? "FLAGGED" : ""}">${auditText}</span> — ${a.concern || "—"}
+audit       <span class="${a.legitimate === false ? "FLAGGED" : ""}">${auditText}</span> — ${(a.concern || "—")}
 receipt     ${r.digest}</pre>`;
     load();
   } finally { busy(e.target, false, "Propose a change, and rule on it"); }
@@ -139,16 +228,14 @@ async function load() {
   const s = await get("/stats");
   const cell = (v, l) => `<div class="stat"><b>${v ?? "—"}</b><span>${l}</span></div>`;
   $("stats").innerHTML =
-    cell(s.records, "runs recorded") +
-    cell(s.hypotheses_tested, "hypotheses tested") +
-    cell(s.hypotheses_refuted, "refuted by experiment") +
-    cell(s.refutation_rate, "refutation rate") +
-    cell(s.promotions, "promotions") +
-    cell(s.refusals, "refusals");
+    cell(s.records, "runs recorded") + cell(s.hypotheses_tested, "hypotheses tested") +
+    cell(s.hypotheses_refuted, "refuted by experiment") + cell(s.refutation_rate, "refutation rate") +
+    cell(s.promotions, "promotions") + cell(s.refusals, "refusals");
 }
 $("refresh").onclick = load;
-$("peek").click();
+$("seed").onchange = showWorld;
+$("depth").oninput = showWorld; $("depth").onchange = showWorld;
+$("complex").onchange = showWorld;
+showWorld();
 load();
 </script>
-
-<footer style="max-width:46rem;margin:3rem auto 2rem;padding:1rem 1rem 0;color:#8a8983;font-size:.8rem;border-top:1px solid #e4e4e7">© 2026 <b>Marco Vanadia</b> · mova · <a href="https://github.com/meta-agentic/meta-science">meta-agentic/meta-science</a> · <a href="https://github.com/meta-agentic/meta-science/blob/main/LICENSE">GPL-3.0</a> — free for everyone, human or AI</footer>

@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 from fastapi import FastAPI, Query
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -35,6 +36,7 @@ from metascience.templates import generate  # noqa: E402
 
 load_env()
 app = FastAPI(title="meta-science", description="An agent that does science, and can be refuted.")
+app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
 
 
 def _ledger():
@@ -56,12 +58,6 @@ def index() -> str:
 def evidence() -> str:
     """The frozen study, presented. Renders from static/study.json, not the live ledger."""
     return (Path(__file__).parent / "static" / "evidence.html").read_text(encoding="utf-8")
-
-
-@app.get("/static/study.json")
-def study_json() -> dict:
-    import json as _json
-    return _json.loads((Path(__file__).parent / "static" / "study.json").read_text())
 
 
 @app.get("/health")
@@ -122,15 +118,18 @@ def world_inspect(seed: int) -> str:
 
 
 @app.get("/discover/{seed}")
-def discover(seed: int, live: bool = False) -> dict:
-    w = generate(seed)
+def discover(seed: int, live: bool = False, depth: int = Query(0, ge=0, le=7),
+             use_complex: bool = Query(False, alias="complex")) -> dict:
+    w = _world(seed, depth, False, use_complex)
     reasoner = GeminiReasoner() if live else HeuristicReasoner()
     run = run_discovery(w, reasoner, Strategy(), seed=seed)
     variables = list(w.observable)
     probes = [(variables[0], 0.5), (variables[0], -0.5)]
     held_out = score_on_held_out(w, run, probes, seed=seed + 5000)
     rec = record_discovery(_ledger(), w, run, held_out, Strategy(),
-                           models={"reasoner": model_name() if live else "heuristic"})
+                           models={"reasoner": model_name() if live else "heuristic"},
+                           notes=(f"depth={depth} complex={use_complex}"
+                                  if (depth or use_complex) else ""))
     return {
         **run.to_dict(),
         "held_out_score": held_out,
