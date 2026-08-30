@@ -16,7 +16,7 @@ from google.cloud import firestore
 
 from .ledger import Receipt
 
-RAW, WIKI, RECEIPTS = "raw", "wiki", "receipts"
+RAW, WIKI, RECEIPTS, EXPERIMENTS = "raw", "wiki", "receipts", "experiments"
 
 
 class FirestoreLedger:
@@ -43,3 +43,10 @@ class FirestoreLedger:
 
     def receipts(self) -> list[dict]:
         return [d.to_dict() for d in self._col(RECEIPTS).order_by("created_at").stream()]
+
+    def put_experiment(self, record: dict) -> None:
+        self._col(EXPERIMENTS).document(record["run_id"]).set(record)
+
+    def experiments(self, limit: int = 500) -> list[dict]:
+        q = self._col(EXPERIMENTS).order_by("created_at").limit(limit)
+        return [d.to_dict() for d in q.stream()]

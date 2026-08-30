@@ -52,6 +52,8 @@ class Ledger(Protocol):
     def canon(self) -> dict: ...
     def set_canon(self, key: str, record: dict) -> None: ...
     def put_receipt(self, receipt: Receipt) -> None: ...
+    def put_experiment(self, record: dict) -> None: ...
+    def experiments(self, limit: int = 500) -> list[dict]: ...
 
 
 class FileLedger:
@@ -60,7 +62,7 @@ class FileLedger:
 
     def __init__(self, root: str | Path):
         self.root = Path(root)
-        for tier in ("raw", "wiki", "output", "receipts"):
+        for tier in ("raw", "wiki", "output", "receipts", "experiments"):
             (self.root / tier).mkdir(parents=True, exist_ok=True)
 
     def put_raw(self, key: str, record: dict) -> None:
@@ -83,6 +85,14 @@ class FileLedger:
     def receipts(self) -> list[dict]:
         return [json.loads(f.read_text())
                 for f in sorted((self.root / "receipts").glob("*.json"))]
+
+    def put_experiment(self, record: dict) -> None:
+        (self.root / "experiments" / f"{record['run_id']}.json").write_text(
+            json.dumps(record, indent=2))
+
+    def experiments(self, limit: int = 500) -> list[dict]:
+        files = sorted((self.root / "experiments").glob("*.json"))
+        return [json.loads(f.read_text()) for f in files[-limit:]]
 
 
 class PromotionGate:
