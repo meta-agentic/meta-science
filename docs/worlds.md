@@ -109,6 +109,34 @@ the state by ε — and the agent must discover that its own looking is weakly a
 Disentangling measurement disturbance from dynamics is exactly the kind of problem
 this benchmark exists to pose.
 
+### The substrate objection, one level deeper
+
+Push further — Landauer's push: information is physical, so even our classical
+`observe()` has side effects. Computing it fires transistors and dissipates heat. The
+observation is unavoidably an act *somewhere*.
+
+Somewhere, yes — but not in the world under study. Two worlds are in play: **W**, the
+structural causal model, and **H**, the physical universe of the CPU computing it. The
+side effects are all in H. W's ontology is closed by enumeration: nothing influences a
+variable except through its mechanism's declared parents, and `observe()` has no write
+path into the nodes. Physics cannot escape the observer effect because the instrument
+is made of the same stuff it measures — there is no outside. Simulation places the
+observer outside the ontology, and that is precisely the epistemic privilege that lets
+a synthetic benchmark have ground truth at all.
+
+The boundary is not merely asserted — it is demonstrated: the cross-process determinism
+test doubles as a substrate-independence experiment. The same seed yields bit-identical
+worlds on a hot CPU or a cold one, under any load, on any run: H's electron-level
+turbulence measurably does not leak into W.
+
+Two cracks, named rather than hidden. First, the API contains a micro-observer-effect
+of its own: unseeded observations advance the RNG stream, so observing changes what
+would next be observed — not W's law, but its noise realization. Every scored path is
+seeded, which closes the crack where it matters; it remains open in the unseeded API.
+Second, covert channels exist in principle — an agent that could *time* `observe()`
+would be measuring H. The interface returns values only, so that channel is closed at
+the interface, not by nature.
+
 ## Compound worlds — yes, with the AST as it stands
 
 The question "can the generator produce compound problems?" has a short answer: the
