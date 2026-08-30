@@ -65,6 +65,15 @@ exception and moved on, so a `503 UNAVAILABLE` from `gemini-3.7-flash` surfaced 
 model with nothing to say. Failures are now recorded, and only a transient overload is
 retried.
 
+**An auditor that flagged everything.** We added a second Gemini model to check whether
+each promotion was earned rather than gamed. It first misread the diff format and objected
+to a problem that did not exist; then, once that was fixed, it flagged every single
+promotion — which carries exactly as much information as flagging none. The fix was not a
+better prompt but a better receipt: the score now travels split into accuracy and cost, so
+"spent less and kept the answers" is distinguishable from "spent less and lost accuracy",
+plus an explicit noise floor below which a movement is sampling variation. It now separates
+the two cases it exists to separate.
+
 **Proving anonymisation rather than asserting it.** Checking that banned words are absent
 is easy. The real question is whether a model can answer without experimenting. So we
 tested it adversarially — and it cannot.
@@ -96,7 +105,7 @@ set so smaller margins become measurable.
 
 ## Built with
 
-`python` · `gemini-3.6-flash` · `google-genai` (GenAI SDK) · `google-cloud-firestore` ·
+`python` · `gemini-3.6-flash` · `gemini-3.5-flash-lite` · `google-genai` (GenAI SDK) · `google-cloud-firestore` ·
 `cloud-run` · `secret-manager` · `terraform` · `fastapi` · `docker` · `pytest`
 
 ## What we are not claiming

@@ -130,6 +130,31 @@ $ python3 -m pytest tests/ -q
 
 ---
 
+## A second model audits every promotion
+
+Scoring higher is necessary and not sufficient. A challenger can score higher by
+exploiting the metric rather than by doing better science — this project had a candidate
+try exactly that, buying accuracy with more samples under a cost model that only charged
+experiment count.
+
+So each promotion is read by a **different Gemini model** (`gemini-3.5-flash-lite`, not
+the `3.6-flash` that proposes) which argues about whether the win was earned. It sees the
+score split into its parts, because the composite alone cannot separate *spent less and
+kept the answers* from *spent less, lost accuracy, and the saving outran it*.
+
+```
+PROMOTED  gemini-8986   {'samples_per_arm': (200, 400)}
+          champ +0.8704  challenger +0.9259
+          audit legitimate (gemini-3.5-flash-lite)
+```
+
+It is **advisory and cannot veto.** It runs after the verdict and annotates the record —
+a promotion that turned on a model's opinion would reintroduce exactly what the gate
+exists to prevent. When the auditor is unreachable that is recorded as *absent*, never as
+approval.
+
+---
+
 ## Results per template
 
 Six topologies, deterministic reasoner, scored on held-out interventions:
