@@ -32,6 +32,34 @@ The interesting artefact here is not a system that improves. It is a system that
 
 ---
 
+## The axioms
+
+Two refusals, stated up front — everything else descends from them.
+
+**A1 — No agent is the judge of its own claims.**
+
+> A ⊢ c  ⇏  ⊨ c
+
+The two turnstiles of logic: `⊢` is *syntactic* — what an agent can derive; `⊨` is
+*semantic* — what actually holds. The axiom says the first never purchases the second
+when the prover judges itself: **derivation is not truth.** An agent has authority over
+its own proofs, never over the world; the gate exists to bridge that gap from outside.
+
+**A2 — Seeing is not doing.**
+
+> P(Y | do(X)) ≢ P(Y | X)
+
+Not `≠` but `≢` — *not identically equal*, and the distinction is the axiom's sharpest
+edge: for an unconfounded X the two quantities **are** equal, which is exactly what a
+randomised experiment buys. The operators differ; their values coincide only when it has
+been earned. Our confounded worlds are built where they diverge — and observation alone
+walks straight into the gap (0/4 recovered), while intervention walks around it (4/4).
+
+The full argument, including the quantum and thermodynamic objections to A2 and where
+they lead: [docs/philosophy.md](docs/philosophy.md).
+
+---
+
 ## What actually happens
 
 A representative run of `python3 run_evolution.py --generations 3`:

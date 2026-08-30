@@ -53,6 +53,8 @@ F_GREEK_H = ImageFont.truetype(STIX, 88)
 F_GREEK = ImageFont.truetype(STIX, 46)
 F_MATH = ImageFont.truetype(STIX, 54)
 F_MATH_S = ImageFont.truetype(STIX, 38)
+# A philosopher's hand for the Latin marginalia.
+F_QUILL = ImageFont.truetype("/System/Library/Fonts/Supplemental/Apple Chancery.ttf", 46)
 
 
 class Scene:
@@ -163,9 +165,14 @@ def axioms() -> Scene:
             # derivation never entails truth. The earlier "A ⊬ ⊨ c(A)" juxtaposed
             # two turnstiles with no operand between them — malformed, caught by
             # the author.
-            ("A1", "No agent is the judge of its own claims.", "A ⊢ c  ⇏  ⊨ c", ""),
-            ("A2", "Seeing is not doing.", "P(Y | X) ≠ P(Y | do(X))",
-             "correlation is not intervention"),
+            ("A1", "No agent is the judge of its own claims.", "A ⊢ c  ⇏  ⊨ c",
+             "⊢ derives (syntax) · ⊨ holds (semantics) — derivation never entails truth",
+             "Ex probatione propria non sequitur veritas."),
+            # ≢, not ≠: for an unconfounded X the two quantities ARE equal — that
+            # is what randomised experiments buy. The axiom says the operators are
+            # not identical; they coincide only when it has been earned.
+            ("A2", "Seeing is not doing.", "P(Y | do(X)) ≢ P(Y | X)",
+             "not identical — they coincide only when confounding is absent"),
         ]),
         ("HYPOTHESIS", [
             ("", "A model can improve its own method.", "∃ Μ′ : Μ′ ≻ Μ", ""),
@@ -187,7 +194,9 @@ def axioms() -> Scene:
         for title, rows in BLOCKS[:n_blocks]:
             d.text((120, y), title, font=F_FOOT, fill=BLUE)
             y += 46
-            for tag, maxim, formula, gloss in rows:
+            for row in rows:
+                tag, maxim, formula, gloss = row[:4]
+                latin = row[4] if len(row) > 4 else None
                 x = 160
                 if tag:
                     d.text((x, y + 8), tag, font=F_FOOT, fill=INK3)
@@ -203,8 +212,15 @@ def axioms() -> Scene:
                     d.text((x, y), maxim, font=F_BODY, fill=INK1)
                     d.text((1060, y - 6), formula, font=F_MATH, fill=INK2)
                     if gloss:
-                        d.text((x, y + 56), gloss, font=F_FOOT, fill=INK3)
+                        # Helvetica has no turnstiles — a gloss carrying logic
+                        # symbols renders in the math face or it renders as tofu.
+                        gf = (ImageFont.truetype(STIX, 30)
+                              if any(ord(ch) > 0x2200 for ch in gloss) else F_FOOT)
+                        d.text((x, y + 56), gloss, font=gf, fill=INK3)
                     y += 104 if gloss else 78
+                    if latin:
+                        d.text((x + 30, y - 2), latin, font=F_QUILL, fill=(176, 148, 96))
+                        y += 76
             y += 30
         return img
 

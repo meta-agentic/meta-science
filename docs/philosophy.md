@@ -20,7 +20,8 @@ such an agent would have to pass — and only then the agent.
 
 Everything in this system descends from two refusals, stated up front.
 
-**No agent is the judge of its own claims.** The model proposes hypotheses, designs
+**No agent is the judge of its own claims** — A ⊢ c ⇏ ⊨ c: that an agent *derives* a
+claim never entails that the claim *holds*. The model proposes hypotheses, designs
 experiments, and suggests improvements to its own method. It never scores itself, never
 sees the held-out worlds it will be judged on, and never writes to canon. Verdicts are
 computed, not solicited. This is not distrust of any particular model; it is the
@@ -28,7 +29,9 @@ constitutional insight behind separated powers and referees who do not play: the
 of proposer and judge corrupt each other when merged, whoever holds them.
 
 **Seeing is not doing.** Pearl's distinction — conditioning is not intervening,
-P(Y|X) ≠ P(Y|do(X)) — is what makes discovery *cost* something. Our worlds contain
+P(Y | do(X)) ≢ P(Y | X), not-identical rather than never-equal, for the two coincide
+exactly when confounding is absent and that absence is what may never be assumed — is
+what makes discovery *cost* something. Our worlds contain
 traps where the data, read passively, is clean, strong, and points the wrong way. Only
 an agent that reaches in and moves something can recover the truth; in our measurements,
 observation alone recovers the causal structure of zero confounded worlds out of four,

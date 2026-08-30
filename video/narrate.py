@@ -111,8 +111,10 @@ NARRATION = {
         "Not a bigger claim — a smaller one, that can be checked.",
     "axioms":
         "Every science begins with what it refuses to assume. No agent judges "
-        "its own claims. Seeing is not doing. And improvement only counts when "
-        "it is proven — on worlds the prover cannot see. The rest is engineering.",
+        "its own claims — derivation is not truth. Seeing is not doing — the two "
+        "coincide only when confounding is absent, which is exactly what may "
+        "never be assumed. And improvement only counts when it is proven, on "
+        "worlds the prover cannot see. The rest is engineering.",
     "corpus_world":
         "Start by taking everything away. No names, no context, no textbook to "
         "remember. What is left is the only thing that cannot be faked: the "
