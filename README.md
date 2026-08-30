@@ -406,6 +406,18 @@ runs on repetition, and repetition is the roadmap:
 - **Law recovery** — the model proposes structure, mechanism family and parameters,
   scored against held-out interventions. Today it recovers directions and magnitudes:
   causal discovery, not yet a law.
+- **The Kepler test — real data, and a measurement of recall.** The obvious next dataset
+  is the one that started modern astronomy: Tycho Brahe's Mars oppositions, the numbers
+  Kepler ground through for years before the eight arc-minutes of residual that would
+  not go away forced him to an ellipse. It is a harder test than it looks, in exactly
+  this project's way. Mars is the most recognisable dataset in the history of science, so
+  a model shown labelled longitudes answers "ellipse" from memory before it has fitted
+  anything — retrieval, not discovery, which is why our generated worlds are anonymised
+  at birth. And nobody intervenes on a planet: the data is purely observational, so the
+  law must be earned by fitting rather than by acting. Both objections are the reason to
+  run it — twice. Once labelled, once with the dates stripped, the units rescaled and the
+  axes renamed; the gap between those two runs measures how much of a model's
+  "discovery" is recall, on the one dataset where memorisation is guaranteed.
 - **Open-ended repeated self-evolution** — many generations, not one turn. The gate is
   what makes that safe rather than reckless: the margin stops ratcheting on noise, the
   auditor catches metric-gaming, receipts keep the lineage replayable, and ever-fresh

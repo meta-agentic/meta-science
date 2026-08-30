@@ -133,8 +133,22 @@ replicated across fresh seeds, with verdicts by meta-analysis, and the model pro
 functional forms rather than effect sizes. The promotion gate then does for many
 generations what it does today for one: margins against noise-ratcheting, an independent
 auditor against metric-gaming, receipts for the whole lineage, and ever-fresh generated
-worlds as the pre-registration analogue that keeps repetition from becoming p-hacking. Plus the smaller debts: non-linear effect estimation, and a larger
-held-out set so smaller margins become measurable.
+worlds as the pre-registration analogue that keeps repetition from becoming p-hacking.
+
+**The Kepler test.** The obvious next dataset is the one that started modern astronomy:
+Tycho Brahe's Mars oppositions — the numbers Kepler ground through for years before the
+eight arc-minutes of residual that would not go away forced him to an ellipse. It is
+harder than it looks, in exactly this project's way. Mars is the most recognisable
+dataset in the history of science, so a model shown labelled longitudes answers
+"ellipse" from memory before fitting anything: retrieval, not discovery — which is why
+our worlds are anonymised at birth. And nobody intervenes on a planet, so the law must
+be earned by fitting rather than by acting. Which is the reason to run it twice: once
+labelled, once with the dates stripped and the axes renamed. The gap between those two
+runs measures how much of a model's "discovery" is recall, on the one dataset where
+memorisation is guaranteed.
+
+Plus the smaller debts: non-linear effect estimation, and a larger held-out set so
+smaller margins become measurable.
 
 ## Built with
 
