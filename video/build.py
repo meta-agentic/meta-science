@@ -356,48 +356,76 @@ def corpus_evidence() -> Scene:
 
 
 def corpus_stats() -> Scene:
+    """Charts, not tables: the same encodings as the deployed evidence page — a strip
+    plot where the finding is the variance, sorted bars for the ranking."""
+    import json as _json
     s = Scene("corpus_stats")
-    arms = (ROOT / "assets" / "stats_arms.txt").read_text().splitlines()
-    ref = (ROOT / "assets" / "stats_templates.txt").read_text().splitlines()
+    acc = _json.loads((ROOT / "assets" / "acc_values.json").read_text())
+    ref_rows = []
+    for line in (ROOT / "assets" / "stats_templates.txt").read_text().splitlines():
+        tid, frac, pct = line.split()
+        ref_rows.append((tid, frac, float(pct.rstrip("%"))))
+
+    ARMS = [("champion", "champion 400×1", INK1),
+            ("frugal-100", "frugal 100×1", INK1),
+            ("lean-25", "lean 25×1", ORANGE),
+            ("paired-lean-25", "paired lean 25", BLUE)]
+
+    def strip_plot(d, x0, y0, w, h):
+        d.text((x0, y0 - 40), "held-out accuracy per world — every dot is one of 48 worlds",
+               font=F_FOOT, fill=INK3)
+        lo, hi = 0.30, 1.02
+        px = lambda v: x0 + 170 + (v - lo) / (hi - lo) * (w - 260)
+        for gx in (0.4, 0.6, 0.8, 1.0):
+            d.line([px(gx), y0, px(gx), y0 + h], fill=LINE, width=1)
+            d.text((px(gx), y0 + h + 10), f"{gx:.1f}", font=F_FOOT, fill=INK3, anchor="ma")
+        row_h = h / len(ARMS)
+        for i, (key, label, color) in enumerate(ARMS):
+            cy = y0 + row_h * i + row_h / 2
+            d.text((x0 + 150, cy), label, font=F_FOOT, fill=color, anchor="rm")
+            vals = acc[key]
+            for j, v in enumerate(vals):
+                jit = ((j * 2654435761 % 97) / 97 - 0.5) * (row_h * 0.55)
+                x, yy = px(v), cy + jit
+                d.ellipse([x - 6, yy - 6, x + 6, yy + 6], fill=color + (140,))
+            m = sum(vals) / len(vals)
+            d.line([px(m), cy - row_h * 0.42, px(m), cy + row_h * 0.42],
+                   fill=INK1, width=4)
+            d.text((x0 + w - 60, cy), f"{m:.3f}", font=F_MONO_S, fill=INK1, anchor="lm")
+
+    def bar_chart(d, x0, y0, w):
+        d.text((x0, y0 - 40), "hypotheses refuted by experiment, per world topology",
+               font=F_FOOT, fill=INK3)
+        bh, gap = 33, 9
+        for i, (tid, frac, pct) in enumerate(ref_rows):
+            yy = y0 + i * (bh + gap)
+            hot = tid in ("T5", "T6")
+            d.text((x0 + 60, yy + bh / 2), tid, font=F_MONO_S,
+                   fill=ORANGE if hot else INK2, anchor="rm")
+            bw = (w - 320) * pct / 100
+            d.rounded_rectangle([x0 + 80, yy, x0 + 80 + bw, yy + bh], radius=6,
+                                fill=ORANGE if hot else CARD,
+                                outline=None if hot else LINE, width=2)
+            d.text((x0 + 95 + bw, yy + bh / 2), f"{pct:.1f}%   {frac}",
+                   font=F_MONO_S, fill=INK1, anchor="lm")
 
     def build(stage):
-        img, d = s.base()
+        img, d0 = s.base()
+        img_rgba = img.convert("RGBA")
+        from PIL import ImageDraw as _ID
+        d = _ID.Draw(img_rgba, "RGBA")
         d.text((60, 70), "6 · The statistics, not the anecdote", font=F_H, fill=INK1)
-        y = 200
-        d.text((100, y), "held-out direction accuracy by strategy arm (48 worlds each)",
-               font=F_FOOT, fill=INK3)
-        y += 45
-        d.rectangle([80, y - 12, W - 80, y + 12 + 52 * len(arms)], fill=CARD,
-                    outline=LINE, width=2)
-        for line in arms:
-            hot = line.startswith("lean 25")
-            d.text((120, y), line, font=F_MONO,
-                   fill=ORANGE if hot else (BLUE if "paired" in line else INK1))
-            y += 52
-        y += 34
+        strip_plot(d, 100, 220, W - 220, 350)
         if stage >= 2:
-            d.text((100, y), "hypotheses refuted, by world topology", font=F_FOOT, fill=INK3)
-            y += 45
-            d.rectangle([80, y - 12, 1000, y + 12 + 48 * len(ref)], fill=CARD,
-                        outline=LINE, width=2)
-            for line in ref:
-                d.text((120, y), line, font=F_MONO_S,
-                       fill=ORANGE if line.startswith(("T5", "T6")) else INK1)
-                y += 48
-            d.text((1050, y - 48 * len(ref) + 10),
-                   "the confounded topologies refute", font=F_BODY, fill=INK2)
-            d.text((1050, y - 48 * len(ref) + 65),
-                   "nearly everything — by design.", font=F_BODY, fill=INK2)
+            bar_chart(d, 100, 690, W - 220)
         if stage >= 3:
-            d.text((100, y + 26),
-                   "Same conclusions at a quarter of the measurement — but cut to 25 "
-                   "samples and the sd quadruples,", font=F_FOOT, fill=INK2)
-            d.text((100, y + 62),
-                   "unless the arms share noise (paired), in which case the metric "
-                   "measures nothing. We report both.", font=F_FOOT, fill=INK2)
-        return img
+            d.text((100, H - 116),
+                   "Cutting to 25 samples quadruples the spread (orange scatter); its "
+                   "paired twin hides it entirely. T5/T6 refute nearly everything — by design.",
+                   font=F_FOOT, fill=INK2)
+        return img_rgba.convert("RGB")
 
-    for stage, dur in ((1, 6.0), (2, 6.5), (3, 6.0)):
+    for stage, dur in ((1, 7.0), (2, 6.5), (3, 6.0)):
         s.hold(build(stage), dur)
     return s
 
