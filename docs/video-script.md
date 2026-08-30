@@ -38,13 +38,13 @@ Run the demo. Stop on beat [1].
 
 Beat [2] — the correlation.
 
-> "So the agent looks. And the data is unambiguous: minus 0.97. Strong, clean, and
-> completely wrong. There's a hidden common cause driving both variables, and it's
-> swamping the real relationship.
+> "So the agent looks. And the data is unambiguous — a correlation near minus one.
+> Strong, clean, and completely wrong. There's a hidden common cause driving both
+> variables, and it's swamping the real relationship.
 >
 > Any system that reasons from data alone stops here — with the sign backwards."
 
-**On screen:** hold on the red `−0.968`.
+**On screen:** hold on the red correlation.
 
 ---
 
@@ -55,8 +55,8 @@ Beat [3].
 > "Now it acts. It commits a prediction first — negative, following the correlation —
 > and *then* runs the experiment.
 >
-> Measured effect: plus 0.82. The opposite sign. Its own experiment just killed its own
-> hypothesis.
+> Measured effect: strongly positive. The opposite sign. Its own experiment just killed
+> its own hypothesis.
 >
 > That order matters. The prediction is written down before the experiment runs, and the
 > verdict comes from comparing the two. The model is never asked whether it was right."
@@ -104,6 +104,17 @@ Beats [4] and [5].
 > self-improving system that can be checked — because it can refuse itself."
 
 ---
+
+## A note on the numbers
+
+**Read them off the screen, don't recite them from here.** Exact values move whenever the
+world generator changes — they already did once, when a hashing fix altered the
+constants. The *shapes* are stable and are what the narration should commit to: the
+correlation is strongly negative, the measured effect is strongly positive and of
+comparable magnitude, and the observation-only baseline is 0/4 against 4/4.
+
+At the time of writing, seed 7 gives `corr(X2, X1) = −0.961` and a measured effect of
+`+1.183`. Re-run `python3 demo.py` before recording and use whatever it prints.
 
 ## Notes
 
