@@ -59,6 +59,18 @@
   svg .mech{font-size:10px;fill:var(--ink-3)}
   .empty{color:var(--ink-3);font-size:.82rem;margin:.5rem 0 0}
   .foot{color:var(--ink-3);font-size:.8rem;margin:1.4rem 0 0;max-width:60rem}
+  .atlas{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+         gap:.8rem;margin-top:.9rem}
+  .vcard{border:1px solid var(--line);border-radius:10px;background:var(--card);
+         padding:.7rem .8rem .6rem}
+  .vcard b{font-size:.95rem}
+  .vcard .fam{color:var(--ink-3);font-size:.72rem;text-transform:uppercase;
+              letter-spacing:.05em;margin-left:.45rem}
+  .vcard .formula{font:12px ui-monospace,Menlo,monospace;color:var(--ink-2);
+                  margin:.3rem 0 0}
+  .vcard .params{font:11px ui-monospace,Menlo,monospace;color:var(--ink-3);margin:.1rem 0 0}
+  .vcard.hiddenvar{border-style:dashed;border-color:var(--discordant)}
+  .vcard.hiddenvar b{color:var(--discordant)}
   a{color:var(--concordant)}
 </style>
 <div class="viz-root"><main>
@@ -96,6 +108,17 @@
     <div class="cell"><h3>JSON</h3><div id="a-json"></div></div>
     <div class="cell"><h3>JSON</h3><div id="o-json"></div></div>
   </div>
+
+  <div class="cell colhead" style="margin-top:1.4rem">
+    <h2>Variable atlas</h2>
+    <span class="banner observerside">never shown to the agent — families and parameters are the hidden truth</span>
+    <p class="empty" style="max-width:52rem">One card per variable. The <em>shape</em> does the
+    identification: a bell is a gaussian source, a straight line a linear response, a power
+    curve a multiplicative one, a blow-up an exponential, an S a saturating response.
+    Curves are drawn from each variable's actual parameters; for multi-parent mechanisms
+    the curve runs along the strongest parent with the others held fixed.</p>
+  </div>
+  <div id="atlas" class="atlas"></div>
 
   <p class="foot">Truth is public on purpose: any reader of the public repo can compute
   it from the seed, so secrecy is not what protects the benchmark. The boundary is
@@ -275,6 +298,107 @@ function surfaceDiagram(surface) {
   return svg;
 }
 
+// ── Variable atlas ──────────────────────────────────────────────────────────
+// One small parametric plot per variable, drawn from its ACTUAL parameters. The
+// five families have five unmistakable silhouettes — bell, line, power curve,
+// blow-up, S — so the reader separates them at first sight instead of reading.
+
+function curveCard(name, spec, isHidden) {
+  const W = 150, H = 64, PADX = 6, PADY = 6;
+  // Sample the family's own function over a domain chosen to show its character.
+  const samples = [];
+  const N = 60;
+  for (let i = 0; i <= N; i++) {
+    const x = spec.x0 + (spec.x1 - spec.x0) * (i / N);
+    samples.push([x, spec.fn(x)]);
+  }
+  let lo = Math.min(...samples.map(s => s[1]));
+  let hi = Math.max(...samples.map(s => s[1]));
+  if (hi - lo < 1e-9) { hi += 1; lo -= 1; }             // a constant is a flat line
+  const px = x => PADX + (x - spec.x0) / (spec.x1 - spec.x0) * (W - 2 * PADX);
+  const py = v => H - PADY - (v - lo) / (hi - lo) * (H - 2 * PADY);
+  const d = samples.map(([x, v], i) => `${i ? "L" : "M"}${px(x).toFixed(1)},${py(v).toFixed(1)}`).join(" ");
+
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": `${name}: ${spec.family} response curve`});
+  // Zero line when zero is inside the range — it anchors sign at a glance.
+  if (lo < 0 && hi > 0)
+    svg.append(el("line", {x1: PADX, x2: W - PADX, y1: py(0), y2: py(0),
+      stroke: "var(--line)", "stroke-width": 1}));
+  svg.append(el("path", {d, fill: "none", "stroke-width": 2,
+    stroke: isHidden ? "var(--discordant)" : "var(--concordant)",
+    "stroke-dasharray": isHidden ? "5 4" : "none"}));
+  // Gaussian cards shade the bell so distribution reads differently from response.
+  if (spec.family === "gaussian")
+    svg.append(el("path", {d: d + ` L${px(spec.x1)},${py(lo)} L${px(spec.x0)},${py(lo)} Z`,
+      fill: isHidden ? "var(--discordant)" : "var(--concordant)", opacity: 0.15,
+      stroke: "none"}));
+
+  const card = document.createElement("div");
+  card.className = "vcard" + (isHidden ? " hiddenvar" : "");
+  card.innerHTML = `<b>${name}</b><span class="fam">${spec.family}${isHidden ? " · hidden" : ""}</span>`;
+  card.append(svg);
+  const f = document.createElement("div"); f.className = "formula"; f.textContent = spec.formula;
+  const q = document.createElement("div"); q.className = "params"; q.textContent = spec.params;
+  card.append(f, q);
+  return card;
+}
+
+function atlasSpec(name, truth) {
+  const m = truth.ground_truth.mechanisms[name];
+  const fmt = v => (+v).toPrecision(3);
+  if (!m) {
+    const e = truth.exogenous[name] || {mean: 0, sd: 1};
+    return {
+      family: "gaussian",
+      x0: e.mean - 3.2 * e.sd, x1: e.mean + 3.2 * e.sd,
+      fn: x => Math.exp(-((x - e.mean) ** 2) / (2 * e.sd * e.sd)),
+      formula: "𝒩(μ, σ)",
+      params: `μ ${fmt(e.mean)} · σ ${fmt(e.sd)}`,
+    };
+  }
+  // Multi-parent mechanisms: run the curve along ONE parent, others held fixed
+  // (0 for additive families, 1 for multiplicative — powers of zero would explode).
+  // Additive families pick the strongest parent; the multiplicative family instead
+  // picks the exponent FARTHEST FROM 1, because x^0.95 draws as a near-straight
+  // line and defeats the whole point of telling families apart by silhouette —
+  // x^-0.7 draws the hyperbola that makes "multiplicative" recognisable.
+  const byStrength = (a, b) => Math.abs(b[1]) - Math.abs(a[1]);
+  const byNonlinearity = (a, b) => Math.abs(b[1] - 1) - Math.abs(a[1] - 1);
+  const entries = Object.entries(m.coeffs)
+    .sort(m.form === "multiplicative" ? byNonlinearity : byStrength);
+  const [parent, w] = entries[0];
+  const rest = entries.slice(1);
+  const noise = truth.noise[name];
+  const params = `${entries.map(([k, v]) => `${k}:${fmt(v)}`).join(" ")} · c ${fmt(m.const)} · σ ${fmt(noise)}`;
+  if (m.form === "linear") {
+    const n0 = m.const + rest.reduce((s, [, v]) => s + 0 * v, 0);
+    return {family: "linear", x0: -2, x1: 2, fn: x => w * x + n0,
+      formula: `m·${parent} + n`, params};
+  }
+  if (m.form === "multiplicative") {
+    const k = m.const * rest.reduce((s, [, v]) => s * 1 ** v, 1);
+    return {family: "multiplicative", x0: 0.15, x1: 3, fn: x => k * x ** w,
+      formula: `c·${parent}^m`, params};
+  }
+  if (m.form === "exponential") {
+    return {family: "exponential", x0: -2, x1: 2, fn: x => m.const * Math.exp(w * x),
+      formula: `c·e^(m·${parent})`, params};
+  }
+  return {family: "saturating", x0: -4, x1: 4,
+    fn: x => { const s = w * x; return m.const * s / (1 + Math.abs(s)); },
+    formula: `c·s∕(1+|s|), s = m·${parent}`, params};
+}
+
+function renderAtlas(truth) {
+  const box = $("atlas");
+  box.replaceChildren();
+  const hidden = new Set(truth.hidden);
+  const names = Object.keys(truth.ground_truth.edges);
+  for (const n of names)
+    box.append(curveCard(n, atlasSpec(n, truth), hidden.has(n)));
+}
+
 async function load() {
   const seed = $("seed").value || 7;
   const depth = Math.min(7, Math.max(0, +$("depth").value || 0));
@@ -290,6 +414,7 @@ async function load() {
   $("o-diagram").replaceChildren(dagDiagram(truth));
   $("a-json").replaceChildren(pre(JSON.stringify(surfaceJson, null, 2)));
   $("o-json").replaceChildren(pre(JSON.stringify(truth.ground_truth, null, 2)));
+  renderAtlas(truth);
 }
 $("seed").onchange = load;
 // change alone misses typed digits until blur; input catches keystrokes and spinners.
