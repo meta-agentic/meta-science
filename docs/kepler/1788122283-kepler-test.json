@@ -1,0 +1,92 @@
+{
+  "fits": {
+    "constant": {
+      "c": 1.577321
+    },
+    "cosine": {
+      "a": 1.529269,
+      "b": 0.154172,
+      "phi_deg": 143.0
+    },
+    "offset_circle": {
+      "cx": -0.122,
+      "cy": 0.096,
+      "radius": 1.531379
+    },
+    "focus_conic": {
+      "p": 1.518209,
+      "e": 0.1015,
+      "theta0_deg": 320.5
+    }
+  },
+  "leave_one_out": {
+    "constant": {
+      "mean_abs_err": 0.136522,
+      "worst_abs_err": 0.248008
+    },
+    "cosine": {
+      "mean_abs_err": 0.016214,
+      "worst_abs_err": 0.029033
+    },
+    "offset_circle": {
+      "mean_abs_err": 0.007763,
+      "worst_abs_err": 0.010897
+    },
+    "focus_conic": {
+      "mean_abs_err": 0.006341,
+      "worst_abs_err": 0.00972
+    }
+  },
+  "arms": {
+    "blind": {
+      "arm": "blind",
+      "held_out": {
+        "x1": 0.12329,
+        "x2": 1.09696
+      },
+      "model": {
+        "depends_on_x1": true,
+        "family": "focus_conic",
+        "predicted_x2": 1.055,
+        "claimed_source": "Keplerian orbit of a celestial body",
+        "rationale": "The inverse distance 1/x2 varies smoothly and sinusoidally with the orbital phase angle 2\u03c0*x1, characteristic of a conic section with the origin at a focus."
+      },
+      "abs_error": 0.04196,
+      "abs_error_au": 0.05748,
+      "harness_predictions": {
+        "constant": 1.16507,
+        "cosine": 1.11419,
+        "offset_circle": 1.10491,
+        "focus_conic": 1.09383
+      },
+      "beats_constant": true,
+      "transport_errors": []
+    },
+    "labelled": {
+      "arm": "labelled",
+      "held_out": {
+        "x1": 44.386,
+        "x2": 1.5027
+      },
+      "model": {
+        "depends_on_x1": true,
+        "family": "focus_conic",
+        "predicted_x2": 1.485,
+        "claimed_source": "The orbit of Mars around the Sun",
+        "rationale": "The heliocentric distance of Mars as a function of longitude is modeled by a conic section with the Sun at one focus (focus_conic), representing Kepler's first law."
+      },
+      "abs_error": 0.0177,
+      "abs_error_au": 0.0177,
+      "harness_predictions": {
+        "constant": 1.59598,
+        "cosine": 1.52629,
+        "offset_circle": 1.51358,
+        "focus_conic": 1.4984
+      },
+      "beats_constant": true,
+      "transport_errors": [
+        "gemini-3.6-flash: ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and "
+      ]
+    }
+  }
+}
