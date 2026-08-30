@@ -2,9 +2,9 @@
 
 ## Elevator pitch (200 chars)
 
-Hypothesis: a model can improve its own scientific method. Thesis: improvement counts
-only when proven on worlds it cannot see, by a margin. We built the gate — and watched
-it refuse Gemini twice.
+Hypothesis: a model can improve its own scientific method. Thesis: nothing counts
+until it beats the champion, by a margin, on worlds it cannot see. We built that
+gate — it refused Gemini twice.
 
 ## Inspiration
 

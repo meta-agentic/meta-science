@@ -1,8 +1,8 @@
 # meta-science
 
-**Hypothesis: a model can improve its own scientific method. Thesis: improvement counts
-only when proven on worlds it cannot see, by a margin. We built the gate — and watched
-it refuse Gemini twice.**
+**Hypothesis: a model can improve its own scientific method. Thesis: nothing counts
+until it beats the champion, by a margin, on worlds it cannot see. We built that
+gate — it refused Gemini twice.**
 
 An agent does science on worlds it has never seen — forming hypotheses, designing its
 own experiments, and being refuted by them. When it proposes a better method, the gate
