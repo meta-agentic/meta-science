@@ -100,7 +100,7 @@ class World:
         return [self._sample({}, self._rng(seed, i)) for i in range(n)]
 
     def intervene(self, var: str, value: float, n: int = 200,
-                  seed: int | None = None) -> list[dict[str, float]]:
+                  seed: int | None = None, arm: int = 0) -> list[dict[str, float]]:
         """do(var := value). Severs incoming edges — the only route to causal truth.
 
         With an explicit `seed`, two arms of the same contrast draw the SAME noise:
@@ -116,7 +116,10 @@ class World:
         """
         if var not in self.observable:
             raise KeyError(f"not an observable variable: {var}")
-        return [self._sample({var: value}, self._rng(seed, i)) for i in range(n)]
+        # `arm` breaks the pairing on purpose: passing a distinct arm id per contrast
+        # level gives each arm independent noise, which is the harder regime and the
+        # one an efficiency claim should be checked against.
+        return [self._sample({var: value}, self._rng(seed, i, arm)) for i in range(n)]
 
     # -- ground truth (never shown to the agent) ------------------------------
 
@@ -141,10 +144,11 @@ class World:
 
     # -- internals ------------------------------------------------------------
 
-    def _rng(self, seed: int | None, i: int) -> random.Random:
+    def _rng(self, seed: int | None, i: int, arm: int = 0) -> random.Random:
         base = self.seed if seed is None else seed
         self._draws += 1
-        return random.Random((base * 1_000_003) ^ (i * 7919) ^ (self._draws if seed is None else 0))
+        drift = self._draws if seed is None else 0
+        return random.Random((base * 1_000_003) ^ (i * 7919) ^ (arm * 104_729) ^ drift)
 
     def _sample(self, do: dict[str, float], rng: random.Random) -> dict[str, float]:
         vals: dict[str, float] = {}

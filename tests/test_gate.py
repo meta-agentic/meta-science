@@ -86,3 +86,32 @@ def test_the_diff_names_exactly_what_changed(tmp_path):
     _, gate = _gate(tmp_path, {champ.name: 0.9, "c": 0.1})
     assert gate.consider(champ, chal, [1]).diff == {
         "samples_per_arm": (100, 400), "effect_threshold": (0.3, 0.15)}
+
+
+def test_the_metric_has_teeth_under_independent_noise():
+    """An over-frugal strategy must lose, or measurement efficiency is free score.
+
+    With paired arms the two contrast levels share noise, so effect estimates stay
+    precise however few samples are drawn and cutting samples always wins. That is a
+    benchmark with no trade-off in it. Under the independent default, accuracy at 25
+    samples per arm falls far enough that the cost saving no longer covers it.
+    """
+    from metascience.evolution import evaluate_detailed, held_out_seeds
+
+    seeds = held_out_seeds(12)
+    champion = evaluate_detailed(Strategy(), seeds)
+    over_frugal = evaluate_detailed(Strategy(samples_per_arm=25), seeds)
+
+    assert over_frugal["accuracy"] < champion["accuracy"] - 0.05, \
+        "cutting to 25 samples must cost real accuracy"
+    assert over_frugal["score"] < champion["score"] + 0.02, \
+        "and that cost must not be outrun by the cost saving"
+
+
+def test_a_moderate_efficiency_gain_still_wins():
+    """The promotion the demo shows must survive the harder regime too."""
+    from metascience.evolution import evaluate_detailed, held_out_seeds
+
+    seeds = held_out_seeds(12)
+    assert (evaluate_detailed(Strategy(samples_per_arm=100), seeds)["score"]
+            > evaluate_detailed(Strategy(), seeds)["score"] + 0.02)

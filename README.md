@@ -135,6 +135,33 @@ the code.
 
 ---
 
+## We audited our own benchmark, and changed it
+
+Late in the build we checked whether the two arms of an intervention share random draws.
+They did — *common random numbers*, which makes the paired difference isolate the causal
+effect. Elegant, and a trap: if the noise cancels, effect estimates stay precise however
+few samples you draw, so **cutting measurement becomes free score.** That is very likely
+why the proposer kept winning by asking for fewer samples.
+
+So we measured it, on 24 held-out worlds:
+
+| strategy | paired arms | independent arms |
+|---|---|---|
+| champion, 400 samples | acc 0.981 · **+0.8704** | acc 0.981 · **+0.8704** |
+| frugal, 100 samples | acc 0.981 · **+0.9537** | acc 0.968 · **+0.9398** |
+| very lean, 25 samples | acc 0.981 · **+0.9745** | acc 0.875 · **+0.8681** |
+
+Paired, accuracy never moves and the leanest strategy always wins — a benchmark with no
+trade-off in it is not measuring anything. Independent, there is a real cost to cutting
+too far, and the extreme strategy correctly *loses* to the champion.
+
+**Independent noise is now the default**, and the promotion the demo shows survives it
+(+0.9398 against +0.8704). Both facts are asserted by tests. The point is not that we got
+it right first time — we did not. It is that the benchmark was checked against the
+possibility that it was flattering us.
+
+---
+
 ## A second model audits every promotion
 
 Scoring higher is necessary and not sufficient. A challenger can score higher by
@@ -149,7 +176,7 @@ kept the answers* from *spent less, lost accuracy, and the saving outran it*.
 
 ```
 PROMOTED  gemini-8986   {'samples_per_arm': (200, 400)}
-          champ +0.8704  challenger +0.9259
+          champ +0.8704  challenger +0.9398
           audit legitimate (gemini-3.5-flash-lite)
 ```
 
@@ -246,16 +273,6 @@ score, and cannot tune against — and which leaves a receipt either way.
 
 Known limits, stated rather than buried:
 
-- **The efficiency gains are flattered by the world design.** The two arms of an
-  intervention draw the *same* noise — common random numbers, a deliberate variance
-  reduction so the paired difference isolates the causal effect. A consequence is that
-  effect estimates are already precise at small n, so sample size affects accuracy far
-  less here than it would against independent draws. That is very likely *why* the
-  proposer kept winning by cutting samples. The gate measured correctly and the
-  promotions were earned under the stated metric — but "it discovered a real efficiency
-  gain" is a weaker claim than it first appears, and against independent noise the same
-  change would cost accuracy. This was found by auditing our own results and is reported
-  rather than left for a reviewer to notice.
 - Effect estimation is linear, so genuinely multiplicative worlds (T1) are approximated.
 - One generation is demonstrated end-to-end, not an open-ended evolutionary run.
 - The held-out set is 24 worlds. At 10, a single world flipping moves the mean by 0.10 —

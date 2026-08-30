@@ -91,13 +91,15 @@ Identical worlds. The only difference is the ability to act. That single compari
 the anonymisation holds *and* that intervention is doing real work rather than decorating
 a conclusion the model already had.
 
-**Auditing our own headline result.** Late on, we checked whether the two arms of an
-intervention share random draws. They do — common random numbers, which makes the paired
-difference isolate the causal effect. But it also means sample size barely affects
-accuracy in these worlds, which is very likely why the proposer kept winning by cutting
-samples. The promotions were earned under the stated metric, and the gate did its job;
-but "it found a real efficiency gain" is a weaker claim than it looked, and we say so in
-the README rather than leaving a reviewer to find it.
+**Our benchmark was flattering us, so we changed it.** Late on we checked whether the two
+arms of an intervention share random draws. They did — common random numbers, which makes
+the paired difference isolate the causal effect. Elegant, and a trap: with the noise
+cancelled, estimates stay precise however few samples are drawn, so cutting measurement
+was free score. That is very likely why the proposer kept winning by asking for fewer
+samples. We measured both regimes: at 25 samples per arm, accuracy holds at 0.981 paired
+and collapses to 0.875 independent. Independent noise is now the default, the extreme
+strategy correctly loses, and the promotion the demo shows survives the harder regime.
+Both facts are asserted by tests.
 
 ## What we learned
 

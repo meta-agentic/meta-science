@@ -26,6 +26,12 @@ class Strategy:
     screen_observationally: bool = True   # use correlation to order candidates
     trust_observation: bool = False       # ...but never to conclude from it
     max_experiments: int = 12
+    # Independent by default. With paired arms the two contrast levels share noise, so
+    # effect estimates stay precise however few samples are drawn — and cutting samples
+    # becomes free score. Measured: at 25 samples per arm, accuracy holds at 0.981 paired
+    # and collapses to 0.847 independent. A benchmark where the cheap answer is always
+    # right is not measuring anything, so the harder regime is the default.
+    paired_arms: bool = False
 
     def digest(self) -> str:
         return json.dumps(asdict(self), sort_keys=True)

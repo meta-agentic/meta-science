@@ -88,8 +88,13 @@ def run_discovery(world: World, reasoner: Reasoner, strategy: Strategy,
 
         # 2. Run the experiment that can refute it.
         lo, hi = strategy.contrast
+        # Paired arms share noise so the difference isolates the effect. Setting
+        # paired_arms=False gives each arm its own draws — the harder, more realistic
+        # regime, and the one an efficiency claim has to survive.
+        arm_b = 0 if strategy.paired_arms else 1
         a = _mean(world.intervene(cause, lo, strategy.samples_per_arm, seed=seed + 2), effect)
-        b = _mean(world.intervene(cause, hi, strategy.samples_per_arm, seed=seed + 2), effect)
+        b = _mean(world.intervene(cause, hi, strategy.samples_per_arm, seed=seed + 2,
+                                  arm=arm_b), effect)
         measured = (b - a) / (hi - lo)
 
         # 3. Verdict by comparison, not by self-report.
