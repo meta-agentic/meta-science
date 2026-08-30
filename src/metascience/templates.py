@@ -8,6 +8,7 @@ the position of a variable is a fingerprint.
 from __future__ import annotations
 
 import hashlib
+import os
 import random
 
 from .worlds import Mechanism, Node, World
@@ -18,6 +19,17 @@ from .worlds import Mechanism, Node, World
 # reachable only by asking for them by name.
 TEMPLATE_IDS = ("T1", "T2", "T3", "T4", "T5", "T6")
 EXTRA_TEMPLATES = ("T7",)
+
+# Master switch for the complex domain, DEFAULT OFF. Every experiment recorded so far
+# was generated with real-domain variables only; this keeps that true by enforcement
+# rather than convention — a future edit that routes a complex template into a
+# benchmark, a compound, or a study fails loudly instead of silently mixing domains
+# into the history. Enable per-deployment with METASCIENCE_COMPLEX=1.
+COMPLEX_TEMPLATES = frozenset(EXTRA_TEMPLATES)
+
+
+def complex_enabled() -> bool:
+    return os.environ.get("METASCIENCE_COMPLEX", "").strip().lower() in ("1", "true", "yes")
 
 
 def _labels(rng: random.Random, k: int) -> list[str]:
@@ -44,6 +56,11 @@ def _stable_hash(s: str) -> int:
 def build(template_id: str, seed: int) -> World:
     if template_id not in _BUILDERS:
         raise ValueError(f"unknown template: {template_id}")
+    if template_id in COMPLEX_TEMPLATES and not complex_enabled():
+        raise ValueError(
+            f"template {template_id} uses complex-domain variables, which are disabled "
+            "by default to keep the experiment history real-domain only. Set "
+            "METASCIENCE_COMPLEX=1 to enable them for this process.")
     rng = random.Random(seed * 31 + _stable_hash(template_id) % 9973)
     fn = _BUILDERS[template_id]
     return fn(rng, seed)

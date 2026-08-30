@@ -149,6 +149,15 @@ resource "google_cloud_run_v2_service" "app" {
       }
 
       env {
+        # The complex-variable master switch is off by default so experiment history
+        # stays real-domain. The service opts in for the INSPECTOR only — a human
+        # asking for T7 by name is presentation; collect.py and the benchmark never
+        # request an EXTRA template, which tests assert.
+        name  = "METASCIENCE_COMPLEX"
+        value = "1"
+      }
+
+      env {
         name = "GEMINI_API_KEY"
         value_source {
           secret_key_ref {

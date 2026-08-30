@@ -111,9 +111,29 @@ def test_depth_out_of_range_is_refused():
         generate_compound(7, depth=8)
 
 
-def test_t7_complex_template_holds_the_invariants():
+def test_complex_domain_is_off_by_default(monkeypatch):
+    """The master switch: every experiment path stays real-domain unless a process
+    opts in, so history cannot silently mix domains."""
+    import pytest as _pytest
+
+    monkeypatch.delenv("METASCIENCE_COMPLEX", raising=False)
+    with _pytest.raises(ValueError, match="disabled by default"):
+        generate(2, "T7")
+    generate(2, "T1")          # the rotation set is untouched by the switch
+
+
+def test_compounds_never_contain_complex_variables():
+    """Compound generation draws from the rotation set only; if that ever changes,
+    the recorded history stops being comparable and this fails first."""
+    for seed in range(4):
+        for depth in (0, 2, 5):
+            assert not generate_compound(seed, depth).complex_vars
+
+
+def test_t7_complex_template_holds_the_invariants(monkeypatch):
     """T7 is EXTRA — reachable by name, never by rotation — and must pass the same
     gates as the rotation set: anonymous surface, determinism, a runnable loop."""
+    monkeypatch.setenv("METASCIENCE_COMPLEX", "1")
     from metascience.templates import TEMPLATE_IDS
 
     assert "T7" not in TEMPLATE_IDS, \
@@ -133,8 +153,9 @@ def test_t7_complex_template_holds_the_invariants():
         assert "modulus" in forms and forms & {"real", "imag"}
 
 
-def test_modulus_is_discoverable_by_intervention():
+def test_modulus_is_discoverable_by_intervention(monkeypatch):
     """The new family must be a real mechanism the loop can probe, not decoration."""
+    monkeypatch.setenv("METASCIENCE_COMPLEX", "1")
     w = generate(3, "T7")
     run = run_discovery(w, HeuristicReasoner(), Strategy(), seed=3)
     assert run.experiments
@@ -146,7 +167,7 @@ def test_modulus_is_discoverable_by_intervention():
 
 def test_t7_is_deterministic_across_processes():
     script = (
-        "import sys, json; sys.path.insert(0, %r);"
+        "import os, sys, json; os.environ['METASCIENCE_COMPLEX'] = '1'; sys.path.insert(0, %r);"
         "from metascience.templates import generate;"
         "print(json.dumps(generate(2, 'T7').ground_truth(), sort_keys=True))"
         % str(ROOT / "src"))

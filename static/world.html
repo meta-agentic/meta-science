@@ -30,7 +30,7 @@
   h1{font-size:1.6rem;margin:0 0 .3rem;letter-spacing:-.02em}
   .lede{color:var(--ink-2);margin:0 0 1.4rem;max-width:52rem}
   .row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:0 0 1.3rem}
-  input{font:inherit;padding:.4rem .6rem;border:1px solid var(--line);border-radius:7px;
+  input,select{font:inherit;padding:.4rem .6rem;border:1px solid var(--line);border-radius:7px;
         background:var(--surface-1);color:var(--ink-1)}
   label.sw{font-size:.88rem;color:var(--ink-2);display:inline-flex;gap:.4rem;align-items:center}
 
@@ -85,6 +85,14 @@
     <label class="sw">compound depth
       <input id="depth" type="number" min="0" max="7" value="0" style="width:4rem">
       <span style="color:var(--ink-3)">0 = atomic · n = n bridged templates chained</span></label>
+    <label class="sw">template
+      <select id="template">
+        <option value="">auto (from seed)</option>
+        <option>T1</option><option>T2</option><option>T3</option>
+        <option>T4</option><option>T5</option><option>T6</option>
+        <option value="T7">T7 · complex z = a + j·b</option>
+      </select>
+      <span style="color:var(--ink-3)">explicit template — atomic only</span></label>
   </div>
 
   <div class="grid">
@@ -232,6 +240,21 @@ function dagDiagram(truth) {
     fill: getComputedStyle(document.querySelector(".viz-root")).getPropertyValue("--ink-3")}));
   defs.append(marker);
   svg.append(defs);
+  // Complex groupings first, painted UNDER nodes and edges: a rounded hull around
+  // the two components with the z = a + j·b label, so the pair reads as one
+  // quantity with two tappable outputs without inventing a fake node for z.
+  for (const [z, comps] of Object.entries(truth.ground_truth.complex_vars || {})) {
+    const known = comps.filter(c => pos[c]);
+    if (known.length < 2) continue;
+    const xs = known.map(c => pos[c][0]), ys = known.map(c => pos[c][1]);
+    const x0 = Math.min(...xs) - 34, x1 = Math.max(...xs) + 34;
+    const y0 = Math.min(...ys) - 34, y1 = Math.max(...ys) + 56;
+    svg.append(el("rect", {x: x0, y: y0, width: x1 - x0, height: y1 - y0, rx: 14,
+      fill: "var(--concordant)", opacity: 0.08,
+      stroke: "var(--concordant)", "stroke-width": 1, "stroke-dasharray": "3 4"}));
+    svg.append(el("text", {x: x0 + 8, y: y0 + 14, class: "mech",
+      style: "font-style:italic"}, `${z} = ${comps[0]} + j·${comps[1]}`));
+  }
   for (const [child, parents] of Object.entries(edges)) {
     for (const p of parents) {
       const [x1, y1] = pos[p], [x2, y2] = pos[child];
@@ -396,6 +419,20 @@ function atlasSpec(name, truth) {
     return {family: "exponential", x0: -2, x1: 2, fn: x => m.const * Math.exp(w * x),
       formula: `c·e^(m·${parent})`, params};
   }
+  if (m.form === "modulus") {
+    // sqrt((w·x)² + k²) along one component with the other held at 1: the smooth-V
+    // silhouette — flat near the vertex, asymptotically straight — nothing else in
+    // the atlas looks like it.
+    const k = rest.length ? Math.abs(rest[0][1]) : 0;
+    return {family: "modulus", x0: -3, x1: 3,
+      fn: x => m.const + Math.sqrt((w * x) ** 2 + k * k),
+      formula: `c + |a + j·b|`, params};
+  }
+  if (m.form === "real" || m.form === "imag") {
+    const which = m.form === "real" ? "Re" : "Im";
+    return {family: m.form, x0: -2, x1: 2, fn: x => m.const + w * x,
+      formula: `c + m·${which}(z)`, params};
+  }
   return {family: "saturating", x0: -4, x1: 4,
     fn: x => { const s = w * x; return m.const * s / (1 + Math.abs(s)); },
     formula: `c·s∕(1+|s|), s = m·${parent}`, params};
@@ -432,12 +469,55 @@ function renderAtlas(truth) {
 
   for (const [n, s] of specs)
     box.append(curveCard(n, s, hidden.has(n)));
+
+  // Complex variables get an Argand-plane card: the pair's mean as a point with a
+  // 1-sigma ellipse — a constant component collapses the ellipse to a bar. Nothing
+  // else in the atlas is a plane, so "complex" is recognisable before reading.
+  for (const [z, comps] of Object.entries(truth.ground_truth.complex_vars || {})) {
+    const [reN, imN] = comps;
+    const g = n => truth.exogenous[n] || {mean: 0, sd: 0};
+    const re = g(reN), im = g(imN);
+    const W = 150, H = 96, cx = W / 2, cy = H / 2;
+    const span = Math.max(Math.abs(re.mean) + 3 * re.sd,
+                          Math.abs(im.mean) + 3 * im.sd, 1);
+    const px = v => cx + (v / span) * (W / 2 - 8);
+    const py = v => cy - (v / span) * (H / 2 - 8);
+    const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img",
+      "aria-label": `${z} in the complex plane`});
+    svg.append(el("line", {x1: 4, x2: W - 4, y1: cy, y2: cy,
+      stroke: "var(--line)", "stroke-width": 1}));
+    svg.append(el("line", {x1: px(0), x2: px(0), y1: 4, y2: H - 4,
+      stroke: "var(--line)", "stroke-width": 1}));
+    svg.append(el("text", {x: W - 12, y: cy - 4, class: "mech"}, "Re"));
+    svg.append(el("text", {x: px(0) + 4, y: 12, class: "mech"}, "Im"));
+    svg.append(el("ellipse", {cx: px(re.mean), cy: py(im.mean),
+      rx: Math.max(2, Math.abs(px(re.sd) - px(0))),
+      ry: Math.max(2, Math.abs(py(im.sd) - py(0))),
+      fill: "var(--concordant)", opacity: 0.18,
+      stroke: "var(--concordant)", "stroke-width": 1.5, "stroke-dasharray": "4 3"}));
+    svg.append(el("circle", {cx: px(re.mean), cy: py(im.mean), r: 3.5,
+      fill: "var(--concordant)"}));
+
+    const card = document.createElement("div");
+    card.className = "vcard";
+    card.innerHTML = `<b>${z}</b><span class="fam">complex</span>`;
+    card.append(svg);
+    const f = document.createElement("div"); f.className = "formula";
+    f.textContent = `${z} = ${reN} + j·${imN}`;
+    const q = document.createElement("div"); q.className = "params";
+    q.textContent = `Re: μ ${(+re.mean).toPrecision(3)} σ ${(+re.sd).toPrecision(2)} · ` +
+                    `Im: μ ${(+im.mean).toPrecision(3)} σ ${(+im.sd).toPrecision(2)}`;
+    card.append(f, q);
+    box.append(card);
+  }
 }
 
 async function load() {
   const seed = $("seed").value || 7;
-  const depth = Math.min(7, Math.max(0, +$("depth").value || 0));
-  const q = depth ? `?depth=${depth}` : "";
+  const template = $("template").value;
+  const depth = template ? 0 : Math.min(7, Math.max(0, +$("depth").value || 0));
+  $("depth").disabled = !!template;
+  const q = template ? `?template=${template}` : (depth ? `?depth=${depth}` : "");
   const [surface, truth] = await Promise.all([
     (await fetch(`/world/${seed}${q}`)).json(),
     (await fetch(`/world/${seed}/truth${q}`)).json(),
@@ -454,5 +534,6 @@ async function load() {
 $("seed").onchange = load;
 // change alone misses typed digits until blur; input catches keystrokes and spinners.
 $("depth").oninput = load; $("depth").onchange = load;
+$("template").onchange = load;
 load();
 </script>
