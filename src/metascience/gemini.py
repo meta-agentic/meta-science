@@ -40,6 +40,9 @@ def _client() -> genai.Client:
 # the costume of an empty answer. Anything that goes wrong now surfaces here.
 LAST_ERRORS: list[str] = []
 
+# The model that produced the last successful answer, for provenance records.
+LAST_MODEL: str | None = None
+
 
 def _generate(prompt: str, schema: dict, temperature: float = 0.2,
               model: str | None = None) -> dict:
@@ -54,6 +57,8 @@ def _generate(prompt: str, schema: dict, temperature: float = 0.2,
         for attempt in range(2):
             try:
                 r = client.models.generate_content(model=model, contents=prompt, config=cfg)
+                global LAST_MODEL
+                LAST_MODEL = model
                 return json.loads(r.text)
             except Exception as exc:  # noqa: BLE001
                 LAST_ERRORS.append(f"{model}: {type(exc).__name__}: {str(exc)[:120]}")

@@ -296,12 +296,14 @@ FREEFORM_SCHEMA = {
 }
 
 
-def freeform_prompt(rows: list, held_x1: float) -> str:
+def freeform_prompt(rows: list, held_x1: float, cyclic: bool = True) -> str:
     """No menu, no family names: the agent must compose the law itself."""
     table = "\n".join(f"  x1={a}   x2={b}" for a, b in rows)
+    x1_fact = ("x1 is a cyclic coordinate with period 1 (x1=0 and x1=1 are the "
+               "same place)" if cyclic else
+               "x1 is a positive measured quantity in fixed but unstated units")
     return (
-        f"{len(rows)} measured rows of two variables. x1 is a cyclic coordinate "
-        "with period 1 (x1=0 and x1=1 are the same place). x2 is a positive "
+        f"{len(rows)} measured rows of two variables. {x1_fact}. x2 is a positive "
         "measured quantity in fixed but unstated units. Nothing else about the "
         "source of this data is available.\n\n" + table + "\n\n"
         "Task:\n"

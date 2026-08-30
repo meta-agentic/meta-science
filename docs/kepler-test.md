@@ -143,6 +143,34 @@ said "Keplerian orbit." Recognition arrived when the evidence forced it, which i
 the only arrival this project respects. *Astronomia Nova*, reproduced as a two-turn
 propose-refute-refine loop.
 
+## The third law: eight planets, one shot
+
+Kepler needed a fleet, so we flew one: eight fictional planets (a from 0.47 to
+2.20 AU) propagated by the flight-dynamics service, each for ~1.3 orbits. Period and
+semi-major axis are *measured* from each trajectory — wrap time and geometry, never
+injected — and the log-log slope across the fleet is **1.507** before any agent is
+involved: the law is in the measurements. The anonymising rescale multiplies both
+columns by arbitrary constants, which under a power law changes only the prefactor —
+**the exponent is scale-invariant, so this experiment cannot be broken by labels.**
+
+Free-form, blind, non-cyclic, one shot
+([full trace](kepler/1788126102-thirdlaw.json) — every prompt, answer, answering
+model and timing recorded): Gemini ran its own log-log analysis, composed
+`c1*pow(x1, c2)`, announced *"an exponent near 1.5"*, and named **"Child-Langmuir
+law or Kepler's third law"** — the only two canonical 3/2-power laws in physics,
+narrowed from eight anonymised pairs. Fitted: c2 = 1.515, held-out error 0.4%
+relative. No refinement round was needed.
+
+The contrast with the first-law probes is the finding: there, "Keplerian" leaked
+from a formula menu and vanished when the menu did; here, the recognition is
+*earned* — the exponent is in the data, and naming the two laws that share it is
+inference, not recall. The instrument can now tell those apart.
+
+One service defect, named rather than hidden (and pinned by test so a fix breaks
+loudly): the service's heliocentric clock runs 13.06× fast — an effective μ ≈ 170×
+solar — consistently across all eight planets. The exponent is untouched; the
+Kepler constant is miscalibrated. Reported upstream to isohub.
+
 ## What this is not
 
 Not part of the hackathon submission's frozen claims — it lives on a branch, one live

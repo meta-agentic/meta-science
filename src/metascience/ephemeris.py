@@ -152,3 +152,52 @@ def control_orbit(seed: int = 7) -> list[tuple[float, float]]:
     so the law-breaking comparison changes exactly one thing."""
     pts = arc(f"control-{seed}", low_orbit(seed), "P10D", "PT2H", TWO_BODY)
     return [(t, r) for _, t, r in pts]
+
+
+# ------------------------------------------------------------------ the third law
+
+THIRD_LAW_SEEDS = (57, 31, 5, 56, 30, 4, 55, 29)   # a from 0.47 to 2.20 AU
+
+
+def _epoch_seconds(iso: str) -> float:
+    from datetime import datetime
+    return datetime.fromisoformat(iso.replace("Z", "+00:00")).timestamp()
+
+
+def measure_planet(seed: int) -> dict:
+    """One planet's period and semi-major axis, measured — never injected.
+
+    The arc covers ~1.3 orbits. T is the interpolated time for the unwrapped
+    longitude to advance one full turn; a is (r_min + r_max)/2 over a full orbit.
+    The generator knows the physics (it must, to size the arc); the numbers
+    reported here come from the trajectory alone.
+    """
+    a_nominal = 0.45 + (seed * 137) % 211 / 100.0
+    days = int(1.3 * (a_nominal ** 1.5) * 365.25)
+    step_days = max(1, days // 130)
+    pts = arc(f"thirdlaw-{seed}", fictional_planet(seed),
+              f"P{days}D", f"P{step_days}D", TWO_BODY)
+
+    t0 = _epoch_seconds(pts[0][0])
+    times = [( _epoch_seconds(e) - t0) / 86400.0 for e, _, _ in pts]
+    unwrapped, prev, offset = [], pts[0][1], 0.0
+    for _, theta, _ in pts:
+        if theta < prev - 180.0:
+            offset += 360.0
+        unwrapped.append(theta + offset)
+        prev = theta
+    target = unwrapped[0] + 360.0
+    for i in range(1, len(unwrapped)):
+        if unwrapped[i] >= target:
+            frac = (target - unwrapped[i - 1]) / (unwrapped[i] - unwrapped[i - 1])
+            period_days = times[i - 1] + frac * (times[i] - times[i - 1])
+            radii = [r for _, _, r in pts[:i + 1]]
+            return {"seed": seed,
+                    "a_au": round((min(radii) + max(radii)) / 2.0, 5),
+                    "period_days": round(period_days, 3),
+                    "samples": len(pts)}
+    raise RuntimeError(f"arc for seed {seed} never completed an orbit")
+
+
+def third_law_table() -> list[dict]:
+    return [measure_planet(s) for s in THIRD_LAW_SEEDS]
