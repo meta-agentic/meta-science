@@ -15,21 +15,21 @@ Data can be perfectly clear, and perfectly wrong. The only way past a hidden cau
 Real science cuts both ways. Some guesses survive their experiment, some die by it — and the machine finds out which, the hard way. It wrote its predictions down first, so there is no taking them back.
 
 5
-00:01:24,966 --> 00:01:56,833
+00:01:24,966 --> 00:01:58,633
 And here is the ghost in the shell — the model thinking about its own method, in its own words. Its idea was good, so it passed. Its next two ideas were also good. Not good enough. That is the whole point.
 
 6
-00:01:57,333 --> 00:02:27,833
+00:01:59,133 --> 00:02:29,633
 None of this rests on a lucky run. Hundreds of worlds, thousands of tests — and any of them can be re-run by anyone, from a single seed.
 
 7
-00:02:28,333 --> 00:02:53,366
+00:02:30,133 --> 00:02:55,166
 Spend a quarter of the budget: same answers. Spend even less, and the spread gives you away — unless the benchmark is rigged to hide it. Ours was, once. We found it, fixed it, and published both.
 
 8
-00:02:53,866 --> 00:03:17,999
+00:02:55,666 --> 00:03:19,799
 In the end we asked the system the oldest question in science: do you need repetition? It gave the statistician's answer — not here, not yet — and told us exactly what kind of world would change its mind.
 
 9
-00:03:18,499 --> 00:03:39,033
+00:03:20,299 --> 00:03:40,833
 One gated turn today. A thousand tomorrow — and every one of them would still have to show a receipt. Meta-science. Free for everyone, human or A.I.

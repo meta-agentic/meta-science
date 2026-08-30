@@ -261,8 +261,8 @@ def _ghost_panel(d, y, label, text, upto=None):
     d.text((120, y), label, font=F_FOOT, fill=BLUE)
     y += 42
     shown = text if upto is None else text[:upto] + "▌"
-    box_h = 46 * (len(wrap(ImageDraw.Draw(Image.new('RGB', (1, 1))), text,
-                            F_MONO_S, 1560)) + 1)
+    box_h = 46 * len(wrap(ImageDraw.Draw(Image.new('RGB', (1, 1))), text,
+                          F_MONO_S, 1560)) + 18
     d.rectangle([80, y - 14, W - 80, y + box_h], fill=(22, 30, 40),
                 outline=BLUE, width=2)
     yy = y + 6
@@ -310,15 +310,36 @@ def corpus_evolution() -> Scene:
                                  audit_reasoning)
         return img
 
-    # The ghost thinks first — typewriter over the verbatim rationale.
+    # Two acts, so nothing ever runs off screen.
+    # Act 1 — the ghosts: the proposal types itself out, the gate promotes, the
+    # auditor dissents in its own voice. Only the first two cards appear here.
     step = max(6, len(reasoning) // 14)
     for n in range(step, len(reasoning) + step, step):
         s.hold(build([], min(n, len(reasoning))), 0.45)
-    s.hold(build([]), 1.2)
-    # Then the gate rules, card by card; the auditor gets its own ghost.
-    for i in range(1, len(gens) + 1):
-        s.hold(build(gens[:i], show_audit_ghost=(i >= 2)), 3.6)
-    s.hold(build(gens, show_audit_ghost=True), 5.0)
+    s.hold(build([]), 1.0)
+    s.hold(build(gens[:1]), 3.6)
+    s.hold(build(gens[:2], show_audit_ghost=True), 6.0)
+
+    # Act 2 — the ghosts leave; the full verdict sequence gets the room.
+    def build_act2(shown):
+        img, d = s.base()
+        d.text((60, 70), "4 · It improves its own method — through a gate", font=F_H, fill=INK1)
+        d.text((60, 170), "The verdicts, in sequence — refusing marginal gains is what "
+                          "stops a system ratcheting on noise.", font=F_BODY, fill=INK2)
+        y = 290
+        for tag, verdict, line1, line2 in shown:
+            d.rectangle([80, y, W - 80, y + 128], fill=CARD, outline=LINE, width=2)
+            d.text((130, y + 22), tag, font=F_MONO, fill=INK3)
+            d.text((320, y + 22), verdict, font=F_MONO,
+                   fill=BLUE if verdict == "PROMOTED" else ORANGE)
+            d.text((640, y + 26), line1, font=F_MONO_S, fill=INK1)
+            d.text((320, y + 76), line2, font=F_MONO_S, fill=INK2)
+            y += 152
+        return img
+
+    for i in range(3, len(gens) + 1):
+        s.hold(build_act2(gens[:i]), 3.4)
+    s.hold(build_act2(gens), 5.0)
     return s
 
 
