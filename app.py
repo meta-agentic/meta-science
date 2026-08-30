@@ -13,8 +13,8 @@ import os
 import sys
 from pathlib import Path
 
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Query
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
@@ -23,6 +23,8 @@ from metascience.discovery import run_discovery, score_on_held_out  # noqa: E402
 from metascience.auditor import audit_promotion  # noqa: E402
 from metascience.evolution import (evaluate_detailed, evaluate_strategy,  # noqa: E402
                                    held_out_seeds, run_generation)
+from metascience.experiment import (record_discovery, record_generation,  # noqa: E402
+                                    summarise, to_csv_rows)
 from metascience.gemini import TUNABLE, GeminiProposer, GeminiReasoner  # noqa: E402
 from metascience.ledger import FileLedger, PromotionGate  # noqa: E402
 from metascience.reasoner import HeuristicReasoner  # noqa: E402
@@ -59,8 +61,9 @@ own method only when a frozen benchmark proves the improvement real.</p>
 </ul>"""
 
 
-@app.get("/healthz")
-def healthz() -> dict:
+@app.get("/health")
+def health() -> dict:
+    """Not /healthz: Google's frontend intercepts that path and returns its own 404."""
     return {"ok": True, "model": model_name()}
 
 
@@ -77,10 +80,14 @@ def discover(seed: int, live: bool = False) -> dict:
     run = run_discovery(w, reasoner, Strategy(), seed=seed)
     variables = list(w.observable)
     probes = [(variables[0], 0.5), (variables[0], -0.5)]
+    held_out = score_on_held_out(w, run, probes, seed=seed + 5000)
+    rec = record_discovery(_ledger(), w, run, held_out, Strategy(),
+                           models={"reasoner": model_name() if live else "heuristic"})
     return {
         **run.to_dict(),
-        "held_out_score": score_on_held_out(w, run, probes, seed=seed + 5000),
+        "held_out_score": held_out,
         "reasoner": "gemini" if live else "heuristic",
+        "run_id": rec.run_id,
     }
 
 
@@ -93,9 +100,21 @@ def evolve() -> dict:
         ledger, evaluate_strategy, margin=0.02, detailed=evaluate_detailed,
         auditor=lambda r: audit_promotion(r, {k: t.__name__ for k, t in TUNABLE.items()}))
     champion = Strategy()
+    challenger_holder = {}
+    proposer = GeminiProposer()
+    original = proposer.propose
+
+    def capture(champ, notes=""):
+        challenger_holder["c"] = original(champ, notes)
+        return challenger_holder["c"]
+
+    proposer.propose = capture
     _, receipt = run_generation(
-        ledger, gate, champion, GeminiProposer(), seeds,
+        ledger, gate, champion, proposer, seeds,
         "accuracy is saturated on most worlds; 12 experiments x 400 samples each")
+    rec = record_generation(ledger, receipt, champion, challenger_holder["c"], seeds,
+                            models={"proposer": model_name(),
+                                    "auditor": "gemini-3.5-flash-lite"})
     return {
         "verdict": receipt.verdict,
         "candidate": receipt.candidate,
@@ -109,6 +128,7 @@ def evolve() -> dict:
         "score_parts": {"champion": receipt.champion_parts,
                         "challenger": receipt.challenger_parts},
         "audit": receipt.audit,
+        "run_id": rec.run_id,
     }
 
 
@@ -117,3 +137,39 @@ def receipts() -> dict:
     led = _ledger()
     rows = led.receipts() if hasattr(led, "receipts") else []
     return {"count": len(rows), "receipts": rows[-20:]}
+
+
+# -- the evidence base -------------------------------------------------------
+
+@app.get("/experiments")
+def experiments(limit: int = Query(100, le=500)) -> dict:
+    """Every recorded run, newest last. Each one carries what it needs to be rerun."""
+    rows = _ledger().experiments(limit=limit)
+    return {"count": len(rows), "experiments": rows}
+
+
+@app.get("/stats")
+def stats() -> dict:
+    """Population-level figures over everything recorded — the table a paper opens with.
+
+    Computed from stored records rather than by rerunning the code, so it describes what
+    was actually observed and not what the current version would produce today.
+    """
+    return summarise(_ledger().experiments(limit=500))
+
+
+@app.get("/export.csv", response_class=PlainTextResponse)
+def export_csv() -> str:
+    """One row per hypothesis tested, joined to ground truth — the long format analysis
+    actually wants. Straight into pandas or R without reshaping."""
+    import csv
+    import io
+
+    rows = to_csv_rows(_ledger().experiments(limit=500))
+    if not rows:
+        return "no experiments recorded yet\n"
+    buf = io.StringIO()
+    w = csv.DictWriter(buf, fieldnames=list(rows[0]))
+    w.writeheader()
+    w.writerows(rows)
+    return buf.getvalue()
