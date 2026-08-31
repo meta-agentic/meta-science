@@ -8,12 +8,13 @@ An agent does science on worlds it has never seen — forming hypotheses, design
 own experiments, and being refuted by them. When it proposes a better method, the gate
 decides. Never the agent.
 
-<a href="https://www.youtube.com/watch?v=vgGNmRYNm4s">
+<a href="https://www.youtube.com/watch?v=7P_hOwUgAFg">
   <img src="video/final/thumbnail.png" alt="Watch the demo — 3:39" width="620">
 </a>
 
-**[Watch the demo](https://www.youtube.com/watch?v=vgGNmRYNm4s)** (3:39) — the narrator
-is Gemini: the system narrates its own demo, and says so at the end.
+**[Watch the demo](https://www.youtube.com/watch?v=7P_hOwUgAFg)** (3:53) — the narrator
+is Gemini and the score is Lyria: the system narrates its own demo, and says so at
+the end.
 
 Built on Gemini 3.5+ via the Google GenAI SDK, running on Cloud Run with a Firestore
 ledger, declared in Terraform.
