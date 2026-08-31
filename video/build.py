@@ -307,7 +307,9 @@ def _verdict_panel(d, y, title, lines, note=None):
                fill=ORANGE if verdict == "REFUTED" else BLUE, anchor="ra")
         y += 56
     if note:
-        d.text((120, y + 18), note, font=F_FOOT, fill=INK3)
+        # Menlo, not Helvetica: the note carries arrows (X1→X4) and Helvetica has
+        # no glyph for U+2192, which rendered as a tofu box in the shipped cut.
+        d.text((120, y + 18), note, font=F_MONO_S, fill=INK3)
         y += 50
     return y + 40
 
