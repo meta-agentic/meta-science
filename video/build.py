@@ -456,6 +456,19 @@ def corpus_evidence() -> Scene:
                "cases, an independent reviewer caught it — the correction is printed "
                "on the figure.", F_BODY, INK2)
     s.hold(s2, 7.0)
+
+    # The backend, live: the Cloud Run monitoring console for this project —
+    # the checklist's own preferred form of proof, shown rather than claimed.
+    s3, d3 = s.base()
+    d3.text((60, 70), "5 · Every run is evidence — including this one", font=F_H, fill=INK1)
+    shot = Image.open(ROOT / "assets" / "cloudrun-dashboard.png").convert("RGB")
+    shot.thumbnail((1380, 700))
+    s3.paste(shot, ((W - shot.width) // 2, 190))
+    d3 = ImageDraw.Draw(s3)
+    d3.text((W // 2, 190 + shot.height + 26),
+            "Cloud Run monitoring · project meta-science · europe-west1 · 0% errors",
+            font=F_MONO, fill=INK2, anchor="ma")
+    s.hold(s3, 6.0)
     return s
 
 
