@@ -599,8 +599,10 @@ def outro() -> Scene:
     d.text((W // 2, 380), "Today it does one gated turn.", font=F_H, fill=INK1, anchor="ma")
     d.text((W // 2, 490), "The architecture exists so that a thousand turns", font=F_H, fill=BLUE, anchor="ma")
     d.text((W // 2, 580), "would still be falsifiable.", font=F_H, fill=BLUE, anchor="ma")
-    d.text((W // 2, 740), "github.com/meta-agentic/meta-science", font=F_MONO, fill=INK2, anchor="ma")
-    d.text((W // 2, 810), "metascience-o6a5u2jdvq-ew.a.run.app", font=F_MONO, fill=BLUE, anchor="ma")
+    # The memorable link last; the .run URL keeps its place on the "Built on"
+    # frame, where it serves as the backend proof rather than a call to action.
+    d.text((W // 2, 740), "science.meta-agentic.ai", font=F_MONO, fill=BLUE, anchor="ma")
+    d.text((W // 2, 810), "github.com/meta-agentic/meta-science", font=F_MONO, fill=INK2, anchor="ma")
     s.hold(img, 5.5)
 
     # The reveal. True, and the whole project in one sentence: the narrator has been
