@@ -68,76 +68,77 @@
 </style>
 <div class="viz-root"><main>
   <h1>meta-science</h1>
-  <p class="lede">An agent that does science on worlds it has never seen — forming
+  <p class="lede" data-i18n="lede">An agent that does science on worlds it has never seen — forming
   hypotheses, designing its own experiments, and being refuted by them — and that improves
   its own method only when a frozen benchmark proves the improvement real.</p>
 
   <section>
-    <h2>The world under study</h2>
+    <h2 data-i18n="world_h">The world under study</h2>
     <div class="row" style="margin-bottom:.9rem">
-      <label class="sw">seed <input id="seed" type="number" value="7" style="width:6rem"></label>
-      <label class="sw">compound depth
+      <label class="sw"><span data-i18n="seed">seed</span> <input id="seed" type="number" value="7" style="width:6rem"></label>
+      <label class="sw"><span data-i18n="depth">compound depth</span>
         <input id="depth" type="number" min="0" max="7" value="0" style="width:4rem"></label>
       <label class="sw"><input type="checkbox" id="complex">
-        complex variables (z = a + j·b)</label>
+        <span data-i18n="complex">complex variables (z = a + j·b)</span></label>
     </div>
-    <span class="banner agentside">this page works on the agent's side of the boundary</span>
-    <div id="agentview"></div>
-    <p class="note">Opaque labels, two affordances, no structure — everything below runs
-    against exactly this view. The truth exists, but it is <em>revealed</em>, never used:
-    <a id="inspectlink" href="/world/7/inspect">full inspector →</a></p>
+    <span class="banner agentside" data-i18n="banner">this page works on the agent's side of the boundary</span>
+    <div id="agentview" dir="ltr"></div>
+    <p class="note"><span data-i18n="worldnote">Opaque labels, two affordances, no structure — everything below runs
+    against exactly this view. The truth exists, but it is <em>revealed</em>, never used:</span>
+    <a id="inspectlink" data-i18n="inspector" href="/world/7/inspect">full inspector →</a></p>
   </section>
 
   <section>
-    <h2>1 · Run the discovery loop</h2>
+    <h2 data-i18n="s1">1 · Run the discovery loop</h2>
     <div class="row">
-      <button id="run">Run experiments on this world</button>
+      <button id="run" data-i18n="run">Run experiments on this world</button>
       <span class="note" id="runnote"></span>
     </div>
-    <p class="note">Each prediction is committed <em>before</em> its experiment. The verdict
+    <p class="note" data-i18n="runnote">Each prediction is committed <em>before</em> its experiment. The verdict
     is a comparison, never a question put to the model.</p>
-    <div id="trial"></div>
+    <div id="trial" dir="ltr"></div>
     <div id="revealbox" style="display:none;margin-top:1rem">
       <div class="row">
-        <button class="ghost" id="showdata">Show the simulation data</button>
-        <button class="reveal" id="reveal">Reveal this world's hidden truth</button>
-        <span class="note">— both for the same world the agent just worked blind.</span>
+        <button class="ghost" id="showdata" data-i18n="showdata">Show the simulation data</button>
+        <button class="reveal" id="reveal" data-i18n="reveal">Reveal this world's hidden truth</button>
+        <span class="note" data-i18n="bothnote">— both for the same world the agent just worked blind.</span>
       </div>
-      <div id="dataview" style="margin-top:1rem"></div>
-      <div id="truthview" style="margin-top:1rem"></div>
+      <div id="dataview" dir="ltr" style="margin-top:1rem"></div>
+      <div id="truthview" dir="ltr" style="margin-top:1rem"></div>
     </div>
   </section>
 
   <section>
-    <h2>2 · Let it improve its own method</h2>
+    <h2 data-i18n="s2">2 · Let it improve its own method</h2>
     <div class="row">
-      <button id="evolve">Propose a change, and rule on it</button>
-      <span class="note" id="evolvenote">Gemini proposes against 24 held-out worlds — takes a
+      <button id="evolve" data-i18n="evolve">Propose a change, and rule on it</button>
+      <span class="note" id="evolvenote" data-i18n="evolvenote">Gemini proposes against 24 held-out worlds — takes a
       minute. The benchmark is always the frozen real-domain set, whatever the controls above
       say: history stays comparable.</span>
     </div>
-    <div id="gen"></div>
+    <div id="gen" dir="ltr"></div>
   </section>
 
   <section>
-    <h2>3 · The evidence base</h2>
-    <div id="stats"><span class="note">loading…</span></div>
+    <h2 data-i18n="s3">3 · The evidence base</h2>
+    <div id="stats"><span class="note" data-i18n="loading">loading…</span></div>
     <div class="row" style="margin-top:1rem">
-      <button class="ghost" id="refresh">Refresh</button>
-      <a href="/evidence"><b>The evidence — four figures from the frozen study</b></a>
+      <button class="ghost" id="refresh" data-i18n="refresh">Refresh</button>
+      <a href="/evidence"><b data-i18n="evidence">The evidence — four figures from the frozen study</b></a>
       <a href="/export.csv">CSV</a>
       <a href="/experiments">Raw JSON</a>
     </div>
-    <p class="note">Every run here is stored with its seeds, strategy and code commit —
+    <p class="note" data-i18n="storednote">Every run here is stored with its seeds, strategy and code commit —
     enough to recompute the result rather than merely read it.</p>
   </section>
 
   <footer><i>Ex probatione propria non sequitur veritas.</i> · © 2026 <b>Marco Vanadia</b> · mova ·
     <a href="https://github.com/meta-agentic/meta-science">meta-agentic/meta-science</a> ·
     <a href="https://github.com/meta-agentic/meta-science/blob/main/LICENSE">GPL-3.0</a>
-    — free for everyone, human or AI</footer>
+    <span data-i18n="freefor">— free for everyone, human or AI</span></footer>
 </main></div>
 <script src="/static/worldviz.js"></script>
+<script src="/static/i18n.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const get = async (u, opts) => (await fetch(u, opts)).json();
