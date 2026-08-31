@@ -1,35 +1,39 @@
 1
-00:00:00,300 --> 00:00:16,800
+00:00:00,400 --> 00:00:12,280
 What would it take to trust a machine that says it made itself better? Not a bigger claim — a smaller one, that can be checked.
 
 2
-00:00:17,300 --> 00:00:35,433
-Start by taking everything away. No names, no context, no textbook to remember. What is left is the only thing that cannot be faked: the ability to find out.
+00:00:12,880 --> 00:00:36,280
+Every science begins with what it refuses to assume. No agent judges its own claims — derivation is not truth. Seeing is not doing — the two coincide only when confounding is absent, which is exactly what may never be assumed. And improvement only counts when it is proven, on worlds the prover cannot see. The rest is engineering.
 
 3
-00:00:35,933 --> 00:01:01,466
-Data can be perfectly clear, and perfectly wrong. The only way past a hidden cause is to reach into the world and move something. Reading alone fails every time. Acting succeeds every time.
+00:00:36,880 --> 00:00:54,913
+Start by taking everything away. No names, no context, no textbook to remember. What is left is the only thing that cannot be faked: the ability to find out.
 
 4
-00:01:01,966 --> 00:01:24,466
-Real science cuts both ways. Some guesses survive their experiment, some die by it — and the machine finds out which, the hard way. It wrote its predictions down first, so there is no taking them back.
+00:00:55,513 --> 00:01:16,793
+Data can be perfectly clear, and perfectly wrong. The only way past a hidden cause is to reach into the world and move something. Reading alone fails every time. Acting succeeds every time.
 
 5
-00:01:24,966 --> 00:01:58,633
-And here is the ghost in the shell — the model thinking about its own method, in its own words. Its idea was good, so it passed. Its next two ideas were also good. Not good enough. That is the whole point.
+00:01:17,393 --> 00:01:35,553
+Real science cuts both ways. Some guesses survive their experiment, some die by it — and the machine finds out which, the hard way. It wrote its predictions down first, so there is no taking them back.
 
 6
-00:01:59,133 --> 00:02:29,633
-None of this rests on a lucky run. Hundreds of worlds, thousands of tests — and any of them can be re-run by anyone, from a single seed.
+00:01:36,153 --> 00:02:03,720
+And here is the ghost in the shell — the model thinking about its own method, in its own words. Its idea was good, so it passed. Its next two ideas were also good. Not good enough. That is the whole point.
 
 7
-00:02:30,133 --> 00:02:55,166
-Spend a quarter of the budget: same answers. Spend even less, and the spread gives you away — unless the benchmark is rigged to hide it. Ours was, once. We found it, fixed it, and published both.
+00:02:04,320 --> 00:02:28,720
+None of this rests on a lucky run. Hundreds of worlds, thousands of tests — and any of them can be re-run by anyone, from a single seed.
 
 8
-00:02:55,666 --> 00:03:19,799
-In the end we asked the system the oldest question in science: do you need repetition? It gave the statistician's answer — not here, not yet — and told us exactly what kind of world would change its mind.
+00:02:29,320 --> 00:02:48,640
+Spend a quarter of the budget: same answers. Spend even less, and the spread gives you away — unless the benchmark is rigged to hide it. Ours was, once. We found it, fixed it, and published both.
 
 9
-00:03:20,299 --> 00:03:40,833
-One gated turn today. A thousand tomorrow — and every one of them would still have to show a receipt. Meta-science. Free for everyone, human or A.I.
+00:02:49,240 --> 00:03:08,680
+In the end we asked the system the oldest question in science: do you need repetition? It gave the statistician's answer — not here, not yet — and told us exactly what kind of world would change its mind.
+
+10
+00:03:09,280 --> 00:03:38,546
+One gated turn today. A thousand tomorrow — and every one of them would still have to show a receipt. ... One more thing. The voice you have been listening to... is Gemini. The system just narrated its own demo. Meta-science. Free for everyone — human, or A.I.
