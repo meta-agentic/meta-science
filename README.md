@@ -8,12 +8,25 @@ An agent does science on worlds it has never seen — forming hypotheses, design
 own experiments, and being refuted by them. When it proposes a better method, the gate
 decides. Never the agent.
 
-The ideas behind it — Popper, the two axioms, and how the process ended up
-disciplining its own authors: [Why a machine must be allowed to be
-wrong](#why-a-machine-must-be-allowed-to-be-wrong), below.
-
 Built on Gemini 3.5+ via the Google GenAI SDK, running on Cloud Run with a Firestore
 ledger, declared in Terraform.
+
+## What's here
+
+- [The axioms](#the-axioms) — the two refusals everything else descends from
+- [What actually happens](#what-actually-happens) — a live run: one promotion, two
+  refusals, and a receipt for each
+- [Why a machine must be allowed to be wrong](#why-a-machine-must-be-allowed-to-be-wrong)
+  — the essay: Popper, the physicist's objection, and how the process ended up
+  disciplining its own authors
+- [Quickstart](#quickstart) — the whole gate runs offline, no API key needed
+- [Why the refutations are real](#why-the-refutations-are-real) — zero of four worlds
+  recovered by looking, four of four by acting
+- [Anonymisation is a test, not a promise](#anonymisation-is-a-test-not-a-promise) —
+  enforced by the suite, not asserted in prose
+- [We audited our own benchmark, and changed it](#we-audited-our-own-benchmark-and-changed-it)
+  — it was flattering us; the comparison is published
+- [What is not claimed](#what-is-not-claimed) — the prior art, and the limits we know of
 
 ---
 
