@@ -9,27 +9,27 @@ Not a bigger claim — a smaller
 one, that can be checked.
 
 3
-00:00:12,880 --> 00:00:16,612
+00:00:12,880 --> 00:00:16,611
 Every science begins with
 what it refuses to assume.
 
 4
-00:00:16,612 --> 00:00:20,703
+00:00:16,611 --> 00:00:20,702
 No agent judges its own claims
 — derivation is not truth.
 
 5
-00:00:20,703 --> 00:00:25,800
+00:00:20,702 --> 00:00:25,800
 Seeing is not doing — the two coincide
 only when confounding is absent,
 
 6
-00:00:25,800 --> 00:00:28,886
+00:00:25,800 --> 00:00:28,885
 which is exactly what
 may never be assumed.
 
 7
-00:00:28,886 --> 00:00:34,557
+00:00:28,885 --> 00:00:34,557
 And improvement only counts when it is
 proven, on worlds the prover cannot see.
 
@@ -38,11 +38,11 @@ proven, on worlds the prover cannot see.
 The rest is engineering.
 
 9
-00:00:36,880 --> 00:00:40,602
+00:00:36,880 --> 00:00:40,603
 Start by taking everything away.
 
 10
-00:00:40,602 --> 00:00:45,954
+00:00:40,603 --> 00:00:45,954
 No names, no context,
 no textbook to remember.
 
@@ -52,17 +52,17 @@ What is left is the only thing that
 cannot be faked: the ability to find out.
 
 12
-00:00:55,512 --> 00:01:01,119
+00:00:55,512 --> 00:01:01,118
 Data can be perfectly
 clear, and perfectly wrong.
 
 13
-00:01:01,119 --> 00:01:10,157
+00:01:01,118 --> 00:01:10,156
 The only way past a hidden cause is to
 reach into the world and move something.
 
 14
-00:01:10,157 --> 00:01:13,703
+00:01:10,156 --> 00:01:13,703
 Reading alone fails every time.
 
 15
@@ -70,16 +70,16 @@ Reading alone fails every time.
 Acting succeeds every time.
 
 16
-00:01:17,393 --> 00:01:19,961
+00:01:17,393 --> 00:01:19,960
 Real science cuts both ways.
 
 17
-00:01:19,961 --> 00:01:25,005
+00:01:19,960 --> 00:01:25,004
 Some guesses survive their
 experiment, some die by it —
 
 18
-00:01:25,005 --> 00:01:29,224
+00:01:25,004 --> 00:01:29,224
 and the machine finds
 out which, the hard way.
 
@@ -89,12 +89,12 @@ It wrote its predictions down first,
 so there is no taking them back.
 
 20
-00:01:36,153 --> 00:01:46,713
+00:01:36,153 --> 00:01:46,712
 And here is the ghost in the shell —
 the model thinking about its own method,
 
 21
-00:01:46,713 --> 00:01:49,045
+00:01:46,712 --> 00:01:49,045
 in its own words.
 
 22
@@ -102,25 +102,25 @@ in its own words.
 Its idea was good, so it passed.
 
 23
-00:01:53,433 --> 00:02:00,428
+00:01:53,433 --> 00:02:00,427
 Its next two ideas were
 also good. Not good enough.
 
 24
-00:02:00,428 --> 00:02:03,719
+00:02:00,427 --> 00:02:03,719
 That is the whole point.
 
 25
-00:02:04,319 --> 00:02:10,511
+00:02:04,319 --> 00:02:10,510
 None of this rests on a lucky run.
 
 26
-00:02:10,511 --> 00:02:25,260
+00:02:10,510 --> 00:02:25,259
 Hundreds of worlds, thousands of tests —
 and any of them can be re-run by anyone,
 
 27
-00:02:25,260 --> 00:02:28,719
+00:02:25,259 --> 00:02:28,719
 from a single seed.
 
 28
@@ -129,12 +129,12 @@ Spend a quarter of the
 budget: same answers.
 
 29
-00:02:33,747 --> 00:02:38,577
+00:02:33,747 --> 00:02:38,576
 Spend even less, and the
 spread gives you away —
 
 30
-00:02:38,577 --> 00:02:44,413
+00:02:38,576 --> 00:02:44,413
 unless the benchmark is rigged
 to hide it. Ours was, once.
 
@@ -143,12 +143,12 @@ to hide it. Ours was, once.
 We found it, fixed it, and published both.
 
 32
-00:02:49,240 --> 00:02:55,236
+00:02:49,240 --> 00:02:55,235
 In the end we asked the system
 the oldest question in science:
 
 33
-00:02:55,236 --> 00:02:57,460
+00:02:55,235 --> 00:02:57,460
 do you need repetition?
 
 34
@@ -174,23 +174,23 @@ A thousand tomorrow —
 and every one of them would still have to
 
 39
-00:03:18,881 --> 00:03:21,078
+00:03:18,881 --> 00:03:21,079
 show a receipt. ...
 
 40
-00:03:21,078 --> 00:03:22,814
+00:03:21,079 --> 00:03:22,813
 One more thing.
 
 41
-00:03:22,814 --> 00:03:28,597
+00:03:22,813 --> 00:03:28,598
 The voice you have been
 listening to... is Gemini.
 
 42
-00:03:28,597 --> 00:03:34,613
+00:03:28,598 --> 00:03:34,612
 The system just narrated
 its own demo. Meta-science.
 
 43
-00:03:34,613 --> 00:03:38,545
+00:03:34,612 --> 00:03:38,545
 Free for everyone — human, or A.I.
