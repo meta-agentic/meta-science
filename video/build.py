@@ -581,6 +581,13 @@ def corpus_replication() -> Scene:
 # ── outro ────────────────────────────────────────────────────────────────────
 
 def outro() -> Scene:
+    """Timed against the measured narration, not by eye. Relative to this clip:
+    0.0s "One gated turn today ... show a receipt", 11.8s "One more thing.",
+    13.6s the reveal, 25.4s "Free for everyone — human, or A.I."
+
+    The concat demuxer repeats the final still, so the last frame plays for twice
+    its hold: 2.3 here gives the 4.6s the closing card actually needs.
+    """
     s = Scene("outro")
     img, d = s.base()
     d.text((60, 70), "Built on", font=F_H, fill=INK1)
@@ -596,35 +603,36 @@ def outro() -> Scene:
                "narrower and checkable: falsifiable self-improvement — every promotion "
                "earned against evidence the proposer cannot see, score, or tune against, "
                "with a receipt either way.", F_BODY, INK1)
-    s.hold(img, 8.0)
+    s.hold(img, 4.4)
+
     img, d = s.base()
     d.text((W // 2, 380), "Today it does one gated turn.", font=F_H, fill=INK1, anchor="ma")
     d.text((W // 2, 490), "The architecture exists so that a thousand turns", font=F_H, fill=BLUE, anchor="ma")
     d.text((W // 2, 580), "would still be falsifiable.", font=F_H, fill=BLUE, anchor="ma")
     # The memorable link last; the .run URL keeps its place on the "Built on"
-    # frame, where it serves as the backend proof rather than a call to action.
+    # frame, where it serves as backend proof rather than a call to action.
     d.text((W // 2, 740), "science.meta-agentic.ai", font=F_MONO, fill=BLUE, anchor="ma")
     d.text((W // 2, 810), "github.com/meta-agentic/meta-science", font=F_MONO, fill=INK2, anchor="ma")
-    s.hold(img, 5.5)
+    s.hold(img, 7.4)
 
-    # The reveal. True, and the whole project in one sentence: the narrator has been
-    # the system's own audited model all along.
+    # The reveal, landing with the voice that makes it true.
     img, d = s.base()
     d.text((W // 2, 400), "One more thing.", font=F_H, fill=INK2, anchor="ma")
-    s.hold(img, 2.2)
+    s.hold(img, 1.8)
+
     img, d = s.base()
+    # "is" joins the line above so the reveal word stands alone, and the screen
+    # says nothing more — the narrator is already saying it.
     d.text((W // 2, 330), "One more thing.", font=F_H, fill=INK2, anchor="ma")
-    d.text((W // 2, 470), "The voice you've been listening to", font=F_H, fill=INK1, anchor="ma")
-    d.text((W // 2, 560), "is Gemini.", font=F_TITLE, fill=BLUE, anchor="ma")
-    s.hold(img, 3.2)
+    d.text((W // 2, 470), "The voice you've been listening to is", font=F_H, fill=INK1, anchor="ma")
+    d.text((W // 2, 570), "Gemini.", font=F_TITLE, fill=BLUE, anchor="ma")
+    s.hold(img, 11.8)
+
     img, d = s.base()
-    d.text((W // 2, 330), "One more thing.", font=F_H, fill=INK2, anchor="ma")
-    d.text((W // 2, 470), "The voice you've been listening to", font=F_H, fill=INK1, anchor="ma")
-    d.text((W // 2, 560), "is Gemini.", font=F_TITLE, fill=BLUE, anchor="ma")
-    d.text((W // 2, 750), "The system narrated its own demo —", font=F_BODY, fill=INK2, anchor="ma")
-    d.text((W // 2, 810), "under the same rule as everything else here: verifiable.",
-           font=F_BODY, fill=ORANGE, anchor="ma")
-    s.hold(img, 5.5)
+    d.text((W // 2, 400), "meta-science", font=F_TITLE, fill=INK1, anchor="ma")
+    d.text((W // 2, 545), "free for everyone", font=F_H, fill=INK2, anchor="ma")
+    d.text((W // 2, 635), "human or AI", font=F_H, fill=BLUE, anchor="ma")
+    s.hold(img, 2.3)
     return s
 
 

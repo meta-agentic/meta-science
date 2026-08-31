@@ -1,206 +1,206 @@
 1
-00:00:00,400 --> 00:00:07,000
+00:00:09,400 --> 00:00:16,000
 What would it take to trust a machine
 that says it made itself better?
 
 2
-00:00:07,000 --> 00:00:12,279
+00:00:16,000 --> 00:00:21,280
 Not a bigger claim — a smaller
 one, that can be checked.
 
 3
-00:00:12,880 --> 00:00:16,611
+00:00:21,879 --> 00:00:25,611
 Every science begins with
 what it refuses to assume.
 
 4
-00:00:16,611 --> 00:00:20,702
+00:00:25,611 --> 00:00:29,701
 No agent judges its own claims
 — derivation is not truth.
 
 5
-00:00:20,702 --> 00:00:25,800
+00:00:29,701 --> 00:00:34,798
 Seeing is not doing — the two coincide
 only when confounding is absent,
 
 6
-00:00:25,800 --> 00:00:28,885
+00:00:34,798 --> 00:00:37,884
 which is exactly what
 may never be assumed.
 
 7
-00:00:28,885 --> 00:00:34,557
+00:00:37,884 --> 00:00:43,557
 And improvement only counts when it is
 proven, on worlds the prover cannot see.
 
 8
-00:00:34,557 --> 00:00:36,280
+00:00:43,557 --> 00:00:45,280
 The rest is engineering.
 
 9
-00:00:36,880 --> 00:00:40,603
+00:00:45,880 --> 00:00:49,603
 Start by taking everything away.
 
 10
-00:00:40,603 --> 00:00:45,954
+00:00:49,603 --> 00:00:54,954
 No names, no context,
 no textbook to remember.
 
 11
-00:00:45,954 --> 00:00:54,912
+00:00:54,954 --> 00:01:03,911
 What is left is the only thing that
 cannot be faked: the ability to find out.
 
 12
-00:00:55,512 --> 00:01:01,118
+00:01:04,513 --> 00:01:10,117
 Data can be perfectly
 clear, and perfectly wrong.
 
 13
-00:01:01,118 --> 00:01:10,156
+00:01:10,117 --> 00:01:19,156
 The only way past a hidden cause is to
 reach into the world and move something.
 
 14
-00:01:10,156 --> 00:01:13,703
+00:01:19,156 --> 00:01:22,703
 Reading alone fails every time.
 
 15
-00:01:13,703 --> 00:01:16,793
+00:01:22,703 --> 00:01:25,793
 Acting succeeds every time.
 
 16
-00:01:17,393 --> 00:01:19,960
+00:01:26,393 --> 00:01:28,959
 Real science cuts both ways.
 
 17
-00:01:19,960 --> 00:01:25,004
+00:01:28,959 --> 00:01:34,004
 Some guesses survive their
 experiment, some die by it —
 
 18
-00:01:25,004 --> 00:01:29,224
+00:01:34,004 --> 00:01:38,224
 and the machine finds
 out which, the hard way.
 
 19
-00:01:29,224 --> 00:01:35,552
+00:01:38,224 --> 00:01:44,552
 It wrote its predictions down first,
 so there is no taking them back.
 
 20
-00:01:36,153 --> 00:01:46,712
+00:01:45,153 --> 00:01:55,712
 And here is the ghost in the shell —
 the model thinking about its own method,
 
 21
-00:01:46,712 --> 00:01:49,045
+00:01:55,712 --> 00:01:58,045
 in its own words.
 
 22
-00:01:49,045 --> 00:01:53,433
+00:01:58,045 --> 00:02:02,433
 Its idea was good, so it passed.
 
 23
-00:01:53,433 --> 00:02:00,427
+00:02:02,433 --> 00:02:09,426
 Its next two ideas were
 also good. Not good enough.
 
 24
-00:02:00,427 --> 00:02:03,719
+00:02:09,426 --> 00:02:12,718
 That is the whole point.
 
 25
-00:02:04,319 --> 00:02:08,149
+00:02:13,318 --> 00:02:17,149
 None of this rests on a lucky run.
 
 26
-00:02:08,149 --> 00:02:17,274
+00:02:17,149 --> 00:02:26,274
 Hundreds of worlds, thousands of tests —
 and any of them can be re-run by anyone,
 
 27
-00:02:17,274 --> 00:02:19,413
+00:02:26,274 --> 00:02:28,413
 from a single seed.
 
 28
-00:02:19,413 --> 00:02:27,524
+00:02:28,413 --> 00:02:36,524
 And the machine that did it is running
 while you watch: on Google Cloud,
 
 29
-00:02:27,524 --> 00:02:33,719
+00:02:36,524 --> 00:02:42,718
 answering anyone who asks,
 every request on the record.
 
 30
-00:02:34,319 --> 00:02:38,747
+00:02:43,318 --> 00:02:47,747
 Spend a quarter of the
 budget: same answers.
 
 31
-00:02:38,747 --> 00:02:43,576
+00:02:47,747 --> 00:02:52,575
 Spend even less, and the
 spread gives you away —
 
 32
-00:02:43,576 --> 00:02:49,413
+00:02:52,575 --> 00:02:58,413
 unless the benchmark is rigged
 to hide it. Ours was, once.
 
 33
-00:02:49,413 --> 00:02:53,639
+00:02:58,413 --> 00:03:02,639
 We found it, fixed it, and published both.
 
 34
-00:02:54,240 --> 00:03:00,235
+00:03:03,240 --> 00:03:09,235
 In the end we asked the system
 the oldest question in science:
 
 35
-00:03:00,235 --> 00:03:02,460
+00:03:09,235 --> 00:03:11,460
 do you need repetition?
 
 36
-00:03:02,460 --> 00:03:07,780
+00:03:11,460 --> 00:03:16,780
 It gave the statistician's
 answer — not here, not yet —
 
 37
-00:03:07,780 --> 00:03:13,680
+00:03:16,780 --> 00:03:22,680
 and told us exactly what kind
 of world would change its mind.
 
 38
-00:03:14,280 --> 00:03:16,709
+00:03:23,280 --> 00:03:25,723
 One gated turn today.
 
 39
-00:03:16,709 --> 00:03:19,138
+00:03:25,723 --> 00:03:28,164
 A thousand tomorrow —
 
 40
-00:03:19,138 --> 00:03:23,881
+00:03:28,164 --> 00:03:32,935
 and every one of them would still have to
 
 41
-00:03:23,881 --> 00:03:26,079
+00:03:32,935 --> 00:03:35,145
 show a receipt. ...
 
 42
-00:03:26,079 --> 00:03:27,813
+00:03:35,145 --> 00:03:36,889
 One more thing.
 
 43
-00:03:27,813 --> 00:03:33,598
+00:03:36,889 --> 00:03:42,706
 The voice you have been
 listening to... is Gemini.
 
 44
-00:03:33,598 --> 00:03:39,612
+00:03:42,706 --> 00:03:48,757
 The system just narrated
 its own demo. Meta-science.
 
 45
-00:03:39,612 --> 00:03:43,545
+00:03:48,757 --> 00:03:52,711
 Free for everyone — human, or A.I.
