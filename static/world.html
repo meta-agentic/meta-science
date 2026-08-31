@@ -348,7 +348,19 @@ async function load() {
   $("o-json").replaceChildren(pre(JSON.stringify(truth.ground_truth, null, 2)));
   renderAtlas(truth);
 }
-$("seed").onchange = load;
+// The route is /world/{seed}/inspect, so the seed in the URL is the one meant —
+// without this the page always showed its default and the path was decoration.
+const fromPath = location.pathname.match(/\/world\/(\d+)\/inspect/);
+if (fromPath) $("seed").value = fromPath[1];
+
+// Keep the address bar honest as the seed changes, so any view can be linked.
+function syncUrl() {
+  const path = `/world/${$("seed").value || 7}/inspect`;
+  if (location.pathname !== path) history.replaceState(null, "", path);
+}
+
+$("seed").onchange = () => { syncUrl(); load(); };
+$("seed").oninput = () => { syncUrl(); load(); };
 // change alone misses typed digits until blur; input catches keystrokes and spinners.
 $("depth").oninput = load; $("depth").onchange = load;
 $("complex").onchange = load;
