@@ -6,6 +6,7 @@ TTS or human read — plus a timed final.srt, per-clip AIFF via macOS `say`, and
 muxed final_narrated.mp4. Speech rate is fitted per clip so the narration lands
 inside the clip's own duration.
 """
+import re
 import subprocess
 import sys
 import wave
@@ -162,6 +163,103 @@ def ts(sec: float) -> str:
     return f"{h:02d}:{m:02d}:{s:02d},{int((sec % 1) * 1000):03d}"
 
 
+# Subtitle segmentation. The TTS gives no word-level timings, so a cue's interior
+# splits are estimated by character count — but the cue's OUTER boundaries come from
+# the measured audio, and splitting only inside them means an estimate can never
+# drift past the clip it belongs to. Broadcast shape: <=42 chars a line, two lines.
+MAX_LINE = 42
+MAX_CUE = MAX_LINE * 2
+MIN_CUE_SEC = 1.0
+
+
+def _chunk(text: str, max_chars: int = MAX_CUE) -> list[str]:
+    """Sentence boundaries first, then clauses, then words — never mid-word."""
+    out: list[str] = []
+    for sentence in re.split(r"(?<=[.!?])\s+", text.strip()):
+        if not sentence:
+            continue
+        if len(sentence) <= max_chars:
+            out.append(sentence)
+            continue
+        buf = ""
+        for seg in re.split(r"(?<=[,;:—])\s+", sentence):
+            if buf and len(buf) + 1 + len(seg) > max_chars:
+                out.append(buf)
+                buf = seg
+            else:
+                buf = f"{buf} {seg}".strip()
+        if buf:
+            out.append(buf)
+
+    hard: list[str] = []
+    for c in out:
+        while len(c) > max_chars:
+            cut = c.rfind(" ", 0, max_chars)
+            cut = cut if cut > 0 else max_chars
+            hard.append(c[:cut].strip())
+            c = c[cut:].strip()
+        if c:
+            hard.append(c)
+
+    # A stray fragment ("...") reads as a flicker; fold it back if it fits.
+    merged: list[str] = []
+    for c in hard:
+        if merged and len(c) < 20 and len(merged[-1]) + 1 + len(c) <= max_chars:
+            merged[-1] = f"{merged[-1]} {c}"
+        else:
+            merged.append(c)
+    return merged
+
+
+def _wrap(text: str) -> str | None:
+    """Two balanced lines, or None when no break leaves both within MAX_LINE.
+
+    Choosing the space nearest the middle is not enough: it can leave one side
+    a character over the limit. Only breaks where BOTH sides fit are eligible,
+    and the most balanced of those wins.
+    """
+    if len(text) <= MAX_LINE:
+        return text
+    best = None
+    for i, ch in enumerate(text):
+        if ch != " ":
+            continue
+        left, right = i, len(text) - i - 1
+        if left <= MAX_LINE and right <= MAX_LINE:
+            balance = abs(left - right)
+            if best is None or balance < best[0]:
+                best = (balance, i)
+    if best is None:
+        return None
+    cut = best[1]
+    return text[:cut] + "\n" + text[cut + 1:]
+
+
+def cues(text: str, start: float, end: float) -> list[tuple[float, float, str]]:
+    """Re-segment one spoken line across its measured window.
+
+    Time is apportioned by character count, which tracks speech duration closely
+    at a steady TTS pace. The first cue starts exactly at `start` and the last
+    ends exactly at `end`, so the clip's own timing is preserved exactly.
+    """
+    parts = []
+    for part in _chunk(text):
+        # A part no two-line break can hold is re-cut to single-line pieces.
+        parts.extend([part] if _wrap(part) else _chunk(part, MAX_LINE))
+    if len(parts) < 2:
+        return [(start, end, _wrap(parts[0]) or parts[0])]
+    total = sum(len(p) for p in parts)
+    span = end - start
+    out, t = [], start
+    for i, part in enumerate(parts):
+        stop = end if i == len(parts) - 1 else t + span * len(part) / total
+        if stop - t < MIN_CUE_SEC:
+            stop = min(t + MIN_CUE_SEC, end)
+        out.append((t, stop, _wrap(part) or part))
+        t = stop
+    return out
+
+
 def main() -> None:
     CAP.mkdir(exist_ok=True)
     t0, srt, idx, narrated = 0.0, [], 1, []
@@ -190,8 +288,9 @@ def main() -> None:
             check=True)
         narrated.append(merged)
 
-        srt.append(f"{idx}\n{ts(t0 + 0.4)} --> {ts(t0 + target - 0.2)}\n{text}\n")
-        idx += 1
+        for c_start, c_end, c_text in cues(text, t0 + 0.4, t0 + target - 0.2):
+            srt.append(f"{idx}\n{ts(c_start)} --> {ts(c_end)}\n{c_text}\n")
+            idx += 1
         t0 += target
         print(f"  {name:22s} clip {d:5.1f}s -> {target:5.1f}s (voice {adur:4.1f}s)")
 
