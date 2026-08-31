@@ -9,7 +9,8 @@ own experiments, and being refuted by them. When it proposes a better method, th
 decides. Never the agent.
 
 The ideas behind it — Popper, the two axioms, and how the process ended up
-disciplining its own authors: [docs/philosophy.md](docs/philosophy.md).
+disciplining its own authors: [Why a machine must be allowed to be
+wrong](#why-a-machine-must-be-allowed-to-be-wrong), below.
 
 Built on Gemini 3.5+ via the Google GenAI SDK, running on Cloud Run with a Firestore
 ledger, declared in Terraform.
@@ -18,12 +19,16 @@ ledger, declared in Terraform.
 
 ## The problem this is about
 
-"Self-improving agent" is the most common unfalsifiable claim in the field. A system that
-*reports* it improved itself is indistinguishable from a system that logs `"improved!"`
+"Self-improving agent" is the most common unfalsifiable claim in the field. Its problem
+is not that it is false; its problem is that, as usually stated, it *cannot* be false. A
+system that *reports* it improved itself is indistinguishable from a system that logs `"improved!"`
 and changes nothing. The demos always show successes, which proves nothing, because a
-loop that can only succeed has no information in it.
+loop that can only succeed has no information in it. Karl Popper named this failure a
+century ago: a theory that cannot be refuted by any conceivable event is not thereby
+strong — it is thereby empty.
 
-So this project is built around one invariant:
+So we did not set out to build a self-improving agent. We set out to build the *gate*
+such an agent would have to pass — and only then the agent. One invariant holds it up:
 
 > **An agent never promotes its own output to canon — including its own improvements.**
 
@@ -44,6 +49,13 @@ The two turnstiles of logic: `⊢` is *syntactic* — what an agent can derive; 
 *semantic* — what actually holds. The axiom says the first never purchases the second
 when the prover judges itself: **derivation is not truth.** An agent has authority over
 its own proofs, never over the world; the gate exists to bridge that gap from outside.
+In practice the model proposes hypotheses, designs experiments, and suggests
+improvements to its own method — but it never scores itself, never sees the held-out
+worlds it will be judged on, and never writes to canon. Verdicts are computed, not
+solicited. This is not distrust of any particular model; it is the constitutional
+insight behind separated powers and referees who do not play: the roles of proposer and
+judge corrupt each other when merged, whoever holds them.
+
 Or, as a philosopher would have carved it:
 
 > *Ex probatione propria non sequitur veritas.* — from one's own proving, truth does not follow.
@@ -52,14 +64,17 @@ Or, as a philosopher would have carved it:
 
 > P(Y | do(X)) ≢ P(Y | X)
 
-Not `≠` but `≢` — *not identically equal*, and the distinction is the axiom's sharpest
+Pearl's distinction — conditioning is not intervening — is what makes discovery *cost*
+something. Not `≠` but `≢` — *not identically equal*, and the distinction is the axiom's sharpest
 edge: for an unconfounded X the two quantities **are** equal, which is exactly what a
 randomised experiment buys. The operators differ; their values coincide only when it has
 been earned. Our confounded worlds are built where they diverge — and observation alone
 walks straight into the gap (0/4 recovered), while intervention walks around it (4/4).
+Knowledge that can be had by looking is retrieval. Knowledge that must be paid for in
+experiments is science.
 
-The full argument, including the quantum and thermodynamic objections to A2 and where
-they lead: [docs/philosophy.md](docs/philosophy.md).
+The quantum objection to A2 — and where it leads — is taken up in [Why a machine must be
+allowed to be wrong](#why-a-machine-must-be-allowed-to-be-wrong).
 
 ---
 
@@ -129,6 +144,81 @@ intervention, and finds out it was wrong.
 **Level 2 — self-evolution.** The agent proposes a change to *its own experiment-design
 strategy*. Champion versus challenger on 24 held-out worlds it has never seen. The same
 gate rules on both.
+
+---
+
+## Why a machine must be allowed to be wrong
+
+*An essay on the ideas behind meta-science — and on the process that built it, which
+turned out to be the same idea applied to ourselves.*
+
+### The physicist's objection
+
+A physicist will object to the second axiom, and did, in the person of this project's
+author: quantum mechanics knows no passive spectator — observation *is* interaction. The
+objection sharpened us twice.
+
+First, the axiom's substance survives it: even in the quantum formalism, conditioning on
+an outcome (post-selection) and preparing a state (intervention) remain different
+operations; the slogan frays, the mathematics holds.
+
+Second, pushed further, the objection revealed what a simulated benchmark is: the one
+place where the observer genuinely stands outside the ontology — because we built the
+ontology and enumerated its every edge. The side effects are real, and they live in the
+host universe, not the guest one. Our determinism tests double as the experimental
+proof: the same seed builds bit-identical worlds on a hot CPU or a cold one. And where
+our own API leaks a miniature observer effect — unseeded observation advances the random
+stream — we name the crack rather than polish it.
+
+### What a refusal is worth
+
+The agent's proposals land in a tier that is non-authoritative by construction.
+Promotion to canon requires beating the incumbent on worlds the proposer cannot see or
+enumerate, by a margin — because a gate without a margin ratchets on noise, which is how
+a thousand tiny lucky wins launder randomness into "progress." Every verdict writes a
+receipt sufficient to recompute it, and an independent auditor — a different model —
+reads each promotion and may dissent, on the record, without veto.
+
+In three live runs, all published, the gate promoted Gemini's first proposal and refused
+its next two — every time. Most of those refusals were of *measured improvements*: real
+gains, turned down for falling under the margin. Those refusals are worth more than any
+promotion we could show you. A system that can only say yes to itself proves nothing by
+saying yes.
+
+### The process was the philosophy
+
+The unexpected lesson: building this forced the same discipline onto us.
+
+Our benchmark flattered us once — paired sampling made cutting measurement free, and the
+"efficiency gains" our evolver kept finding were partly an artefact. We found it by
+auditing our own results, measured both regimes, switched to the harder one, and
+published the comparison. Our figures drifted from the code once — a process-randomised
+hash quietly broke replayability — and the fix was to pin every published number to the
+code by test. Our chart design was reviewed by an independent reasoner that rejected our
+first axis for hiding real failure cases; it was right, and the correction is printed on
+the figure. Even the second axiom was refined under fire from its own author. And the
+collaboration that built all of it ran on the first axiom: an AI pair-engineer proposing
+at speed, a human judging, refusing, and redirecting — neither of us trusted as the
+judge of our own claims.
+
+None of this was in the plan. All of it is the point. A method you only apply to your
+subject is a pose; applied to yourself, it becomes a practice.
+
+### Toward a thousand turns
+
+Today the system runs a few gated turns of self-improvement, demonstrated end to end.
+The architecture exists so that a thousand turns would still be falsifiable: margins
+against noise, auditors against metric-gaming, receipts for lineage, and — the quiet
+advantage of synthetic worlds — an inexhaustible supply of fresh, unseen tests, which
+lets repetition remain science instead of becoming p-hacking.
+
+Free for everyone, human or AI. That is not a licence footnote; it is the thesis
+restated. Science is the practice of claims that anyone may check. We tried to build
+software the same way.
+
+*Ex probatione propria non sequitur veritas.* — including ours.
+
+— *Marco Vanadia (mova), built meta-agentically with an AI pair-engineer, August 2026*
 
 ---
 
