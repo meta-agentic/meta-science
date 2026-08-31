@@ -256,6 +256,26 @@ python3 run_evolution.py --generations 3       # live: Gemini proposes, gate dec
 The `--offline` path runs the whole gate with a scripted proposer, so **the governance
 claim can be verified without an API key at all.**
 
+### Reproducible testing
+
+Every published number can be recomputed rather than believed:
+
+```bash
+python3 -m pytest -q                     # 78 offline tests — worlds, gate, auditor,
+                                         #   determinism (in a subprocess), and the
+                                         #   published figures pinned to the code
+bash scripts/verify.sh                   # the pre-deploy gate: 9 checks incl. a live
+                                         #   refusal, a live promotion, and terraform
+python3 scripts/collect.py --worlds 48   # regenerate the 384-run study (~45s, no key)
+python3 scripts/analyse.py               # ... and its tables
+python3 -m pytest -m slow -q             # 4 live-model tests (needs GEMINI_API_KEY):
+                                         #   incl. the 0/4-vs-4/4 retrieval baseline
+```
+
+The three published evolution runs replay from their committed receipts — seeds, diffs
+and scores are re-derived by `tests/test_committed_receipts.py`, offline. If a figure in
+this README and the code ever disagree, the suite fails before a reader can be misled.
+
 Serve it locally:
 
 ```bash
