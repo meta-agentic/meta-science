@@ -165,6 +165,19 @@ memorisation is guaranteed.
 Plus the smaller debts: non-linear effect estimation, and a larger held-out set so
 smaller margins become measurable.
 
+## Try it yourself
+
+- **[Live demo](https://science.meta-agentic.ai/)** — meet a world it has never seen, run an
+  experiment, watch the gate decide
+- **[World inspector](https://science.meta-agentic.ai/world/7/inspect)** — what the agent is
+  allowed to know, beside the truth it is not
+- **[Evidence base](https://science.meta-agentic.ai/evidence)** — the 384-run study behind
+  every figure here
+- **[Receipts](https://github.com/meta-agentic/meta-science/tree/main/docs/receipts)** — three
+  live runs, committed in full, replayable offline without an API key
+- **[Source](https://github.com/meta-agentic/meta-science)** — GPL-3.0, free for everyone,
+  human or AI
+
 ## Built with (Devpost tags field, not the story body)
 
 `python` · `gemini-3.6-flash` · `gemini-3.5-flash` · `gemini-3.5-flash-lite` · `google-genai` (GenAI SDK) · `google-cloud-firestore` ·
