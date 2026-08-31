@@ -48,9 +48,35 @@ OUT = ROOT / "runs" / "campaign"
 REPS = 30
 
 
+MIN_INTERVAL = 8.0   # seconds between call STARTS: stay well under the RPM cap
+_last_call = [0.0]   # a naive backoff ladder made things worse — every retry
+                     # hits up to four endpoints (two models x two attempts),
+                     # feeding the throttle it is waiting out. Pace, don't retry.
+
+# The evolution arm's proposer and auditor reach _generate directly, not through
+# _ask — pace every caller at the source. Both resolve the symbol at call time,
+# so patching the module attribute covers them.
+_orig_generate = gemini._generate
+
+
+def _paced_generate(*args, **kwargs):
+    wait = _last_call[0] + MIN_INTERVAL - time.time()
+    if wait > 0:
+        time.sleep(wait)
+    _last_call[0] = time.time()
+    return _orig_generate(*args, **kwargs)
+
+
+gemini._generate = _paced_generate
+
+
 def _ask(prompt: str, schema: dict) -> dict:
-    """One live call with campaign-level quota backoff and a full trace."""
-    for attempt in range(6):
+    """One live call, paced below the rate limit, with a full trace."""
+    for attempt in range(8):
+        wait = _last_call[0] + MIN_INTERVAL - time.time()
+        if wait > 0:
+            time.sleep(wait)
+        _last_call[0] = time.time()
         t0 = time.time()
         try:
             answer = gemini._generate(prompt, schema)
@@ -59,7 +85,7 @@ def _ask(prompt: str, schema: dict) -> dict:
                     "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         except RuntimeError as exc:
             if "429" in str(exc) or "RESOURCE_EXHAUSTED" in str(exc):
-                wait = 30 * (attempt + 1)
+                wait = 60 + 30 * attempt
                 print(f"    quota backoff {wait}s", flush=True)
                 time.sleep(wait)
                 continue
