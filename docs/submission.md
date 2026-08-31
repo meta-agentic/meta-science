@@ -63,7 +63,7 @@ suggests method changes. Firestore holds the ledger of every verdict. Cloud Run 
 it declared in Terraform, with the API key in Secret Manager and a service account scoped
 to `roles/datastore.user`.
 
-## Challenges
+## Challenges we ran into
 
 **We built a metric we could have gamed.** Cost initially charged the number of
 experiments, which left sample size free — so a challenger could buy accuracy by drawing
@@ -94,7 +94,7 @@ determinism is now asserted in a subprocess — an in-process check cannot see i
 is easy. The real question is whether a model can answer without experimenting. So we
 tested it adversarially — and it cannot.
 
-## Accomplishments
+## Accomplishments that we're proud of
 
 The measurement that settles the whole design — four worlds with a hidden confounder,
 scored on whether the agent recovers the true causal direction:
@@ -122,10 +122,16 @@ Both facts are asserted by tests.
 ## What we learned
 
 That the hard part of a self-improving system is not the improving. It is building the
-evidence the improvement has to survive — and then not letting the proposer anywhere near
-it.
+evidence the improvement has to survive — and then not letting the proposer anywhere
+near it.
 
-## What's next
+And where the claim stops. Automated scientific discovery has substantial prior art — active learning, causal
+discovery, rule-induction in the Zendo/Eleusis tradition. This is not the first AI
+scientist and does not claim to be. The narrower claim is falsifiable self-improvement: a
+loop whose every promotion is earned against evidence the proposer cannot see, score, or
+tune against, leaving a receipt either way.
+
+## What's next for meta-science
 
 Level 3 — after level 1 (do science) and level 2 (improve the method) — is open-ended,
 repeated self-evolution scored on *law recovery under replication*. Every hypothesis is
@@ -150,15 +156,8 @@ memorisation is guaranteed.
 Plus the smaller debts: non-linear effect estimation, and a larger held-out set so
 smaller margins become measurable.
 
-## Built with
+## Built with (Devpost tags field, not the story body)
 
 `python` · `gemini-3.6-flash` · `gemini-3.5-flash` · `gemini-3.5-flash-lite` · `google-genai` (GenAI SDK) · `google-cloud-firestore` ·
 `cloud-run` · `secret-manager` · `terraform` · `fastapi` · `docker` · `pytest`
 
-## What we are not claiming
-
-Automated scientific discovery has substantial prior art — active learning, causal
-discovery, rule-induction in the Zendo/Eleusis tradition. This is not the first AI
-scientist and does not claim to be. The narrower claim is falsifiable self-improvement: a
-loop whose every promotion is earned against evidence the proposer cannot see, score, or
-tune against, leaving a receipt either way.
