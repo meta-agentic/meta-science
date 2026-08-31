@@ -111,86 +111,96 @@ also good. Not good enough.
 That is the whole point.
 
 25
-00:02:04,319 --> 00:02:11,778
+00:02:04,319 --> 00:02:08,149
 None of this rests on a lucky run.
 
 26
-00:02:11,778 --> 00:02:29,550
+00:02:08,149 --> 00:02:17,274
 Hundreds of worlds, thousands of tests —
 and any of them can be re-run by anyone,
 
 27
-00:02:29,550 --> 00:02:33,719
+00:02:17,274 --> 00:02:19,413
 from a single seed.
 
 28
+00:02:19,413 --> 00:02:27,524
+And the machine that did it is running
+while you watch: on Google Cloud,
+
+29
+00:02:27,524 --> 00:02:33,719
+answering anyone who asks,
+every request on the record.
+
+30
 00:02:34,319 --> 00:02:38,747
 Spend a quarter of the
 budget: same answers.
 
-29
+31
 00:02:38,747 --> 00:02:43,576
 Spend even less, and the
 spread gives you away —
 
-30
+32
 00:02:43,576 --> 00:02:49,413
 unless the benchmark is rigged
 to hide it. Ours was, once.
 
-31
+33
 00:02:49,413 --> 00:02:53,639
 We found it, fixed it, and published both.
 
-32
+34
 00:02:54,240 --> 00:03:00,235
 In the end we asked the system
 the oldest question in science:
 
-33
+35
 00:03:00,235 --> 00:03:02,460
 do you need repetition?
 
-34
+36
 00:03:02,460 --> 00:03:07,780
 It gave the statistician's
 answer — not here, not yet —
 
-35
+37
 00:03:07,780 --> 00:03:13,680
 and told us exactly what kind
 of world would change its mind.
 
-36
+38
 00:03:14,280 --> 00:03:16,709
 One gated turn today.
 
-37
+39
 00:03:16,709 --> 00:03:19,138
 A thousand tomorrow —
 
-38
+40
 00:03:19,138 --> 00:03:23,881
 and every one of them would still have to
 
-39
+41
 00:03:23,881 --> 00:03:26,079
 show a receipt. ...
 
-40
+42
 00:03:26,079 --> 00:03:27,813
 One more thing.
 
-41
+43
 00:03:27,813 --> 00:03:33,598
 The voice you have been
 listening to... is Gemini.
 
-42
+44
 00:03:33,598 --> 00:03:39,612
 The system just narrated
 its own demo. Meta-science.
 
-43
+45
 00:03:39,612 --> 00:03:43,545
 Free for everyone — human, or A.I.

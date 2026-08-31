@@ -134,7 +134,9 @@ NARRATION = {
         "two ideas were also good. Not good enough. That is the whole point.",
     "corpus_evidence":
         "None of this rests on a lucky run. Hundreds of worlds, thousands of "
-        "tests — and any of them can be re-run by anyone, from a single seed.",
+        "tests — and any of them can be re-run by anyone, from a single seed. "
+        "And the machine that did it is running while you watch: on Google Cloud, "
+        "answering anyone who asks, every request on the record.",
     "corpus_stats":
         "Spend a quarter of the budget: same answers. Spend even less, and the "
         "spread gives you away — unless the benchmark is rigged to hide it. "
